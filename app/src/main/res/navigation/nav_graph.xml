@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/updateFragment2">
+    <fragment
+        android:id="@+id/updateFragment2"
+        android:name="com.example.saloon.UpdateFragment"
+        android:label="UpdateFragment" >
+        <action
+            android:id="@+id/action_updateFragment2_to_passwordFragment"
+            app:destination="@id/passwordFragment" />
+        <action
+            android:id="@+id/action_updateFragment2_to_phoneNumberFragment"
+            app:destination="@id/phoneNumberFragment" />
+        <action
+            android:id="@+id/action_updateFragment2_to_saloonNameFragment"
+            app:destination="@id/saloonNameFragment" />
+        <action
+            android:id="@+id/action_updateFragment2_to_locationFragment"
+            app:destination="@id/locationFragment"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.example.saloon.LocationFragment"
+        android:label="LocationFragment" >
+        <argument
+            android:name="accountItem"
+            app:argType="com.example.saloon.AccountItem"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordFragment"
+        android:name="com.example.saloon.PasswordFragment"
+        android:label="PasswordFragment" />
+    <fragment
+        android:id="@+id/phoneNumberFragment"
+        android:name="com.example.saloon.PhoneNumberFragment"
+        android:label="PhoneNumberFragment" />
+    <fragment
+        android:id="@+id/saloonNameFragment"
+        android:name="com.example.saloon.SaloonNameFragment"
+        android:label="SaloonNameFragment" />
+</navigation>

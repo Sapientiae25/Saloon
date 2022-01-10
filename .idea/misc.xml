@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/border.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/border_right.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/bottom_border.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/btn_style.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/circle.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/cross.xml" value="0.321875" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/curved.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/line.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/rounded.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/drawable/top_border.xml" value="0.3411458333333333" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/activity_account.xml" value="0.264" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/activity_calendar.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/activity_create_style.xml" value="0.264945652173913" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/activity_style.xml" value="0.264" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/activity_tester.xml" value="0.303125" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/activity_user.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/calendar_bottom_sheet_layout.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/calendar_cell_layout.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/date_layout.xml" value="0.22916666666666666" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_edit_style.xml" value="0.2078804347826087" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_location.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_login.xml" value="0.23369565217391305" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_opens.xml" value="0.18659420289855072" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_password.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_phone_number.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_register.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_saloon_bottom_sheet.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_saloon_name.xml" value="0.264" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_style.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/fragment_update.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/nav_header.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/review_layout.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/style_layout.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/layout/test_rv.xml" value="0.276268115942029" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/menu/account_menu.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/menu/edit_style_menu.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/menu/time_menu.xml" value="0.32083333333333336" />
+        <entry key="..\:/Users/PlWoCo/AndroidStudioProjects/Saloon/app/src/main/res/xml/network_security_config.xml" value="0.16822916666666668" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
