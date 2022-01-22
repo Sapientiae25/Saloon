@@ -24,6 +24,7 @@ class EditStyleFragment : Fragment(){
 
     private lateinit var accountItem : AccountItem
     private lateinit var styleItem : StyleItem
+    private lateinit var communicator: ChangeFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +47,7 @@ class EditStyleFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_edit_style, container, false)
-
+        val tvUserView = rootView.findViewById<TextView>(R.id.tvUserView)
         val etName = rootView.findViewById<TextInputEditText>(R.id.etName)
         val etPrice = rootView.findViewById<TextInputEditText>(R.id.etPrice)
         val etDuration = rootView.findViewById<TextInputEditText>(R.id.etDuration)
@@ -59,6 +60,8 @@ class EditStyleFragment : Fragment(){
         val cgTags = rootView.findViewById<ChipGroup>(R.id.cgTags)
         val etInfo = rootView.findViewById<TextInputEditText>(R.id.etInfo)
         val tagList = mutableListOf<String>()
+        communicator = activity as ChangeFragment
+        tvUserView.setOnClickListener { communicator.change(StyleFragment.newInstance(accountItem,styleItem))}
 
         etName.setText(styleItem.name)
         etPrice.setText(styleItem.price.toString())
@@ -114,12 +117,7 @@ class EditStyleFragment : Fragment(){
                         val exist = obj.getInt("exist")
                         if (exist == 1){
                             Toast.makeText(context, "Style already exists",Toast.LENGTH_SHORT).show()
-                        }else{
-                            val intent = Intent(context, UserActivity::class.java)
-                            intent.putExtra("account_id", accountItem.id)
-                            intent.putExtra("name", accountItem.name)
-                            startActivity(intent)
-                        }
+                        }else{ communicator.change(UserActivity.newInstance(accountItem)) }
                     },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                     @Throws(AuthFailureError::class)
@@ -141,7 +139,7 @@ class EditStyleFragment : Fragment(){
 
     companion object {
         fun newInstance(param1: AccountItem,param2 : StyleItem) =
-            SaloonNameFragment().apply {
+            EditStyleFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("accountItem", param1)
                     putParcelable("styleItem", param2)

@@ -1,90 +1,78 @@
 package com.example.saloon
 
-import android.content.ClipData
-import android.content.ClipDescription
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Dialog
 import android.os.Bundle
-import android.view.DragEvent
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.view.Window
+import android.widget.NumberPicker
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
-class Tester : AppCompatActivity() {
+class Tester : AppCompatActivity(){
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tester)
 
-        val llTester = findViewById<LinearLayout>(R.id.llTester)
-        val dragView = View(this)
-        dragView.background = AppCompatResources.getDrawable(this,R.drawable.rounded)
-        dragView.setBackgroundColor((getColor(R.color.red)))
-        val dimen = resources.getDimensionPixelSize(R.dimen.item_width)
-        dragView.layoutParams = ViewGroup.LayoutParams(dimen,dimen)
+        val tvHelp = findViewById<TextView>(R.id.tvHelp)
+        val time = LocalTime.parse("13:15")
+        val time2 = LocalTime.parse("11:36")
 
-        llTester.addView(dragView,1)
-
-        val rvTest = findViewById<RecyclerView>(R.id.rvTest)
-        rvTest.layoutManager = LinearLayoutManager(this)
-        val r = mutableListOf<Int>()
-        for (i in 0 until 5){r.add(i)}
-        rvTest.adapter = TestAdapter(r)
-        dragView.setOnLongClickListener {
-            val text = "Sup Dawg!"
-            val item = ClipData.Item(text)
-            val mimeType = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(text,mimeType,item)
-
-            val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data,dragShadowBuilder,it,0)
-
-//            it.visibility = View.INVISIBLE
-            rvTest.adapter?.notifyItemRangeChanged(0,20)
-            true
-        }
-        rvTest.adapter?.notifyItemRangeChanged(0,20)
-
-        val dragListListener = View.OnDragListener { view, event ->
-            when (event.action){
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
-                }
-                DragEvent.ACTION_DRAG_ENTERED -> {
-                    view.invalidate()
-                    true
-                }
-                DragEvent.ACTION_DRAG_LOCATION -> {
-                    true
-                }
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    view.invalidate()
-                    true
-                }
-                DragEvent.ACTION_DROP -> {
-//                    val item = event.clipData.getItemAt(0)
-//                    val dragData = item.text
-//                    println("worked")
+        if (time > time2){
+            println("hoooo")
+        }else{println("tooo")}
+        println(time)
+        tvHelp.setOnClickListener { showDialog(tvHelp) }
+//        val numPickerHour = findViewById<NumberPicker>(R.id.numPickerHour)
+//        val numPickerMins = findViewById<NumberPicker>(R.id.numPickerMins)
+//        val save = findViewById<TextView>(R.id.save)
+//        var hour = 0
+//        var minute = ""
 //
-                    val v = event.localState as View
-                    val owner = v.parent as ViewGroup
-                    owner.removeView(v)
-                    owner.addView(v)
-//                    val destination = view as LinearLayout
+//        numPickerHour.minValue = 0
+//        numPickerHour.maxValue  = 23
 //
-//                    destination.addView(v)
-                    v.visibility = View.VISIBLE
-                    true
-                }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    view.invalidate()
-                    true
-                }
-                else -> false
+//        val minOptions = arrayOf("0","15","30","45")
+//        numPickerMins.minValue = 0
+//        numPickerMins.maxValue = 3
+//        numPickerMins.displayedValues = minOptions
+//
+//        numPickerHour.setOnValueChangedListener { numberPicker, _, i2 ->  hour = numberPicker.value}
+//        numPickerMins.setOnValueChangedListener { numberPicker, i, i2 ->
+//            val x = minOptions[numberPicker.value]
+//            minute = x}
+//        save.setOnClickListener { println("$hour:$minute") }
+    }
 
-            }
-        }
-        llTester.setOnDragListener(dragListListener)
+    private fun showDialog(textView: TextView) {
+        val dialog = Dialog(this)
+        var hour = 0
+        var minute = ""
+        val minOptions = arrayOf("0","15","30","45")
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.time_picker_layout)
+        val numPickerHour = dialog.findViewById<NumberPicker>(R.id.numPickerHour)
+        val numPickerMins = dialog.findViewById<NumberPicker>(R.id.numPickerMins)
+        val save = dialog.findViewById<TextView>(R.id.save)
+        val close = dialog.findViewById<TextView>(R.id.close)
+
+        numPickerHour.minValue = 0
+        numPickerHour.maxValue  = 23
+        numPickerMins.minValue = 0
+        numPickerMins.maxValue = 3
+        numPickerMins.displayedValues = minOptions
+        numPickerHour.setOnValueChangedListener { numberPicker, _, _ ->  hour = numberPicker.value}
+        numPickerMins.setOnValueChangedListener { numberPicker, _, _ ->
+            val x = minOptions[numberPicker.value]
+            minute = x
+            textView.text = minute}
+        close.setOnClickListener { dialog.dismiss() }
+        save.setOnClickListener { println("$hour:$minute") ;dialog.dismiss() }
+        dialog.show()
     }
 }

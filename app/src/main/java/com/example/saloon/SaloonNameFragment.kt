@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.commit
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
@@ -21,7 +22,7 @@ import java.util.HashMap
 class SaloonNameFragment : Fragment() {
 
     private lateinit var etName: TextInputEditText
-    private lateinit var btnSaveNumber: Button
+    private lateinit var btnSaveName: AppCompatButton
     private lateinit var accountItem: AccountItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +49,10 @@ class SaloonNameFragment : Fragment() {
         val rootView =  inflater.inflate(R.layout.fragment_saloon_name, container, false)
 
         etName = rootView.findViewById(R.id.etName)
-        btnSaveNumber = rootView.findViewById(R.id.btnSaveAddress)
+        btnSaveName = rootView.findViewById(R.id.btnSaveName)
         fill()
 
-        btnSaveNumber.setOnClickListener {
+        btnSaveName.setOnClickListener {
             var filled = true
             if (etName.text!!.isEmpty()){filled=false;etName.error="This field must be filled"}
             if (filled){

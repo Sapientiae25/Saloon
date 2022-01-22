@@ -1,28 +1,25 @@
 package com.example.saloon
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.textfield.TextInputEditText
-import org.json.JSONObject
-import java.util.HashMap
+import java.util.*
 
 class PasswordFragment : Fragment() {
 
     private lateinit var etPassword: TextInputEditText
     private lateinit var etConfirm: TextInputEditText
-    private lateinit var btnSaveNumber: Button
+    private lateinit var btnSavePassword: AppCompatButton
     private lateinit var accountItem: AccountItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +48,10 @@ class PasswordFragment : Fragment() {
 
         etPassword = rootView.findViewById(R.id.etPassword)
         etConfirm = rootView.findViewById(R.id.etConfirm)
-        btnSaveNumber = rootView.findViewById(R.id.btnSaveAddress)
+        btnSavePassword = rootView.findViewById(R.id.btnSavePassword)
         fill()
 
-        btnSaveNumber.setOnClickListener {
+        btnSavePassword.setOnClickListener {
             var filled = true
             if (etPassword.text!!.isEmpty()){filled=false;etPassword.error="This field must be filled"}
             if (etConfirm.text!!.isEmpty()){filled=false;etConfirm.error="This field must be filled"}

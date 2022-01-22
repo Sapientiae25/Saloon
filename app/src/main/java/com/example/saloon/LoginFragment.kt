@@ -71,8 +71,7 @@ class LoginFragment : Fragment() {
                             val name = obj.getString("name")
                             val accountId = obj.getString("account_id")
                             val accountItem = AccountItem(accountId,name)
-//                            val intent = Intent(context, UserActivity::class.java)
-                            val intent = Intent(context, Tester::class.java)
+                            val intent = Intent(context, DefaultActivity::class.java)
                             intent.putExtra("account_item", accountItem)
                             startActivity(intent)
                         }else{
@@ -90,14 +89,4 @@ class LoginFragment : Fragment() {
         }
         return rootView
     }
-
-//    companion object {
-//        fun newInstance(param1: String, param2: String) =
-//            LoginFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
 }

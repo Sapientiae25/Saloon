@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CancelAppointmentActivity"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp">
+    <TextView
+        android:id="@+id/tvStyleName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/style_name"
+        android:textSize="25sp"/>
+    <TextView
+        android:id="@+id/tvStyleTime"
+        android:layout_marginStart="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="@string/time"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tlReason"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/reason"
+            android:textSize="20sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/llEmail"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_colon"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/email"/>
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/blockBtn"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:text="Block"
+        android:textSize="20sp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancelBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/btn_style"
+        android:backgroundTint="@color/red"
+        android:textSize="15sp"
+        android:text="@string/cancel_booking"
+        android:textColor="@android:color/white" />
+</LinearLayout>

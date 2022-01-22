@@ -30,13 +30,13 @@ class StyleActivity : AppCompatActivity(){
         val tvUserView = findViewById<TextView>(R.id.tvUserView)
         val tvEditStyle = findViewById<TextView>(R.id.tvEditStyle)
 
-        supportFragmentManager.commit { add(R.id.fragmentContainer,StyleFragment.newInstance(accountItem!!,styleItem!!))}
+        supportFragmentManager.commit { add(R.id.fragmentContainerView,StyleFragment.newInstance(accountItem!!,styleItem!!))}
 
         tvUserView.setOnClickListener {
-            supportFragmentManager.commit { replace(R.id.fragmentContainer,StyleFragment.newInstance(accountItem!!,styleItem!!))}
+            supportFragmentManager.commit { replace(R.id.fragmentContainerView,StyleFragment.newInstance(accountItem!!,styleItem!!))}
         }
         tvEditStyle.setOnClickListener {
-            supportFragmentManager.commit { replace(R.id.fragmentContainer,EditStyleFragment.newInstance(accountItem!!,styleItem!!))}
+            supportFragmentManager.commit { replace(R.id.fragmentContainerView,EditStyleFragment.newInstance(accountItem!!,styleItem!!))}
         }
 
     }}

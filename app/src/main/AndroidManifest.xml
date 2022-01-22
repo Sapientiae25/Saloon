@@ -19,6 +19,15 @@
         android:windowSoftInputMode="adjustResize"
         tools:targetApi="n">
         <activity
+            android:name=".DefaultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CancelAppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BreakCheckPopUp"
+            android:exported="false" />
+        <activity
             android:name=".Tester"
             android:exported="false" />
         <activity

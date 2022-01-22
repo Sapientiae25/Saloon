@@ -1,15 +1,17 @@
 package com.example.saloon
 
 import android.content.Intent
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.saloon.StyleItem
 
-class StyleItemAdapter (private val styleItemList: MutableList<StyleItem>,private val accountItem: AccountItem)
+class StyleItemAdapter (private val styleItemList: MutableList<StyleItem>,private val accountItem: AccountItem,
+                        val activity: DefaultActivity)
     : RecyclerView.Adapter<StyleItemAdapter.StyleItemViewHolder>() {
+    lateinit var communicator: ChangeFragment
 
     inner class StyleItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val name: TextView = itemView.findViewById(R.id.name)
@@ -19,17 +21,16 @@ class StyleItemAdapter (private val styleItemList: MutableList<StyleItem>,privat
 
         fun bind(index: Int){
             val currentItem = styleItemList[index]
+            println(currentItem)
             val timeItem = currentItem.time
             name.text = currentItem.name
             price.text = itemView.context.getString(R.string.money,currentItem.price)
             val timeValue = if (timeItem.maxTime != null) itemView.context.getString(R.string.time_distance,timeItem.time,timeItem.maxTime)
             else timeItem.time
             time.text = itemView.context.getString(R.string.time_mins,timeValue)
+            communicator = activity
             styleLayout.setOnClickListener {
-                val intent = Intent(itemView.context, StyleActivity::class.java)
-                intent.putExtra("account_item", accountItem)
-                intent.putExtra("style_item", currentItem)
-                itemView.context.startActivity(intent)
+                communicator.change(StyleFragment.newInstance(accountItem,currentItem))
             }
         }
     }
