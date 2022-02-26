@@ -34,19 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etCity"
-            android:layout_width="match_parent"
-            android:inputType="text"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:hint="@string/town_city" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPostcode"
             android:layout_width="match_parent"
             android:inputType="text"
@@ -60,6 +47,32 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTown"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:hint="@string/town" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:hint="@string/city" />
+    </com.google.android.material.textfield.TextInputLayout>
+     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCountry"
             android:layout_width="match_parent"
             android:inputType="text"
@@ -67,7 +80,7 @@
             android:textSize="15sp"
             android:hint="@string/country" />
     </com.google.android.material.textfield.TextInputLayout>
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSaveAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

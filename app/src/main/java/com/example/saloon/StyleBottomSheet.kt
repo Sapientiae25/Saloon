@@ -30,7 +30,7 @@ class StyleBottomSheet : BottomSheetDialogFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val booking = arguments?.getParcelable<CalendarItem>("booking")!!
-        val accountItem = arguments?.getParcelable<AccountItem>("accountItem")
+        val accountItem = (activity as DefaultActivity).accountItem
         val tvName = view.findViewById<TextView>(R.id.tvName)
         val tvCost = view.findViewById<TextView>(R.id.tvCost)
         val tvStyleDuration = view.findViewById<TextView>(R.id.tvStyleDuration)

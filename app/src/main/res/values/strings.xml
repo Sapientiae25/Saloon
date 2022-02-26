@@ -18,6 +18,7 @@
     <string name="style_name">style name</string>
     <string name="time">Time</string>
     <string name="style_image">style image</string>
+    <string name="distance">%1$s, %2$s, %3$s</string>
     <string name="time_distance">%1$s-%2$s</string>
     <string name="price">Price</string>
     <string name="duration_mins">Duration (mins)</string>
@@ -27,6 +28,7 @@
     <string name="max_time_optional">Max time (optional)</string>
     <string name="add_image"><u>Add Image</u></string>
     <string name="create_style">Create Style</string>
+    <string name="create_category">Create Category</string>
     <string name="info">Info</string>
     <string name="choose_date">Choose Date:</string>
     <string name="mm">MM</string>
@@ -43,6 +45,8 @@
     <string name="change_password">Change Password:</string>
     <string name="saloon_name_colon">Saloon Name:</string>
     <string name="opens">Opens:</string>
+    <string name="open_">Opens: %1$s</string>
+    <string name="close_">Closes: %1$s</string>
     <string name="closes">Closes:</string>
     <string name="save_address">Save Address</string>
     <string name="postcode">Postcode:</string>
@@ -121,5 +125,42 @@
     <string name="checked">Checked</string>
     <string name="add_styles">Add Styles</string>
     <string name="category_name">Category Name</string>
+    <string name="duration">Duration</string>
+    <string name="_0_mins">0 mins</string>
+    <string name="select_time">Select Time</string>
+    <string name="close">Close</string>
+    <string name="_0">0</string>
+    <string name="mins">mins</string>
+    <string name="no_styles_found">No Styles Found</string>
+    <string name="delete_check">Are You Sure You Want To Delete %1$s</string>
+    <string name="user_date">%1$02d/%2$02d/%3$04d</string>
+    <string name="save_number">Save Number</string>
+    <string name="no_upcoming_bookings">No Upcoming Bookings</string>
+    <string name="code">code</string>
+    <string name="booking_id">Booking Id: %1$s</string>
+    <string name="search">search</string>
+    <string name="filter">Filter</string>
+    <string name="favourites">Favourites</string>
+    <string name="rating">Rating</string>
+    <string name="separate">%1$s - %2$s</string>
+    <string name="duration_time">Duration: %1$s mins</string>
+    <string name="comma">%1$s, %2$s</string>
+    <string name="all">All</string>
+    <string name="men">Men</string>
+    <string name="gender">Gender</string>
+    <string name="length">Length</string>
+    <string name="long_">Long</string>
+    <string name="short_">Short</string>
+    <string name="medium">Medium</string>
+    <string name="women">Women</string>
+    <string name="icon">Icon</string>
+    <string name="notification">Notification</string>
+    <string name="_1">1</string>
+    <string name="go_to_style">Go To Style</string>
+    <string name="details">Details</string>
+    <string name="town">Town</string>
+    <string name="city">City</string>
+    <string name="add_image_">Add Image</string>
+    <string name="remove_image">Remove Image</string>
 
 </resources>

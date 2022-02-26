@@ -2,6 +2,7 @@ package com.example.saloon
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,7 +71,13 @@ class LoginFragment : Fragment() {
                         if (exist == 1){
                             val name = obj.getString("name")
                             val accountId = obj.getString("account_id")
-                            val accountItem = AccountItem(accountId,name)
+                            val address = obj.getString("address")
+                            val postcode = obj.getString("postcode")
+                            val open = obj.getString("open")
+                            val close = obj.getString("close")
+                            val rating = obj.getString("rating")
+                            val addressItem = AddressItem("",postcode,"",address,"" )
+                            val accountItem = AccountItem(accountId,name,open=open,close=close,addressItem=addressItem,rating=rating)
                             val intent = Intent(context, DefaultActivity::class.java)
                             intent.putExtra("account_item", accountItem)
                             startActivity(intent)

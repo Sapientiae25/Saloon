@@ -25,7 +25,8 @@ class AddStyleAdapter (private val checkedList: MutableList<CheckItem>)
         fun bind(index: Int){
             val currentItem = checkedList[index]
             tvStyle.text = currentItem.style
-            itemView.setOnClickListener{
+            rbChecked.isChecked = currentItem.checked
+                itemView.setOnClickListener{
                 if (currentItem.checked){
                     rbChecked.isChecked = false
                     currentItem.checked = false

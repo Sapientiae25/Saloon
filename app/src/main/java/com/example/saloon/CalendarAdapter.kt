@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 
 
-class CalendarAdapter (private val calendarArray: MutableList<CalendarItem>, val accountItem: AccountItem,
-                       private val activity: DefaultActivity)
+class CalendarAdapter (private val calendarArray: MutableList<CalendarItem>)
     : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>(),CloseSheet{
 
     var bottomSheetFragment: CalendarBottomSheetFragment? = null
@@ -29,16 +25,14 @@ class CalendarAdapter (private val calendarArray: MutableList<CalendarItem>, val
                     bottomSheetFragment?.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog")
                     val bundle = Bundle()
                     bundle.putParcelable("booking",currentItem)
-                    bundle.putParcelable("accountItem",accountItem)
                     bottomSheetFragment?.arguments = bundle }}
                 else{
                 tvCalendar.setOnClickListener {
                     val bookingBottomSheetFragment = StyleBottomSheet()
-                    bookingBottomSheetFragment?.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog")
+                    bookingBottomSheetFragment.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog")
                     val bundle = Bundle()
                     bundle.putParcelable("booking",currentItem)
-                    bundle.putParcelable("accountItem",accountItem)
-                    bookingBottomSheetFragment?.arguments = bundle }}
+                    bookingBottomSheetFragment.arguments = bundle }}
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -50,7 +44,6 @@ class CalendarAdapter (private val calendarArray: MutableList<CalendarItem>, val
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val currentItem = calendarArray[position]
         holder.bind(position)
-        activity.communicator = this
         val item = holder.itemView
         val tvCalendar = holder.tvCalendar
         when (currentItem.calendarType) {

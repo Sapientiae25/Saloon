@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.android.volley.AuthFailureError
@@ -24,7 +25,7 @@ class RegisterFragment : Fragment() {
     private lateinit var etPassword: TextInputEditText
     private lateinit var etUsername: TextInputEditText
     private lateinit var etEmail: TextInputEditText
-    private lateinit var btnRegister: Button
+    private lateinit var btnRegister: AppCompatButton
     private lateinit var tvLoginInstead: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +67,7 @@ class RegisterFragment : Fragment() {
                         if (exist == 0){
                             Toast.makeText(context,"Account created!",Toast.LENGTH_SHORT).show()
                             val accountId = obj.getString("account_id")
-                            val intent = Intent(context, UserActivity::class.java)
+                            val intent = Intent(context, DefaultActivity::class.java)
                             val accountItem = AccountItem(accountId,etUsername.text.toString())
                             intent.putExtra("account_item", accountItem)
                             startActivity(intent)

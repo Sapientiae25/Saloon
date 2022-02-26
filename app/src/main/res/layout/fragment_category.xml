@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layoutDescription="@xml/activity_user_scene">
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/tvNoStyles"
         android:visibility="gone"
@@ -16,31 +15,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_styles"/>
-    <ImageView
+    <com.denzcoskun.imageslider.ImageSlider
         android:id="@+id/ivStoreFront"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:contentDescription="@string/store_front"
-        android:src="@drawable/ic_baseline_person_24"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="210dp"
+        app:iss_auto_cycle="true"
+        app:iss_corner_radius="5"
+        app:iss_delay="0"
+        app:iss_error_image="@android:color/darker_gray"
+        app:iss_period="2000"
+        app:iss_placeholder="@android:color/darker_gray"
+        app:iss_selected_dot="@drawable/default_selected_dot"
+        app:iss_unselected_dot="@drawable/default_unselected_dot"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategoryStyleItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivStoreFront" />
+        app:layout_constraintTop_toBottomOf="@+id/ivStoreFront"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnNewStyle"
+        android:id="@+id/btnEditCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-        android:background="@drawable/cross"
+        android:background="@drawable/ic_baseline_edit_24"
         android:contentDescription="@string/add_item"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context=".CreateStyleActivity">
-        <ImageView
+        android:orientation="vertical">
+        <com.denzcoskun.imageslider.ImageSlider
             android:id="@+id/ivStyleImage"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:contentDescription="@string/store_front"
-            android:src="@drawable/ic_baseline_person_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
+            android:layout_height="200dp"
+            app:iss_auto_cycle="true"
+            app:iss_corner_radius="5"
+            app:iss_delay="0"
+            app:iss_error_image="@android:color/darker_gray"
+            app:iss_period="2000"
+            app:iss_placeholder="@android:color/darker_gray"
+            app:iss_selected_dot="@drawable/default_selected_dot"
+            app:iss_unselected_dot="@drawable/default_unselected_dot"/>
         <LinearLayout
             android:id="@+id/llFragmentChange"
             android:layout_width="match_parent"
@@ -90,88 +89,139 @@
                 android:inputType="numberDecimal"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/llTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tlDuration"
+                android:id="@+id/tlInfo"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="7dp"
-                android:layout_weight="1">
+                android:layout_marginTop="15dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDuration"
+                    android:id="@+id/etInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/duration_mins"
-                    android:inputType="number"
-                    android:textSize="15sp" />
+                    android:gravity="start"
+                    android:hint="@string/info"
+                    android:textSize="20sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tlMaxTime"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
-                android:layout_weight="1">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMaxTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/max_time_optional"
-                    android:inputType="number"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlInfo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/tlDuration"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llTime">
+            <AutoCompleteTextView
+                android:id="@+id/etDuration"
                 android:gravity="start"
-                android:hint="@string/info"
-                android:textSize="20sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlTags"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            app:endIconDrawable="@drawable/ic_baseline_info_24"
-            app:endIconMode="custom">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etTags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/tags_popular_words"
+                android:hint="@string/duration"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cgTags"
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/filter"
+        android:layout_marginTop="15dp"
+        android:textSize="25sp"/>
+    <LinearLayout
+        android:id="@+id/llFilter"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/llGender"
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
+            <TextView
+                android:id="@+id/tvGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gender"
+                android:textSize="20sp"
+                app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"/>
+            <RadioGroup
+                android:id="@+id/rgGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp">
+                <RadioButton
+                    android:id="@+id/tvGenderAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all"
+                    android:layout_weight="1"/>
+                <RadioButton
+                    android:id="@+id/tvGenderMen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/men"
+                    android:layout_weight="1"/>
+                <RadioButton
+                    android:id="@+id/tvGenderWomen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/women"/>
+            </RadioGroup>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llLength"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
+            <TextView
+                android:id="@+id/tvLength"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/length"
+                android:textSize="20sp"
+                app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"/>
+            <RadioGroup
+                android:id="@+id/rgLength"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp">
+                <RadioButton
+                    android:id="@+id/tvLengthAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all"
+                    android:layout_weight="1"/>
+                <RadioButton
+                    android:id="@+id/tvLengthLong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/long_"
+                    android:layout_weight="1"/>
+                <RadioButton
+                    android:id="@+id/tvLengthMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/medium"/>
+                <RadioButton
+                    android:id="@+id/tvLengthShort"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/short_"/>
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
         <TextView
             android:id="@+id/tvAddImage"
             android:layout_width="wrap_content"
@@ -181,12 +231,12 @@
             android:text="@string/add_image"
             android:textSize="20sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCreateStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_style"
+            android:background="@drawable/round_button"
             android:backgroundTint="@color/teal_200"
             android:text="@string/save_style"
             android:textColor="@android:color/white" />

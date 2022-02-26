@@ -15,8 +15,6 @@ import java.util.*
 class EventCheckAdapter (private val bookingArray: MutableList<CalendarItem>)
     : RecyclerView.Adapter<EventCheckAdapter.EventCheckViewHolder>(){
 
-    var communicator: DeleteEvent? = null
-
     inner class EventCheckViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val tvDelete: TextView = itemView.findViewById(R.id.tvDelete)
         private val deleteBtn: ImageView = itemView.findViewById(R.id.deleteBtn)
@@ -45,7 +43,9 @@ class EventCheckAdapter (private val bookingArray: MutableList<CalendarItem>)
                     notifyItemRangeChanged(0,bookingArray.size)
 //                    TODO
                     if (bookingArray.size == 0){
-                        communicator?.deletes() } } } } }
+//                        communicator?.deletes()
+                    
+                    } } } } }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventCheckViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.event_exist_layout,
             parent, false)

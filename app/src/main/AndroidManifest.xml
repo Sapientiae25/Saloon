@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.saloon">
-
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:name=".VolleySingleton"
         android:allowBackup="true"
@@ -25,28 +25,10 @@
             android:name=".CancelAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name=".BreakCheckPopUp"
-            android:exported="false" />
-        <activity
             android:name=".Tester"
             android:exported="false" />
         <activity
-            android:name=".CalendarActivity"
-            android:exported="false" />
-        <activity
             android:name=".AccountActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UpdateStyleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".StyleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CreateStyleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UserActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -58,5 +40,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

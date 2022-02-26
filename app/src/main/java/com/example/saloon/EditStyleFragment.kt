@@ -1,149 +1,135 @@
 package com.example.saloon
 
-import android.content.Context
-import android.content.Intent
+import android.app.Dialog
 import android.os.Bundle
-import android.transition.TransitionManager
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import org.json.JSONObject
-import java.util.*
 
 class EditStyleFragment : Fragment(){
 
-    private lateinit var accountItem : AccountItem
     private lateinit var styleItem : StyleItem
-    private lateinit var communicator: ChangeFragment
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        arguments?.getParcelable<AccountItem>("accountItem")?.let {
-            accountItem = it
-        }
-        arguments?.getParcelable<StyleItem>("styleItem")?.let {
-            styleItem = it
-        }
-    }
+    private lateinit var etDuration: AutoCompleteTextView
+    var minute = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_edit_style, container, false)
+        val accountItem = (activity as DefaultActivity).accountItem
+        styleItem = arguments?.getParcelable("styleItem") !!
         val tvUserView = rootView.findViewById<TextView>(R.id.tvUserView)
         val etName = rootView.findViewById<TextInputEditText>(R.id.etName)
         val etPrice = rootView.findViewById<TextInputEditText>(R.id.etPrice)
-        val etDuration = rootView.findViewById<TextInputEditText>(R.id.etDuration)
-        val etMaxTime = rootView.findViewById<TextInputEditText>(R.id.etMaxTime)
-        val etTags = rootView.findViewById<TextInputEditText>(R.id.etTags)
-        val tlTags = rootView.findViewById<TextInputLayout>(R.id.tlTags)
         val tvAddImage = rootView.findViewById<TextView>(R.id.tvAddImage)
-        val ivStyleImage = rootView.findViewById<ImageView>(R.id.ivStyleImage)
         val btnCreateStyle = rootView.findViewById<Button>(R.id.btnCreateStyle)
-        val cgTags = rootView.findViewById<ChipGroup>(R.id.cgTags)
+        etDuration = rootView.findViewById(R.id.etDuration)
         val etInfo = rootView.findViewById<TextInputEditText>(R.id.etInfo)
-        val tagList = mutableListOf<String>()
-        communicator = activity as ChangeFragment
-        tvUserView.setOnClickListener { communicator.change(StyleFragment.newInstance(accountItem,styleItem))}
+        val tvGender = rootView.findViewById<TextView>(R.id.tvGender)
+        val tvLength = rootView.findViewById<TextView>(R.id.tvLength)
+        val rgGender = rootView.findViewById<RadioGroup>(R.id.rgGender)
+        val rgLength = rootView.findViewById<RadioGroup>(R.id.rgLength)
 
         etName.setText(styleItem.name)
         etPrice.setText(styleItem.price.toString())
         val timeItem = styleItem.time
         etDuration.setText(timeItem.time)
-        if(timeItem.maxTime != null){etMaxTime.setText(timeItem.maxTime)}
-        etInfo.setText(styleItem.info)
-        for (tag in styleItem.tags){
-            tagList.add(tag)
-            val chip = Chip(context)
-            chip.text = tag
-            chip.isClickable = true
-            chip.isCloseIconVisible = true
-            cgTags.addView(chip)
-            chip.setOnCloseIconClickListener{
-                TransitionManager.beginDelayedTransition(cgTags)
-                tagList.remove(chip.text)
-                cgTags.removeView(chip)
-            }
-        }
-
-        tlTags.setEndIconOnClickListener{Toast.makeText(context,"Words our users can use to find you",Toast.LENGTH_SHORT).show()}
-        etTags.setOnKeyListener{ _, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP && tagList.size > 5) {
-                val tagText = etTags.text.toString()
-                tagList.add(tagText)
-                val chip = Chip(context)
-                chip.text = tagText
-                chip.isClickable = true
-                chip.isCloseIconVisible = true
-                cgTags.addView(chip)
-                chip.setOnCloseIconClickListener{
-                    TransitionManager.beginDelayedTransition(cgTags)
-                    tagList.remove(chip.text)
-                    cgTags.removeView(chip)
-                }
-                etTags.text?.clear()
-            }
-            false
-        }
-
         btnCreateStyle.setOnClickListener {
             var filled = true
             if (etName.text!!.isEmpty()){filled=false;etName.error="This field must be filled"}
             if (etPrice.text!!.isEmpty()){filled=false;etPrice.error="This field must be filled"}
-            if (etDuration.text!!.isEmpty()){filled=false;etDuration.error="This field must be filled"}
-            val maxTime = if (etMaxTime.text!!.isEmpty()){null}else{etMaxTime.text}
+            if (minute == 0){filled=false;etDuration.error="This field must be filled"}
+            val genderId: Int = rgGender.checkedRadioButtonId
+            val genderButton: View = rgGender.findViewById(genderId)
+            var gender = rgGender.indexOfChild(genderButton)
+            val lengthId: Int = rgLength.checkedRadioButtonId
+            val lengthButton: View = rgLength.findViewById(lengthId)
+            var length = rgLength.indexOfChild(lengthButton)
+            if (length == 0) {length = rgLength.childCount-1} else if (length == rgLength.childCount-1){length = 0}
+            if (gender == 0) {gender = rgGender.childCount-1} else if (gender ==  rgGender.childCount-1){gender = 0}
             if (filled){
-                val url = "http://192.168.1.102:8012/saloon/create_style.php"
-                val stringRequest = object : StringRequest(
+                val url = "http://192.168.1.102:8012/saloon/update_style.php"
+                val stringRequest: StringRequest = object : StringRequest(
                     Method.GET, url, Response.Listener { response ->
                         val obj = JSONObject(response)
                         val exist = obj.getInt("exist")
                         if (exist == 1){
                             Toast.makeText(context, "Style already exists",Toast.LENGTH_SHORT).show()
-                        }else{ communicator.change(UserActivity.newInstance(accountItem)) }
-                    },
+                        }else{
+                            tvUserView.setOnClickListener{view ->
+                                val bundle = bundleOf(Pair("styleItem",styleItem))
+                                view.findNavController().navigate(R.id.action_styleFragment_to_editStyleFragment,bundle) } } },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                     @Throws(AuthFailureError::class)
                     override fun getParams(): Map<String, String> {
                         val params = HashMap<String, String>()
                         params["name"] = etName.text.toString()
                         params["price"] = etPrice.text.toString()
-                        params["time"] = etDuration.text.toString()
-                        params["max_time"] = maxTime.toString()
+                        params["time"] = minute.toString()
                         params["account_id"] = accountItem.id
                         params["info"] = etInfo.text.toString()
+                        params["style_id"] = styleItem.id
+                        params["gender"] = gender.toString()
+                        params["length"] = length.toString()
                         return params
                     }}
                 VolleySingleton.instance?.addToRequestQueue(stringRequest)
             }
         }
+        etDuration.setOnClickListener { showCustomDialog() }
+        tvLength.setOnClickListener { rgLength.visibility = if (rgLength.visibility == View.GONE) View.VISIBLE else View.GONE }
+        tvGender.setOnClickListener { rgGender.visibility = if (rgGender.visibility == View.GONE) View.VISIBLE else View.GONE }
+
+        val url = "http://192.168.1.102:8012/saloon/get_style_filters.php"
+        val stringRequest = object : StringRequest(
+            Method.GET, url, Response.Listener { response ->
+                val obj = JSONObject(response)
+                var length = obj.getInt("length")
+                var gender = obj.getInt("gender")
+                if (length == 0) {length = rgLength.childCount-1} else if (length == rgLength.childCount-1){length = 0}
+                if (gender == 0) {gender = rgGender.childCount-1} else if (gender ==  rgGender.childCount-1){gender = 0}
+                (rgLength.getChildAt(length) as RadioButton).isChecked = true
+                (rgGender.getChildAt(gender) as RadioButton).isChecked = true},
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["style_id"] = styleItem.id
+                return params
+            }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+
         return rootView
     }
 
-    companion object {
-        fun newInstance(param1: AccountItem,param2 : StyleItem) =
-            EditStyleFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("accountItem", param1)
-                    putParcelable("styleItem", param2)
-                }
-            }
-    }
-}
+    private fun showCustomDialog() {
+        val dialog = Dialog(requireContext())
+        val minOptions = mutableListOf<String>()
+        for (i in 15 until 315 step(15)){minOptions.add(i.toString()) }
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.number_picker_layout)
+        val numPicker = dialog.findViewById<NumberPicker>(R.id.numPicker)
+        val save = dialog.findViewById<TextView>(R.id.save)
+        val close = dialog.findViewById<TextView>(R.id.close)
+
+        numPicker.minValue = 0
+        numPicker.maxValue = 19
+        numPicker.displayedValues = minOptions.toTypedArray()
+        numPicker.setOnValueChangedListener { numberPicker, _, _ -> val x = minOptions[numberPicker.value]; minute = x.toInt()}
+        close.setOnClickListener { dialog.dismiss() }
+        save.setOnClickListener {dialog.dismiss(); etDuration.setText(getString(R.string.time_mins,minute.toString())) }
+        dialog.show()
+
+}}
