@@ -47,13 +47,6 @@ class CreateStyleFragment : Fragment() {
         imageList.add(SlideModel(R.drawable.ic_baseline_add_circle_24))
         ivStyleImage.setImageList(imageList)
         ivStyleImage.setItemClickListener(object:ItemClickListener{override fun onItemSelected(position: Int) {addImage(position)}})
-        fun fill(){
-            etName.setText("Taper Fade")
-            etPrice.setText("15.00")
-            etDuration.setText("30")
-            etInfo.setText("Taper Fade To Tape Up") }
-
-        fill()
         btnCreateStyle.setOnClickListener { view ->
             var filled = true
             if (etName.text!!.isEmpty()){filled=false;etName.error="This field must be filled"}

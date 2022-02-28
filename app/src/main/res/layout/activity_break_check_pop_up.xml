@@ -42,7 +42,8 @@
             android:layout_weight="1"
             android:textColor="@color/red"
             android:textSize="30sp"
-            android:paddingBottom="5dp"/>
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"/>
         <TextView
             android:id="@+id/editBtn"
             android:textAlignment="center"
@@ -53,7 +54,8 @@
             android:text="@string/edit_time"
             android:textColor="@color/pink"
             android:textSize="30sp"
-            android:paddingBottom="5dp"/>
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"/>
     </LinearLayout>
 
 

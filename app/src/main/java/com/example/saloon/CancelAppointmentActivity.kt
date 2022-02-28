@@ -37,7 +37,7 @@ class CancelAppointmentActivity : AppCompatActivity() {
         tvStyleTime.text = timePeriod
 
         cancelBooking.setOnClickListener {
-            val url = "http://192.168.1.102:8012/saloon/delete_booking.php"
+            val url = getString(R.string.url,"delete_booking.php")
             val stringRequest = object : StringRequest(
                 Method.POST, url, Response.Listener { response ->
                     println(response)},

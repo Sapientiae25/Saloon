@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,11 +15,10 @@ import com.android.volley.toolbox.StringRequest
 import java.util.*
 
 class BreakCheckPopUp : DialogFragment(), DeleteEvent {
-    private lateinit var editBtn: Button
+    private lateinit var editBtn: TextView
     private lateinit var endDatetime: String
     private lateinit var startDatetime: String
     private lateinit var accountItem: AccountItem
-    var communicator: RestartCalendar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +36,6 @@ class BreakCheckPopUp : DialogFragment(), DeleteEvent {
         val cancelBtn = rootView.findViewById<Button>(R.id.cancelBtn)
         rvEvents.layoutManager = LinearLayoutManager(context)
         val adapter = EventCheckAdapter(bookingArray!!.toMutableList())
-        adapter.communicator = this
         rvEvents.adapter = adapter
         rvEvents.adapter?.notifyItemRangeInserted(0,bookingArray.size)
 
@@ -65,9 +64,10 @@ class BreakCheckPopUp : DialogFragment(), DeleteEvent {
                 params["break_start"] = startDatetime
                 params["break_end"] = endDatetime
                 return params }}
-            VolleySingleton.instance?.addToRequestQueue(stringRequest)
-            communicator = activity as RestartCalendar
-            communicator?.restart()
+//            VolleySingleton.instance?.addToRequestQueue(stringRequest)
+//            communicator = activity as RestartCalendar
+//            communicator?.restart()
+            // TODO
             dismiss()
         }
 

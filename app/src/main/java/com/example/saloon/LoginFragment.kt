@@ -35,10 +35,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    fun fill(){
-        etEmail.setText("test@gmail.com")
-        etPassword.setText("pass")
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +45,8 @@ class LoginFragment : Fragment() {
         etPassword = rootView.findViewById(R.id.etPassword)
         btnLogin = rootView.findViewById(R.id.btnLogin)
         tvRegisterAccount = rootView.findViewById(R.id.tvRegisterAccount)
+        etEmail.setText("test@gmail.com")
+        etPassword.setText("pass")
 
         tvRegisterAccount.setOnClickListener {
             val fm = parentFragmentManager
@@ -56,14 +54,14 @@ class LoginFragment : Fragment() {
                 replace(R.id.fragmentContainer,RegisterFragment())
             }
         }
-        fill()
 
         btnLogin.setOnClickListener {
             var filled = true
             if (etEmail.text!!.isEmpty()){filled=false;etEmail.error="This field must be filled"}
             if (etPassword.text!!.isEmpty()){filled=false;etPassword.error="This field must be filled"}
             if (filled){
-                val url = "http://192.168.1.102:8012/saloon/login.php"
+
+                val url = getString(R.string.url,"login.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         val obj = JSONObject(response)

@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 
 
-class CalendarAdapter (private val calendarArray: MutableList<CalendarItem>)
+class CalendarAdapter (private val calendarArray: MutableList<CalendarItem>,val fragment: CalendarFragment)
     : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>(),CloseSheet{
 
     var bottomSheetFragment: CalendarBottomSheetFragment? = null
@@ -20,18 +21,17 @@ class CalendarAdapter (private val calendarArray: MutableList<CalendarItem>)
             itemView.layoutParams.height = itemView.context.resources.getDimensionPixelSize(R.dimen.item_height) * currentItem.span
             if (currentItem.gone) { itemView.layoutParams.height = 0 }
             if (currentItem.calendarType != 2){
-                tvCalendar.setOnClickListener {
-                    bottomSheetFragment = CalendarBottomSheetFragment()
-                    bottomSheetFragment?.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog")
-                    val bundle = Bundle()
-                    bundle.putParcelable("booking",currentItem)
-                    bottomSheetFragment?.arguments = bundle }}
+                itemView.setOnClickListener {
+                    val bundle = bundleOf(Pair("booking",currentItem))
+                    bottomSheetFragment = CalendarBottomSheetFragment(fragment)
+                    bottomSheetFragment?.arguments = bundle
+                    bottomSheetFragment?.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog") }}
                 else{
-                tvCalendar.setOnClickListener {
-                    val bookingBottomSheetFragment = StyleBottomSheet()
-                    bookingBottomSheetFragment.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog")
+                itemView.setOnClickListener {
                     val bundle = Bundle()
+                    val bookingBottomSheetFragment = StyleBottomSheet()
                     bundle.putParcelable("booking",currentItem)
+                    bookingBottomSheetFragment.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog")
                     bookingBottomSheetFragment.arguments = bundle }}
         }
     }

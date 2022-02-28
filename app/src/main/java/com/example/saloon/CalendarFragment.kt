@@ -1,6 +1,7 @@
 package com.example.saloon
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,11 +45,11 @@ class CalendarFragment : Fragment() {
         val calendar = Calendar.getInstance()
         year = calendar.get(Calendar.YEAR)
         month = calendar.get(Calendar.MONTH)
-        var chosenDay = calendar.get(Calendar.DAY_OF_MONTH)
+        chosenDay = calendar.get(Calendar.DAY_OF_MONTH)
         rvCalendar = rootView.findViewById(R.id.rvCalendar)
         rvCalendar.layoutManager = LinearLayoutManager(context)
         rvCalendar.setHasFixedSize(true)
-        rvCalendar.adapter = CalendarAdapter(calendarList)
+        rvCalendar.adapter = CalendarAdapter(calendarList,this)
         val tvYear = rootView.findViewById<AutoCompleteTextView>(R.id.tvYear)
         val tvMonth = rootView.findViewById<AutoCompleteTextView>(R.id.tvMonth)
         val rvTimesBar = rootView.findViewById<RecyclerView>(R.id.rvTimesBar)
@@ -87,6 +88,7 @@ class CalendarFragment : Fragment() {
                 userDate = getString(R.string.user_date,chosenDay,month+1,year)
                 tvYear.setText(userDate)
                 makeCalendar(chosenDay)
+                rvCalendar.scrollToPosition(0)
                 rvTimesBar.scrollToPosition(0)} }
         previous.setOnClickListener {
             if (chosenDay != 1){ chosenDay -= 1
@@ -94,6 +96,7 @@ class CalendarFragment : Fragment() {
                 userDate = getString(R.string.user_date,chosenDay,month+1,year)
                 tvYear.setText(userDate)
                 makeCalendar(chosenDay)
+                rvCalendar.scrollToPosition(0)
                 rvTimesBar.scrollToPosition(0)} }
         tvDate.text = chosenDay.toString()
 
@@ -126,7 +129,7 @@ class CalendarFragment : Fragment() {
         val url = "http://192.168.1.102:8012/saloon/calendar.php"
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
-                println(response)
+                Log.println(Log.ASSERT,"sui",response)
                 val obj = JSONObject(response)
                 val datesArray = obj.getJSONArray("dates")
                 val breaksArray = obj.getJSONArray("break")
@@ -141,6 +144,7 @@ class CalendarFragment : Fragment() {
                     val finalSpan = date.getInt("final_span")
                     val bookingId = obj.getInt("booking_id")
                     val styleId = obj.getInt("style_id")
+                    val calendarDate = date.getString("date")
                     if (firstSpan > 0){
                         val startHour = startBook.split(":")[0].toInt()
                         val previousItem = CalendarItem(getString(R.string.clock,startHour,0),
@@ -149,7 +153,7 @@ class CalendarFragment : Fragment() {
                         calendarList[timePosition-1] = previousItem }
                     for (y in 1 until removeHours+1){calendarList[timePosition+y].gone = true}
                     calendarList[timePosition+removeHours+1].span = finalSpan
-                    val item = CalendarItem(startBook,endBook,"",rowCount,2,id=bookingId,styleId=styleId)
+                    val item = CalendarItem(startBook,endBook,span=rowCount,calendarType=2,date=calendarDate,id=bookingId,styleId=styleId)
                     calendarList[timePosition] = item
                 }
                 for (x in 0 until breaksArray.length()) {
@@ -158,13 +162,14 @@ class CalendarFragment : Fragment() {
                     val rowCount = breaks.getInt("row_count")
                     val startBreak = breaks.getString("start")
                     val endBreak = breaks.getString("end")
+                    val calendarDate = breaks.getString("date")
                     val removeHours = breaks.getInt("remove_hours")
                     val firstSpan = breaks.getInt("first_span")
                     val finalSpan = breaks.getInt("final_span")
                     val breakId = breaks.getInt("id")
                     for (y in 1 until removeHours+1){ calendarList[timePosition+y].gone = true}
                     calendarList[timePosition+removeHours+1].span = finalSpan
-                    val item = CalendarItem(startBreak,endBreak,"",rowCount,1,id=breakId)
+                    val item = CalendarItem(startBreak,endBreak,"",rowCount,1,id=breakId,date=calendarDate)
                     calendarList[timePosition] = item
                     if (firstSpan > 0){
                         val startHour = startBreak.split(":")[0].toInt()
@@ -174,8 +179,7 @@ class CalendarFragment : Fragment() {
                         calendarList.add(timePosition,previousItem)
                     }}
                 rvCalendar.adapter?.notifyItemRangeChanged(0,calendarList.size)
-                rvCalendar.scrollToPosition(chosenDay)
-                                                },
+                rvCalendar.scrollToPosition(chosenDay) },
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
@@ -186,15 +190,19 @@ class CalendarFragment : Fragment() {
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
     }
+    fun restart(){
+        Log.println(Log.ASSERT,"da",chosenDay.toString())
+        makeCalendar(chosenDay)}
 
     private fun daysInAMonth( m: Int, year: Int): MutableList<String> {
        val  month = m + 1
         val daysObj = YearMonth.of(year,month)
         val days = daysObj.lengthOfMonth()
         val dateList = mutableListOf<String>()
-        for (day in 1 until days){ dateList.add(getString(R.string.datetime,year,month,day)) }
+        for (day in 1 until days+1){ dateList.add(getString(R.string.datetime,year,month,day)) }
         return dateList
     }
+
 
 
 }

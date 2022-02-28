@@ -19,9 +19,6 @@ class PasswordFragment : Fragment() {
     private lateinit var etConfirm: TextInputEditText
     private lateinit var btnSavePassword: AppCompatButton
 
-    fun fill(){
-        etPassword.setText("pass")
-        etConfirm.setText("pass") }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,7 +28,6 @@ class PasswordFragment : Fragment() {
         etPassword = rootView.findViewById(R.id.etPassword)
         etConfirm = rootView.findViewById(R.id.etConfirm)
         btnSavePassword = rootView.findViewById(R.id.btnSavePassword)
-        fill()
 
         btnSavePassword.setOnClickListener {
             var filled = true
@@ -39,7 +35,7 @@ class PasswordFragment : Fragment() {
             if (etConfirm.text!!.isEmpty()){filled=false;etConfirm.error="This field must be filled"}
             if (etConfirm.text == etPassword.text){filled=false;etConfirm.error="Password must be the same"}
             if (filled){
-                val url = "http://192.168.1.102:8012/saloon/name.php"
+                val url = getString(R.string.url,"name.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         println(response)

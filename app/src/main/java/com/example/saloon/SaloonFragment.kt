@@ -1,6 +1,8 @@
 package com.example.saloon
 
 import android.app.Dialog
+import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,8 +13,10 @@ import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -37,6 +41,7 @@ class SaloonFragment : Fragment() {
     lateinit var tvNoStyles: TextView
     lateinit var accountItem: AccountItem
     private var back = 0
+    private val background = ColorDrawable()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +51,12 @@ class SaloonFragment : Fragment() {
         accountItem = (activity as DefaultActivity).accountItem
         back = arguments?.getInt("back")!!
         rvStyleItems = rootView.findViewById(R.id.rvStyleItems)
+        val backgroundColor = ContextCompat.getColor(requireContext(),R.color.red)
         var like = true
+        val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)!!
+        icon.setTint(ContextCompat.getColor(requireContext(),R.color.black))
+        val inWidth = icon.intrinsicWidth
+        val inHeight = icon.intrinsicHeight
         val rvStyleCategories = rootView.findViewById<RecyclerView>(R.id.rvStyleCategories)
         val tvAddress = rootView.findViewById<TextView>(R.id.tvAddress)
         val tvOpen = rootView.findViewById<TextView>(R.id.tvOpen)
@@ -71,7 +81,7 @@ class SaloonFragment : Fragment() {
         btnNewStyle.setOnClickListener { view -> view.findNavController().navigate(R.id.action_saloonFragment_to_createStyleFragment) }
         val ivStoreFront = rootView.findViewById<ImageSlider>(R.id.ivStoreFront)
         val imageList = ArrayList<SlideModel>()
-        imageList.add(SlideModel(R.drawable.ic_baseline_add_circle_24)
+        imageList.add(SlideModel(R.drawable.ic_baseline_add_circle_24))
         imageList.add(SlideModel(R.drawable.trim,ScaleTypes.FIT))
         imageList.add(SlideModel(R.drawable.trim,ScaleTypes.FIT))
         ivStoreFront.setImageList(imageList)
@@ -81,6 +91,55 @@ class SaloonFragment : Fragment() {
                 ivLike.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_border_24))
             }else {like = true
                 ivLike.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_24)) }}
+
+        val categoryTouchHelper = ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT or
+                ItemTouchHelper.LEFT,0){
+            override fun onMove(recyclerView: RecyclerView,viewHolder:RecyclerView.ViewHolder,target:RecyclerView.ViewHolder):Boolean {
+                val sourcePosition = viewHolder.adapterPosition
+                val targetPosition = target.adapterPosition
+                Collections.swap(categoryList,sourcePosition,targetPosition)
+                rvStyleCategories.adapter?.notifyItemMoved(sourcePosition,targetPosition)
+                return true
+            }override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {} })
+
+        val styleTouchHelper = ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or
+                ItemTouchHelper.DOWN,0){
+            override fun onMove(recyclerView: RecyclerView,viewHolder:RecyclerView.ViewHolder,target:RecyclerView.ViewHolder):Boolean {
+                val sourcePosition = viewHolder.adapterPosition
+                val targetPosition = target.adapterPosition
+                Collections.swap(displayStyleList,sourcePosition,targetPosition)
+                rvStyleItems.adapter?.notifyItemMoved(sourcePosition,targetPosition)
+                return true
+            }override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                displayStyleList.removeAt(position)
+                rvStyleItems.adapter?.notifyItemRemoved(position) }
+            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                val swipeFlag = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                return makeMovementFlags(0,swipeFlag) }
+
+            override fun onChildDraw(
+                canvas: Canvas,recyclerView: RecyclerView,viewHolder: RecyclerView.ViewHolder,dX: Float,dY: Float,actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+                val itemHeight = itemView.bottom - itemView.top
+                background.color = backgroundColor
+                background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                background.draw(canvas)
+                val iconTop = itemView.top + (itemHeight - inHeight) / 2
+                val iconMargin = (itemHeight - inHeight) / 2
+                val iconLeft = itemView.right - iconMargin - inWidth
+                val iconRight = itemView.right - iconMargin
+                val iconBottom = iconTop + inHeight
+                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                icon.draw(canvas)
+                super.onChildDraw(canvas,recyclerView,viewHolder,dX, dY,actionState,isCurrentlyActive)
+            } })
+
+        styleTouchHelper.attachToRecyclerView(rvStyleItems)
+        categoryTouchHelper.attachToRecyclerView(rvStyleCategories)
+
         var url = "http://192.168.1.102:8012/saloon/get_categories.php"
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->

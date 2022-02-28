@@ -35,11 +35,6 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    fun fill(){
-        etUsername.setText("Sapientiae")
-        etEmail.setText("test@gmail.com")
-        etPassword.setText("pass")
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +46,6 @@ class RegisterFragment : Fragment() {
         etPassword = rootView.findViewById(R.id.etPassword)
         btnRegister = rootView.findViewById(R.id.btnRegister)
         tvLoginInstead = rootView.findViewById(R.id.tvLoginInstead)
-        fill()
 
         btnRegister.setOnClickListener {
             var filled = true

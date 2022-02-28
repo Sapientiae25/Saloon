@@ -76,10 +76,8 @@ class ChooseCategoryFragment : Fragment() {
                         override fun getParams(): Map<String, String> {
                             val params = HashMap<String, String>()
                             params["style_fk"] = styleId
-                            params["gender"] = filterItem.gender
-                            params["length"] = filterItem.length
-                            params["hair_type"] = filterItem.hair
-                            params["style_type"] = filterItem.style
+                            params["gender"] = filterItem.gender.toString()
+                            params["length"] = filterItem.length.toString()
                             return params
                         }}
                     VolleySingleton.instance?.addToRequestQueue(stringRequest2)
