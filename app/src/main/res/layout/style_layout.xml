@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/styleLayout"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/styleLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -49,10 +50,20 @@
             android:isIndicator="false"
             android:numStars="5"
             android:stepSize="0.1" />
+        <TextView
+            android:id="@+id/privacy"
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/priv"
+            android:textSize="18sp"
+            android:drawablePadding="6dp"
+            app:drawableStartCompat="@drawable/ic_baseline_visibility_off_24"/>
     </LinearLayout>
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginEnd="10dp"
         android:src="@drawable/ic_baseline_person_24"
         android:contentDescription="@string/style_image"/>

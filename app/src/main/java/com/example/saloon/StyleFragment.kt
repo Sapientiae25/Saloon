@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.content.res.AppCompatResources
+import android.widget.LinearLayout
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -20,7 +22,7 @@ import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import org.json.JSONArray
-import java.util.*
+import org.json.JSONObject
 
 class StyleFragment : Fragment() {
 
@@ -28,6 +30,8 @@ class StyleFragment : Fragment() {
     private lateinit var styleItem : StyleItem
     private lateinit var timeItem : TimeItem
     private lateinit var timeValue: String
+    private var privacy = true
+    private lateinit var switchPrivacy: SwitchCompat
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,12 +40,12 @@ class StyleFragment : Fragment() {
         val rootView =  inflater.inflate(R.layout.fragment_style, container, false)
         styleItem = arguments?.getParcelable("styleItem")!!
         accountItem = (activity as DefaultActivity).accountItem
-        var like = true
         val tvDuration = rootView.findViewById<TextView>(R.id.tvDuration)
         val tvName = rootView.findViewById<TextView>(R.id.tvName)
         val tvEditStyle = rootView.findViewById<TextView>(R.id.tvEditStyle)
         val tvInfo = rootView.findViewById<TextView>(R.id.tvInfo)
         val tvPrice = rootView.findViewById<TextView>(R.id.tvPrice)
+        switchPrivacy = rootView.findViewById(R.id.switchPrivacy)
         val tvAddress = rootView.findViewById<TextView>(R.id.tvAddress)
         val tvOpenHours = rootView.findViewById<TextView>(R.id.tvOpenHours)
         val llReviews = rootView.findViewById<LinearLayout>(R.id.llReviews)
@@ -54,7 +58,6 @@ class StyleFragment : Fragment() {
         val reviewList = mutableListOf<ReviewItem>()
         val ivStyleImage = rootView.findViewById<ImageSlider>(R.id.ivStyleImage)
         val imageList = ArrayList<SlideModel>()
-        val ivLike = rootView.findViewById<ImageView>(R.id.ivLike)
         imageList.add(SlideModel(R.drawable.trim, ScaleTypes.FIT))
         imageList.add(SlideModel(R.drawable.trim, ScaleTypes.FIT))
         imageList.add(SlideModel(R.drawable.trim, ScaleTypes.FIT))
@@ -62,6 +65,7 @@ class StyleFragment : Fragment() {
         rvReviews.adapter = ReviewAdapter(reviewList)
         rvReviews.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
         tvAddress.text = (activity as DefaultActivity).accountItem.addressItem?.address
+        tvOpenHours.text = getString(R.string.separate,accountItem.open,accountItem.close)
         timeItem = styleItem.time
         timeValue = if (timeItem.maxTime.isNullOrEmpty()) { timeItem.time } else {
             getString(R.string.time_distance, timeItem.time, timeItem.maxTime) }
@@ -71,11 +75,6 @@ class StyleFragment : Fragment() {
         requireActivity().title = (activity as DefaultActivity).accountItem.name
         tvName.text = styleItem.name
         tvInfo.text = styleItem.info
-        ivLike.setOnClickListener {
-            if (like){ like = false
-                ivLike.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_border_24))
-            }else {like = true
-                ivLike.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_24)) } }
         llReviews.setOnClickListener { rvReviews.visibility = if (rvReviews.visibility == View.GONE){View.VISIBLE} else {View.GONE} }
         var url = "http://192.168.1.102:8012/saloon/get_reviews.php"
         var stringRequest: StringRequest = object : StringRequest(
@@ -92,8 +91,7 @@ class StyleFragment : Fragment() {
                     reviewList.add(ReviewItem(review,rating,reviewDate)) }
                 if (reviewList.size > 0) { val average = total / reviewList.size
                     styleRating.rating = average.toFloat()
-                    rvReviews.adapter?.notifyItemRangeInserted(0, reviewList.size) }
-            },
+                    rvReviews.adapter?.notifyItemRangeInserted(0, reviewList.size) } },
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
@@ -102,7 +100,6 @@ class StyleFragment : Fragment() {
                 return params
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
-
         rvMoreLike.adapter = SimilarAdapter(similarStyles)
         url = "http://192.168.1.102:8012/saloon/get_style.php"
         stringRequest = object : StringRequest(
@@ -118,9 +115,10 @@ class StyleFragment : Fragment() {
                     val styleId = obj.getString("style_id")
                     val maxTime = obj.getString("max_time")
                     val info = obj.getString("info")
+                    val visible = obj.getBoolean("privacy")
                     val rating = obj.getString("rating").toFloatOrNull()
                     val timeItem = TimeItem(time,maxTime)
-                    similarStyles.add(StyleItem(name,price,timeItem,info,styleId,rating=rating)) }
+                    similarStyles.add(StyleItem(name,price,timeItem,info,styleId,rating=rating,privacy=visible)) }
                 rvMoreLike.adapter?.notifyItemRangeInserted(0,similarStyles.size) },
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
@@ -130,10 +128,26 @@ class StyleFragment : Fragment() {
                 return params
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
+        url = "http://192.168.1.102:8012/saloon/check_style_privacy.php"
+        stringRequest = object : StringRequest(
+            Method.POST, url, Response.Listener { response ->
+                Log.println(Log.ASSERT,"s_priv",response)
+                privacy = response == "1"
+                changePrivacy()},
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["style_id"] = styleItem.id
+                return params }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+
+        switchPrivacy.setOnClickListener { privacy = !switchPrivacy.isChecked; changePrivacy() }
         tvEditStyle.setOnClickListener{view ->
             val bundle = bundleOf(Pair("styleItem",styleItem))
             view.findNavController().navigate(R.id.action_styleFragment_to_editStyleFragment,bundle) }
         return rootView
     }
-
+    private fun changePrivacy(){if (privacy){switchPrivacy.isChecked = !privacy; switchPrivacy.text = getString(R.string.priv)}
+    else {switchPrivacy.isChecked = !privacy; switchPrivacy.text = getString(R.string.pub)}}
 }

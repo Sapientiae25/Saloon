@@ -9,10 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -52,7 +50,6 @@ class SaloonFragment : Fragment() {
         back = arguments?.getInt("back")!!
         rvStyleItems = rootView.findViewById(R.id.rvStyleItems)
         val backgroundColor = ContextCompat.getColor(requireContext(),R.color.red)
-        var like = true
         val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)!!
         icon.setTint(ContextCompat.getColor(requireContext(),R.color.black))
         val inWidth = icon.intrinsicWidth
@@ -64,7 +61,6 @@ class SaloonFragment : Fragment() {
         val btnNewStyle = rootView.findViewById<FloatingActionButton>(R.id.btnNewStyle)
         val categoryList = mutableListOf(CategoryItem())
         val svStyle = rootView.findViewById<SearchView>(R.id.svStyle)
-        val ivLike = rootView.findViewById<ImageView>(R.id.ivLike)
         rvStyleCategories.adapter = StyleCategoryAdapter(categoryList)
         rvStyleCategories.adapter?.notifyItemRangeInserted(1,categoryList.size)
         rvStyleCategories.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
@@ -86,11 +82,6 @@ class SaloonFragment : Fragment() {
         imageList.add(SlideModel(R.drawable.trim,ScaleTypes.FIT))
         ivStoreFront.setImageList(imageList)
         ivStoreFront.setItemClickListener(object: ItemClickListener {override fun onItemSelected(position: Int) {addImage(position)}})
-        ivLike.setOnClickListener {
-            if (like){ like = false
-                ivLike.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_border_24))
-            }else {like = true
-                ivLike.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_24)) }}
 
         val categoryTouchHelper = ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT or
                 ItemTouchHelper.LEFT,0){

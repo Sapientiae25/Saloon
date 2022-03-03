@@ -142,8 +142,8 @@ class CalendarFragment : Fragment() {
                     val removeHours = date.getInt("remove_hours")
                     val firstSpan = date.getInt("first_span")
                     val finalSpan = date.getInt("final_span")
-                    val bookingId = obj.getInt("booking_id")
-                    val styleId = obj.getInt("style_id")
+                    val bookingId = date.getInt("booking_id")
+                    val styleId = date.getInt("style_id")
                     val calendarDate = date.getString("date")
                     if (firstSpan > 0){
                         val startHour = startBook.split(":")[0].toInt()

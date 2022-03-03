@@ -8,11 +8,11 @@ data class TimeItem(val time: String="", val maxTime: String? = null): Parcelabl
 @Parcelize
 data class StyleItem(val name: String,val price: Float, val time: TimeItem=TimeItem(),val info: String="",
                      val id: String = "",val bookingId:String="",val filterItem: StyleFilterItem=StyleFilterItem(),
-                     val rating: Float?=null,val accountItem: AccountItem=AccountItem()): Parcelable
+                     val rating: Float?=null,val accountItem: AccountItem=AccountItem(),val privacy:Boolean=false): Parcelable
 @Parcelize
-data class AccountItem(val id: String="",var name: String="", var password: String? = null,var number: String="",
+data class AccountItem(var id: String="",var name: String="", var password: String? = null,var number: String="",
                        var open: String? = null,var close: String? = null,var addressItem: AddressItem? = null,
-                       val filterItem: FilterItem=FilterItem(),var rating: String=""): Parcelable
+                       val filterItem: FilterItem=FilterItem(),var rating: String="",val email: String=""): Parcelable
 @Parcelize
 data class AddressItem(val city: String,val postcode: String,val country: String,val address: String,val town: String): Parcelable
 data class ReviewItem(val review: String,val rating: Int ,val date: String)

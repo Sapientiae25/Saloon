@@ -44,6 +44,18 @@
         android:textSize="22sp"
         android:text="@string/address_colon"/>
     <TextView
+        android:id="@+id/tvPayment"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:background="@drawable/border"
+        android:paddingBottom="13dp"
+        android:paddingTop="13dp"
+        app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="@string/payment_method"/>
+    <TextView
         android:id="@+id/tvOpen"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"

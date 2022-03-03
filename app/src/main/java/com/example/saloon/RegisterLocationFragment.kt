@@ -1,5 +1,6 @@
 package com.example.saloon
 
+import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
@@ -16,11 +17,9 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.GeoPoint
-import org.json.JSONObject
 import java.io.IOException
-import java.util.*
 
-class LocationFragment : Fragment() {
+class RegisterLocationFragment : Fragment() {
 
     private lateinit var etAddress1: TextInputEditText
     private lateinit var etCity: TextInputEditText
@@ -33,8 +32,8 @@ class LocationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView =  inflater.inflate(R.layout.fragment_location, container, false)
-        val accountItem = (activity as DefaultActivity).accountItem
+        val rootView =  inflater.inflate(R.layout.fragment_register_location, container, false)
+        val accountItem = arguments?.getParcelable<AccountItem>("accountItem")!!
         etAddress1 = rootView.findViewById(R.id.etAddress1)
         etCity = rootView.findViewById(R.id.etCity)
         etPostcode = rootView.findViewById(R.id.etPostcode)
@@ -43,31 +42,6 @@ class LocationFragment : Fragment() {
         btnSaveAddress = rootView.findViewById(R.id.btnSaveAddress)
         val countries = arrayListOf("England","Whales","Scotland","USA")
         acCountry.setAdapter(ArrayAdapter(requireContext(),R.layout.text_layout,countries.toTypedArray()))
-
-        var url = "http://192.168.1.102:8012/saloon/get_address.php"
-        var stringRequest: StringRequest = object : StringRequest(
-            Method.POST, url, Response.Listener { response ->
-                println(response)
-                val obj = JSONObject(response)
-                val address = obj.getString("address")
-                val postcode = obj.getString("postcode")
-                val country = obj.getString("country")
-                val city = obj.getString("city")
-                val town = obj.getString("town")
-
-                etAddress1.setText(address)
-                etCity.setText(postcode)
-                etPostcode.setText(country)
-                acCountry.setText(city)
-                etTown.setText(town) },
-            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
-            @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String> {
-                val params = HashMap<String, String>()
-                params["account_id"] = accountItem.id
-                return params
-            }}
-        VolleySingleton.instance?.addToRequestQueue(stringRequest)
 
         btnSaveAddress.setOnClickListener {
             var filled = true
@@ -80,14 +54,14 @@ class LocationFragment : Fragment() {
             if (filled && latLong != null){
                 val addressItem = AddressItem(etCity.text.toString(), etPostcode.text.toString(),
                     acCountry.text.toString(), etAddress1.text.toString(),etTown.text.toString())
-                url = "http://192.168.1.102:8012/saloon/address.php"
-                stringRequest = object : StringRequest(
+                val url = "http://192.168.1.102:8012/saloon/register.php"
+                val stringRequest: StringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
-                        println(response)
-                        Toast.makeText(context,"Address Updated!", Toast.LENGTH_SHORT).show()
-                        val communicator = activity as ChangeFragment
-                        communicator.change(SettingFragment())
-                    },
+                        accountItem.id = response
+                        Toast.makeText(context,"Account created!",Toast.LENGTH_SHORT).show()
+                        val intent = Intent(context, DefaultActivity::class.java)
+                        intent.putExtra("account_item", accountItem)
+                        startActivity(intent) },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                     @Throws(AuthFailureError::class)
                     override fun getParams(): Map<String, String> {
@@ -96,9 +70,12 @@ class LocationFragment : Fragment() {
                         params["city"] = addressItem.city
                         params["postcode"] = addressItem.postcode
                         params["country"] = addressItem.country
-                        params["account_id"] = accountItem.id
+                        params["town"] = addressItem.town
                         params["latitude"] = latLong.latitude.toString()
                         params["longitude"] = latLong.longitude.toString()
+                        params["email"] = accountItem.email
+                        params["password"] = accountItem.password!!
+                        params["name"] = accountItem.name
                         return params }}
                 VolleySingleton.instance?.addToRequestQueue(stringRequest)
             }

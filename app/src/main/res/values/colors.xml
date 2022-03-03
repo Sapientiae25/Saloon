@@ -10,5 +10,7 @@
     <color name="light_grey">#938E8E</color>
     <color name="red">#FF0000</color>
     <color name="pink">#E91E63</color>
+    <color name="loginColor">#1566e0</color>
+    <color name="registerColor">#1566e0</color>
 
 </resources>

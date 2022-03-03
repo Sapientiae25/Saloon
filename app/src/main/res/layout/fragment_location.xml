@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".LocationFragment"
     android:orientation="vertical"
     android:layout_marginEnd="25dp"
@@ -58,6 +59,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:endIconMode="dropdown_menu"
         android:layout_marginTop="10dp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCity"
@@ -65,20 +67,28 @@
             android:inputType="text"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:hint="@string/city" />
+            android:hint="@string/city"
+            android:layout_marginTop="10dp"/>
     </com.google.android.material.textfield.TextInputLayout>
-     <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tlCountry"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etCountry"
+        android:ems="10"
+        android:inputType="textEmailAddress">
+        <AutoCompleteTextView
+            android:id="@+id/acCountry"
             android:layout_width="match_parent"
-            android:inputType="text"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:hint="@string/country" />
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingStart="12dp"
+            android:textColor="@color/light_grey"
+            android:paddingEnd="1dp"
+            android:text="@string/england"
+            android:textSize="20sp"
+            android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSaveAddress"

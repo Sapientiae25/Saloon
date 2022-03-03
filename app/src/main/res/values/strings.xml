@@ -3,14 +3,14 @@
     <string name="username">Username</string>
     <string name="saloon_app">Saloon App</string>
     <string name="password">Password</string>
-    <string name="register_new_account"><u>Register new account</u></string>
+    <string name="register_new_account">Register new account</string>
     <string name="login">Login</string>
     <string name="saloon_name">Saloon Name</string>
     <string name="email">Email</string>
     <string name="register">Register</string>
-    <string name="login_instead"><u>Login Instead</u></string>
+    <string name="login_instead">Login Instead</string>
     <string name="saloon_address">Saloon Address</string>
-    <string name="address_line_1">Address Line 1:</string>
+    <string name="address_line_1">Address</string>
     <string name="town_city">Town/City:</string>
     <string name="no_styles">No Styles</string>
     <string name="add_item">Add Item</string>
@@ -40,17 +40,18 @@
     <string name="email_colon">Email:</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="address">Address</string>
-    <string name="address_colon">Address:</string>
+    <string name="address_colon">Address</string>
     <string name="change_images">Change Images</string>
     <string name="change_password">Change Password:</string>
     <string name="saloon_name_colon">Saloon Name:</string>
     <string name="opens">Opens:</string>
     <string name="open_">Opens: %1$s</string>
+    <string name="expiry_format">%1$s/</string>
     <string name="close_">Closes: %1$s</string>
     <string name="url">http://192.168.1.102:8012/saloon/%1$s</string>
     <string name="closes">Closes:</string>
     <string name="save_address">Save Address</string>
-    <string name="postcode">Postcode:</string>
+    <string name="postcode">Postcode</string>
     <string name="country">Country:</string>
     <string name="address_ph">%1$s ~ %2$s</string>
     <string name="money">£%1$.2f</string>
@@ -163,5 +164,17 @@
     <string name="city">City</string>
     <string name="add_image_">Add Image</string>
     <string name="remove_image">Remove Image</string>
-
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="already_have_an_account">Already Have An Account?</string>
+    <string name="facebook_icon">Facebook Icon</string>
+    <string name="google_icon">Google Icon</string>
+    <string name="england">England</string>
+    <string name="saloon_location">Saloon Location</string>
+    <string name="priv">Private</string>
+    <string name="pub">Public</string>
+    <string name="add_payment_method">Add Payment Method</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="cvv">CVV</string>
+    <string name="expiry">Expiry</string>
+    <string name="card_number">Card Number</string>
 </resources>

@@ -10,7 +10,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/teal_200"
+        android:background="@color/loginColor"
         android:paddingStart="5dp"
         android:paddingEnd="5dp">
         <include
@@ -19,6 +19,15 @@
             android:layout_gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchPrivacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/priv"
+            android:textColor="@color/white"
+            android:checked="false"
+            app:switchPadding="5dp"
+            android:layout_gravity="end"/>
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.fragment.app.FragmentContainerView

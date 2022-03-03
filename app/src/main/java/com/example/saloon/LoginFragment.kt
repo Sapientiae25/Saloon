@@ -10,17 +10,12 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import androidx.navigation.findNavController
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
-import java.util.*
-
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
 
 class LoginFragment : Fragment() {
 
@@ -28,13 +23,6 @@ class LoginFragment : Fragment() {
     private lateinit var etEmail: TextInputEditText
     private lateinit var btnLogin: Button
     private lateinit var tvRegisterAccount: TextView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,19 +36,13 @@ class LoginFragment : Fragment() {
         etEmail.setText("test@gmail.com")
         etPassword.setText("pass")
 
-        tvRegisterAccount.setOnClickListener {
-            val fm = parentFragmentManager
-            fm.commit {
-                replace(R.id.fragmentContainer,RegisterFragment())
-            }
-        }
+        tvRegisterAccount.setOnClickListener { view -> view.findNavController().navigate(R.id.action_loginFragment_to_registerFragment) }
 
         btnLogin.setOnClickListener {
             var filled = true
             if (etEmail.text!!.isEmpty()){filled=false;etEmail.error="This field must be filled"}
             if (etPassword.text!!.isEmpty()){filled=false;etPassword.error="This field must be filled"}
             if (filled){
-
                 val url = getString(R.string.url,"login.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
@@ -71,11 +53,12 @@ class LoginFragment : Fragment() {
                             val accountId = obj.getString("account_id")
                             val address = obj.getString("address")
                             val postcode = obj.getString("postcode")
-                            val open = obj.getString("open")
-                            val close = obj.getString("close")
+                            val open = obj.getString("open").take(5)
+                            val close = obj.getString("close").take(5)
                             val rating = obj.getString("rating")
                             val addressItem = AddressItem("",postcode,"",address,"" )
                             val accountItem = AccountItem(accountId,name,open=open,close=close,addressItem=addressItem,rating=rating)
+                            Log.println(Log.ASSERT,"acc",accountItem.toString())
                             val intent = Intent(context, DefaultActivity::class.java)
                             intent.putExtra("account_item", accountItem)
                             startActivity(intent)

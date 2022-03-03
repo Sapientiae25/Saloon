@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
     <View
         android:id="@+id/waveView"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="220dp"
         android:background="@drawable/blue_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,14 +107,14 @@
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/round_button"
-        android:backgroundTint="@color/registerColor"
+        android:backgroundTint="@color/loginColor"
         android:text="@string/register"
         android:textColor="@android:color/white"
         android:textSize="18sp"
@@ -132,7 +133,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnRegister">
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin">
 
         <ImageView
             android:id="@+id/googleLogin"
@@ -152,14 +153,14 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvLoginInstead"
+        android:id="@+id/gotoRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="32dp"
         android:text="@string/login_instead"
-        android:textColor="@color/registerColor"
+        android:textColor="@color/loginColor"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

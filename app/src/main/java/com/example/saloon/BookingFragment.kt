@@ -1,6 +1,7 @@
 package com.example.saloon
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ class BookingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_booking, container, false)
+        (activity as DefaultActivity).clearNotification()
         val accountItem = (activity as DefaultActivity).accountItem
         val tvNoBookings = rootView.findViewById<TextView>(R.id.tvNoBookings)
         val rvBookings = rootView.findViewById<RecyclerView>(R.id.rvBookings)
@@ -31,7 +33,7 @@ class BookingFragment : Fragment() {
         val url = "http://192.168.1.102:8012/saloon/get_bookings.php"
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
-                println(response)
+                Log.println(Log.ASSERT,"response",response.toString())
                 val arr = JSONArray(response)
                 for (i in 0 until arr.length()){
                     val obj = arr.getJSONObject(i)

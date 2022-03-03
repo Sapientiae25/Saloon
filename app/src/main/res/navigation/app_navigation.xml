@@ -139,6 +139,9 @@
         <action
             android:id="@+id/action_settingFragment_to_saloonDetailsFragment"
             app:destination="@id/saloonDetailsFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_paymentMethodFragment"
+            app:destination="@id/paymentMethodFragment" />
     </fragment>
     <action android:id="@+id/action_global_settingFragment" app:destination="@id/settingFragment" />
     <fragment
@@ -149,4 +152,8 @@
         android:id="@+id/saloonDetailsFragment"
         android:name="com.example.saloon.SaloonDetailsFragment"
         android:label="SaloonDetailsFragment" />
+    <fragment
+        android:id="@+id/paymentMethodFragment"
+        android:name="com.example.saloon.PaymentMethodFragment"
+        android:label="PaymentMethodFragment" /><action android:id="@+id/action_global_paymentMethodFragment" app:destination="@id/paymentMethodFragment"/>
 </navigation>

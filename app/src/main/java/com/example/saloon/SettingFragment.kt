@@ -27,6 +27,7 @@ class SettingFragment : Fragment(){
     private lateinit var tvDetails: TextView
     private lateinit var tvOpen: TextView
     private lateinit var tvClose: TextView
+    private lateinit var tvPayment: TextView
     private lateinit var tvChangeImage: TextView
     private lateinit var tvPassword: EditText
     private lateinit var accountItem: AccountItem
@@ -41,6 +42,7 @@ class SettingFragment : Fragment(){
         tvAddress = rootView.findViewById(R.id.tvAddress)
         tvOpen = rootView.findViewById(R.id.tvOpen)
         tvClose = rootView.findViewById(R.id.tvClose)
+        tvPayment = rootView.findViewById(R.id.tvPayment)
         tvPassword = rootView.findViewById(R.id.tvPassword)
         tvChangeImage = rootView.findViewById(R.id.tvChangeImage)
         tvAddress.setOnClickListener { view -> view.findNavController().navigate(R.id.action_settingFragment_to_locationFragment)}
@@ -48,6 +50,7 @@ class SettingFragment : Fragment(){
         tvOpen.setOnClickListener {showCustomDialog(tvOpen,true) }
         tvClose.setOnClickListener {showCustomDialog(tvClose,false) }
         tvPassword.setOnClickListener {view -> view.findNavController().navigate(R.id.action_settingFragment_to_passwordFragment)}
+        tvPayment.setOnClickListener { view -> view.findNavController().navigate(R.id.action_settingFragment_to_paymentMethodFragment) }
         val ivStyleImage = rootView.findViewById<ImageSlider>(R.id.ivStyleImage)
         val imageList = ArrayList<SlideModel>()
         imageList.add(SlideModel(R.drawable.ic_baseline_add_circle_24))

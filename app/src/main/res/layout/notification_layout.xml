@@ -10,7 +10,8 @@
         android:contentDescription="@string/notification"
         android:src="@drawable/ic_baseline_notifications_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
     <androidx.cardview.widget.CardView
         android:id="@+id/cvCount"
         android:visibility="gone"
