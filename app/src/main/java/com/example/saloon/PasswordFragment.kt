@@ -24,6 +24,7 @@ class PasswordFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_password, container, false)
+        (activity as DefaultActivity).supportActionBar?.title = "Password"
         val accountItem = (activity as DefaultActivity).accountItem
         etPassword = rootView.findViewById(R.id.etPassword)
         etConfirm = rootView.findViewById(R.id.etConfirm)

@@ -29,6 +29,7 @@ class EditStyleFragment : Fragment(){
         val rootView =  inflater.inflate(R.layout.fragment_edit_style, container, false)
         val accountItem = (activity as DefaultActivity).accountItem
         styleItem = arguments?.getParcelable("styleItem") !!
+        (activity as DefaultActivity).supportActionBar?.title = styleItem.name
         val tvUserView = rootView.findViewById<TextView>(R.id.tvUserView)
         val etName = rootView.findViewById<TextInputEditText>(R.id.etName)
         val etPrice = rootView.findViewById<TextInputEditText>(R.id.etPrice)
@@ -59,7 +60,7 @@ class EditStyleFragment : Fragment(){
             if (length == 0) {length = rgLength.childCount-1} else if (length == rgLength.childCount-1){length = 0}
             if (gender == 0) {gender = rgGender.childCount-1} else if (gender ==  rgGender.childCount-1){gender = 0}
             if (filled){
-                val url = "http://192.168.1.102:8012/saloon/update_style.php"
+                val url = getString(R.string.url,"update_style.php")
                 val stringRequest: StringRequest = object : StringRequest(
                     Method.GET, url, Response.Listener { response ->
                         val obj = JSONObject(response)
@@ -90,8 +91,7 @@ class EditStyleFragment : Fragment(){
         etDuration.setOnClickListener { showCustomDialog() }
         tvLength.setOnClickListener { rgLength.visibility = if (rgLength.visibility == View.GONE) View.VISIBLE else View.GONE }
         tvGender.setOnClickListener { rgGender.visibility = if (rgGender.visibility == View.GONE) View.VISIBLE else View.GONE }
-
-        val url = "http://192.168.1.102:8012/saloon/get_style_filters.php"
+        val url = getString(R.string.url,"get_style_filters.php")
         val stringRequest = object : StringRequest(
             Method.GET, url, Response.Listener { response ->
                 val obj = JSONObject(response)

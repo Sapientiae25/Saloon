@@ -25,6 +25,7 @@ class CreateCategoryFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_create_category, container, false)
+        (activity as DefaultActivity).supportActionBar?.title = "Create Category"
         val accountItem = (activity as DefaultActivity).accountItem
         val checkList = mutableListOf<CheckItem>()
         val etCategory = rootView.findViewById<TextView>(R.id.etCategory)
@@ -33,7 +34,7 @@ class CreateCategoryFragment : Fragment(){
         val rvAddStyles = rootView.findViewById<RecyclerView>(R.id.rvAddStyles)
         rvAddStyles.layoutManager = LinearLayoutManager(context)
         rvAddStyles.adapter = AddStyleAdapter(checkList)
-        var url = "http://192.168.1.102:8012/saloon/get_style.php"
+        var url = getString(R.string.url,"get_style.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 println(response)
@@ -57,8 +58,8 @@ class CreateCategoryFragment : Fragment(){
         ivSave.setOnClickListener { view ->
             if (etCategory.text.isEmpty()){etCategory.error = "Please Enter A Category Name"}
             else{
-                url = "http://192.168.1.102:8012/saloon/create_category.php"
-                val url2 = "http://192.168.1.102:8012/saloon/category_style.php"
+                url = getString(R.string.url,"create_category.php")
+                val url2 = getString(R.string.url,"category_style.php")
                 stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         println(response)

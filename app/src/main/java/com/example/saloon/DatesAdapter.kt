@@ -43,7 +43,6 @@ package com.example.saloon
 ////        rvCalendar.layoutManager = LinearLayoutManager(itemView.context)
 ////        rvCalendar.hasFixedSize()
 ////        rvCalendar.adapter?.notifyItemRangeInserted(0,calendar.size)
-//        val url = "http://192.168.1.102:8012/saloon/calendar.php"
 //        val stringRequest = object : StringRequest(
 //            Method.POST, url, Response.Listener { response ->
 //                println(response)

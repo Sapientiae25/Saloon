@@ -34,7 +34,7 @@ class BookingBottomSheetFragment : BottomSheetDialogFragment() {
         tvCost.text = getString(R.string.money,bookingItem.cost.toFloat())
 
         btnGoToStyle.setOnClickListener { view ->
-            val url = "http://192.168.1.102:8012/saloon/style_info.php"
+            val url = getString(R.string.url,"style_info.php")
             val stringRequest = object : StringRequest(
                 Method.POST, url, Response.Listener { response ->
                     println(response)

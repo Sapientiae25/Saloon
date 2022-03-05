@@ -16,11 +16,15 @@
         <include
             android:id="@+id/notification"
             layout="@layout/notification_layout"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
             android:layout_gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchPrivacy"
+            android:clickable="false"
+            android:layout_marginStart="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/priv"

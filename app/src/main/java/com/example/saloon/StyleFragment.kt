@@ -22,7 +22,6 @@ import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import org.json.JSONArray
-import org.json.JSONObject
 
 class StyleFragment : Fragment() {
 
@@ -39,6 +38,7 @@ class StyleFragment : Fragment() {
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_style, container, false)
         styleItem = arguments?.getParcelable("styleItem")!!
+        (activity as DefaultActivity).supportActionBar?.title = styleItem.name
         accountItem = (activity as DefaultActivity).accountItem
         val tvDuration = rootView.findViewById<TextView>(R.id.tvDuration)
         val tvName = rootView.findViewById<TextView>(R.id.tvName)
@@ -72,11 +72,10 @@ class StyleFragment : Fragment() {
         tvDuration.text = getString(R.string.duration_time,timeValue)
         tvPrice.text = getString(R.string.money,styleItem.price)
         btnBook.text = getString(R.string.separate,"BOOK NOW",tvPrice.text)
-        requireActivity().title = (activity as DefaultActivity).accountItem.name
         tvName.text = styleItem.name
         tvInfo.text = styleItem.info
         llReviews.setOnClickListener { rvReviews.visibility = if (rvReviews.visibility == View.GONE){View.VISIBLE} else {View.GONE} }
-        var url = "http://192.168.1.102:8012/saloon/get_reviews.php"
+        var url = getString(R.string.url,"get_reviews.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 val arr = JSONArray(response)
@@ -101,7 +100,7 @@ class StyleFragment : Fragment() {
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
         rvMoreLike.adapter = SimilarAdapter(similarStyles)
-        url = "http://192.168.1.102:8012/saloon/get_style.php"
+        getString(R.string.url,"saloon_get_style.php")
         stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"POP",response)
@@ -115,10 +114,9 @@ class StyleFragment : Fragment() {
                     val styleId = obj.getString("style_id")
                     val maxTime = obj.getString("max_time")
                     val info = obj.getString("info")
-                    val visible = obj.getBoolean("privacy")
                     val rating = obj.getString("rating").toFloatOrNull()
                     val timeItem = TimeItem(time,maxTime)
-                    similarStyles.add(StyleItem(name,price,timeItem,info,styleId,rating=rating,privacy=visible)) }
+                    similarStyles.add(StyleItem(name,price,timeItem,info,styleId,rating=rating)) }
                 rvMoreLike.adapter?.notifyItemRangeInserted(0,similarStyles.size) },
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
@@ -128,7 +126,7 @@ class StyleFragment : Fragment() {
                 return params
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
-        url = "http://192.168.1.102:8012/saloon/check_style_privacy.php"
+        url = getString(R.string.url,"check_style_privacy.php")
         stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"s_priv",response)

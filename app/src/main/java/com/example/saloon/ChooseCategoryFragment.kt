@@ -32,8 +32,7 @@ class ChooseCategoryFragment : Fragment() {
         val categoryList = mutableListOf<CheckItem>()
         rvChooseCategory.layoutManager = LinearLayoutManager(context)
         rvChooseCategory.adapter = CategoryChoiceAdapter(categoryList)
-
-        var url = "http://192.168.1.102:8012/saloon/get_categories.php"
+        var url = getString(R.string.url,"get_categories.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 println(response)
@@ -53,12 +52,12 @@ class ChooseCategoryFragment : Fragment() {
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
 
         ivSave.setOnClickListener { view ->
-            url = "http://192.168.1.102:8012/saloon/create_style.php"
+            url = getString(R.string.url,"create_style.php")
             stringRequest = object : StringRequest(
                 Method.POST, url, Response.Listener { response ->
                     println("r $response")
                     val styleId = response
-                    val url3 = "http://192.168.1.102:8012/saloon/delete_tag.php"
+                    val url3 = getString(R.string.url,"delete_tag.php")
                     val stringRequest3 = object : StringRequest(
                         Method.POST, url3, Response.Listener {},
                         Response.ErrorListener { volleyError -> println(volleyError.message) }) {
@@ -68,7 +67,7 @@ class ChooseCategoryFragment : Fragment() {
                             params["style_id"] = styleId
                             return params }}
                     VolleySingleton.instance?.addToRequestQueue(stringRequest3)
-                    val url2 = "http://192.168.1.102:8012/saloon/set_filters.php"
+                    val url2 = getString(R.string.url,"set_filters.php")
                     val stringRequest2 = object : StringRequest(
                         Method.POST, url2, Response.Listener {response -> println(response)},
                         Response.ErrorListener { volleyError -> println(volleyError.message) }) {
@@ -81,7 +80,7 @@ class ChooseCategoryFragment : Fragment() {
                             return params
                         }}
                     VolleySingleton.instance?.addToRequestQueue(stringRequest2)
-                    val url4 = "http://192.168.1.102:8012/saloon/category_style.php"
+                    val url4 = getString(R.string.url,"category_style.php")
                     for (category in categoryList){
                         if (category.checked){
                             val stringRequest4 = object : StringRequest(

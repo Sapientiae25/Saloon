@@ -41,6 +41,9 @@
         <argument
             android:name="categoryItem"
             app:argType="com.example.saloon.CategoryItem" />
+        <action
+            android:id="@+id/action_categoryFragment_to_editCategoryFragment"
+            app:destination="@id/editCategoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/styleFragment"
@@ -156,4 +159,13 @@
         android:id="@+id/paymentMethodFragment"
         android:name="com.example.saloon.PaymentMethodFragment"
         android:label="PaymentMethodFragment" /><action android:id="@+id/action_global_paymentMethodFragment" app:destination="@id/paymentMethodFragment"/>
+    <fragment
+        android:id="@+id/editCategoryFragment"
+        android:name="com.example.saloon.EditCategoryFragment"
+        android:label="fragment_edit_category"
+        tools:layout="@layout/fragment_edit_category" >
+        <action
+            android:id="@+id/action_editCategoryFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
+    </fragment>
 </navigation>

@@ -39,8 +39,7 @@ class StyleBottomSheet : BottomSheetDialogFragment(){
         val ivImage = view.findViewById<ImageView>(R.id.ivImage)
         val removeBtn = view.findViewById<AppCompatButton>(R.id.removeBtn)
         tvTimePeriod.text = getString(R.string.obj_colon,"Time",getString(R.string.time_distance,booking.start,booking.end))
-
-        val url = "http://192.168.1.102:8012/saloon/style_info.php"
+        val url = getString(R.string.url,"style_info.php")
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 println(response)

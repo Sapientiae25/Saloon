@@ -72,12 +72,13 @@
 
                     <TextView
                         android:id="@+id/tvRating"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="3dp"
+                        android:drawablePadding="4dp"
                         android:text="@string/rating"
                         android:textSize="18sp"
-                        app:drawableStartCompat="@drawable/ic_baseline_star_rate_24"/>
+                        app:drawableEndCompat="@drawable/ic_baseline_star_rate_24"
+                        app:drawableTint="@color/yellow" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <SearchView
@@ -130,6 +131,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginStart="10dp"
         android:contentDescription="@string/add_item"
+        app:backgroundTint="@color/loginColor"
         android:src="@drawable/ic_baseline_filter_alt_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -139,6 +141,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="10dp"
+        app:backgroundTint="@color/loginColor"
+        android:src="@drawable/ic_baseline_add_24"
         android:contentDescription="@string/add_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

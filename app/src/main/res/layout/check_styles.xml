@@ -9,15 +9,13 @@
     android:paddingBottom="5dp">
     <RadioButton
         android:id="@+id/rbChecked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/tvStyle"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/style_name"
-        android:textSize="22sp"/>
+        android:textSize="22sp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        />
 
 </LinearLayout>

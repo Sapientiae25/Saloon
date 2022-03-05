@@ -34,6 +34,7 @@ class LocationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_location, container, false)
+        (activity as DefaultActivity).supportActionBar?.title = "Location"
         val accountItem = (activity as DefaultActivity).accountItem
         etAddress1 = rootView.findViewById(R.id.etAddress1)
         etCity = rootView.findViewById(R.id.etCity)
@@ -43,8 +44,7 @@ class LocationFragment : Fragment() {
         btnSaveAddress = rootView.findViewById(R.id.btnSaveAddress)
         val countries = arrayListOf("England","Whales","Scotland","USA")
         acCountry.setAdapter(ArrayAdapter(requireContext(),R.layout.text_layout,countries.toTypedArray()))
-
-        var url = "http://192.168.1.102:8012/saloon/get_address.php"
+        var url = getString(R.string.url,"get_address.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 println(response)
@@ -80,7 +80,7 @@ class LocationFragment : Fragment() {
             if (filled && latLong != null){
                 val addressItem = AddressItem(etCity.text.toString(), etPostcode.text.toString(),
                     acCountry.text.toString(), etAddress1.text.toString(),etTown.text.toString())
-                url = "http://192.168.1.102:8012/saloon/address.php"
+                url = getString(R.string.url,"address.php")
                 stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         println(response)

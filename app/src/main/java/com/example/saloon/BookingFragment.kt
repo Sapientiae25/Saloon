@@ -27,10 +27,10 @@ class BookingFragment : Fragment() {
         val tvNoBookings = rootView.findViewById<TextView>(R.id.tvNoBookings)
         val rvBookings = rootView.findViewById<RecyclerView>(R.id.rvBookings)
         val bookingList = mutableListOf<BookingItem>()
-        requireActivity().title = "Bookings"
+        (activity as DefaultActivity).supportActionBar?.title = "Bookings"
         rvBookings.layoutManager = LinearLayoutManager(context)
         rvBookings.adapter = BookingAdapter(bookingList)
-        val url = "http://192.168.1.102:8012/saloon/get_bookings.php"
+        val url = getString(R.string.url,"get_bookings.php")
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"response",response.toString())
@@ -53,8 +53,7 @@ class BookingFragment : Fragment() {
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["account_id"] = accountItem.id
-                return params
-            }}
+                return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
 
         return rootView

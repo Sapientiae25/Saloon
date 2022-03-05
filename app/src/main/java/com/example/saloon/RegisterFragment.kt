@@ -56,7 +56,7 @@ class RegisterFragment : Fragment() {
             else if (etEmail.text!!.length < 7){filled=false;etEmail.error="Password must be over 6 characters"}
             if (etPassword.text!!.isEmpty()){filled=false;etPassword.error="This field must be filled"}
             if (filled){
-                val url = "http://192.168.1.102:8012/saloon/check_account_exists.php"
+                val url = getString(R.string.url,"check_account_exists.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         if (response == "0"){

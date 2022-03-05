@@ -54,7 +54,7 @@ class RegisterLocationFragment : Fragment() {
             if (filled && latLong != null){
                 val addressItem = AddressItem(etCity.text.toString(), etPostcode.text.toString(),
                     acCountry.text.toString(), etAddress1.text.toString(),etTown.text.toString())
-                val url = "http://192.168.1.102:8012/saloon/register.php"
+                val url = getString(R.string.url,"register.php")
                 val stringRequest: StringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         accountItem.id = response

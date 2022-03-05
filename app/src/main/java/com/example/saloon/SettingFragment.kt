@@ -15,11 +15,9 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.denzcoskun.imageslider.ImageSlider
-import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import org.json.JSONObject
-import java.util.ArrayList
 
 class SettingFragment : Fragment(){
 
@@ -37,6 +35,7 @@ class SettingFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_setting, container, false)
+        (activity as DefaultActivity).supportActionBar?.title = "Settings"
         accountItem = (activity as DefaultActivity).accountItem
         tvDetails = rootView.findViewById(R.id.tvDetails)
         tvAddress = rootView.findViewById(R.id.tvAddress)
@@ -56,8 +55,7 @@ class SettingFragment : Fragment(){
         imageList.add(SlideModel(R.drawable.ic_baseline_add_circle_24))
         ivStyleImage.setImageList(imageList)
         ivStyleImage.setItemClickListener(object: ItemClickListener {override fun onItemSelected(position: Int) {addImage(position)}})
-
-        val url = "http://192.168.1.102:8012/saloon/open_times.php"
+        val url = getString(R.string.url,"open_times.php")
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 println(response)
@@ -102,7 +100,7 @@ class SettingFragment : Fragment(){
         close.setOnClickListener { dialog.dismiss() }
         save.setOnClickListener {val timeText = getString(R.string.clock,hour,minute);textView.text = timeText
             if (open){
-                val url = "http://192.168.1.102:8012/saloon/open.php"
+                val url = getString(R.string.url,"open.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener {},
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
@@ -115,7 +113,7 @@ class SettingFragment : Fragment(){
                 VolleySingleton.instance?.addToRequestQueue(stringRequest)
                 tvOpen.text = getString(R.string.open_,timeText)
             }else{
-                val url = "http://192.168.1.102:8012/saloon/close.php"
+                val url = getString(R.string.url,"close.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener {},
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {

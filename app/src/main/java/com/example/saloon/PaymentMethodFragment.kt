@@ -20,7 +20,7 @@ class PaymentMethodFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_payment_method, container, false)
-        requireActivity().title = "Details"
+        (activity as DefaultActivity).supportActionBar?.title = "Payment"
         val accountItem = (activity as DefaultActivity).accountItem
         val etCVV = rootView.findViewById<TextInputEditText>(R.id.etCVV)
         val etExpiry = rootView.findViewById<TextInputEditText>(R.id.etExpiry)
@@ -45,7 +45,7 @@ class PaymentMethodFragment : Fragment(){
             if (expire?.substring(0,2)?.toInt()!! > 13 || expire.substring(2,4).toInt() > 31) {filled = false
                 etExpiry.error = "Please Fill This Field Out Correctly"}
             if (filled){
-                val url = "http://192.168.1.102:8012/saloon/add_payment.php"
+                val url = getString(R.string.url,"add_payment.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {

@@ -9,6 +9,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
+        android:padding="7dp"
         android:layout_height="wrap_content"
         android:background="@drawable/border"
         android:gravity="center_horizontal"
@@ -22,9 +23,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvents"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -32,30 +36,32 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
         <TextView
             android:id="@+id/cancelBtn"
-            android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/close"
-            android:background="@drawable/border"
             android:layout_weight="1"
-            android:textColor="@color/red"
-            android:textSize="30sp"
+            android:background="@drawable/border"
             android:paddingTop="7dp"
-            android:paddingBottom="7dp"/>
+            android:paddingBottom="7dp"
+            android:text="@string/close"
+            android:textAlignment="center"
+            android:textColor="@color/red"
+            android:textSize="30sp" />
+
         <TextView
             android:id="@+id/editBtn"
-            android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/border"
-            android:text="@string/edit_time"
-            android:textColor="@color/pink"
-            android:textSize="30sp"
             android:paddingTop="7dp"
-            android:paddingBottom="7dp"/>
+            android:paddingBottom="7dp"
+            android:text="@string/edit_time"
+            android:textAlignment="center"
+            android:textColor="@color/loginColor"
+            android:textSize="30sp" />
     </LinearLayout>
 
 

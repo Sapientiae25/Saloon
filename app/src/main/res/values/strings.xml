@@ -146,6 +146,7 @@
     <string name="rating">Rating</string>
     <string name="separate">%1$s - %2$s</string>
     <string name="duration_time">Duration: %1$s mins</string>
+    <string name="rate">Rating: %1$s</string>
     <string name="comma">%1$s, %2$s</string>
     <string name="all">All</string>
     <string name="men">Men</string>
@@ -177,4 +178,5 @@
     <string name="cvv">CVV</string>
     <string name="expiry">Expiry</string>
     <string name="card_number">Card Number</string>
+    <string name="edit_category">Edit Category</string>
 </resources>

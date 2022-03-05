@@ -53,7 +53,7 @@ class CreateStyleFragment : Fragment() {
             if (etPrice.text!!.isEmpty()){filled=false;etPrice.error="This field must be filled"}
             if (minute == 0){filled=false;etDuration.error="This field must be filled"}
             if (filled){
-                val url = "http://192.168.1.102:8012/saloon/style_check.php"
+                val url = getString(R.string.url,"style_check.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         if (response == "1"){

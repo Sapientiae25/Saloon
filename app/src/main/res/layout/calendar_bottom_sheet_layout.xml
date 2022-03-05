@@ -60,13 +60,24 @@
             android:text="@string/_00_00"/>
     </LinearLayout>
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/btn_style"
+        android:backgroundTint="@color/red"
+        android:text="@string/delete"
+        android:textColor="@android:color/white" />
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAddBreak"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/btn_style"
-        android:backgroundTint="@color/teal_200"
+        android:backgroundTint="@color/loginColor"
         android:text="@string/add_break"
         android:textColor="@android:color/white" />
 </LinearLayout>

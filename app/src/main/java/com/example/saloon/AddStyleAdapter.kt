@@ -3,29 +3,20 @@ package com.example.saloon
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RadioButton
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.AuthFailureError
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import java.util.*
 
 
 class AddStyleAdapter (private val checkedList: MutableList<CheckItem>)
     : RecyclerView.Adapter<AddStyleAdapter.AddStyleViewHolder>(){
 
     inner class AddStyleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        private val tvStyle: TextView = itemView.findViewById(R.id.tvStyle)
         private val rbChecked: RadioButton = itemView.findViewById(R.id.rbChecked)
 
         fun bind(index: Int){
             val currentItem = checkedList[index]
-            tvStyle.text = currentItem.style
             rbChecked.isChecked = currentItem.checked
+            rbChecked.text = currentItem.style
                 itemView.setOnClickListener{
                 if (currentItem.checked){
                     rbChecked.isChecked = false

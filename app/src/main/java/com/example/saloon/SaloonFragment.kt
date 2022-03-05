@@ -47,6 +47,7 @@ class SaloonFragment : Fragment() {
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_saloon, container, false)
         accountItem = (activity as DefaultActivity).accountItem
+        (activity as DefaultActivity).supportActionBar?.title = accountItem.name
         back = arguments?.getInt("back")!!
         rvStyleItems = rootView.findViewById(R.id.rvStyleItems)
         val backgroundColor = ContextCompat.getColor(requireContext(),R.color.red)
@@ -66,11 +67,11 @@ class SaloonFragment : Fragment() {
         rvStyleCategories.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
         rvStyleItems.adapter = SaloonStyleAdapter(displayStyleList)
         rvStyleItems.layoutManager = LinearLayoutManager(context)
-        rvStyleItems.adapter?.notifyItemRangeInserted(0,displayStyleList.size)
+        rvStyleItems.adapter?.notifyItemRangeRemoved(0,displayStyleList.size)
         val btnFilter = rootView.findViewById<FloatingActionButton>(R.id.btnFilter)
         tvNoStyles = rootView.findViewById(R.id.tvNoStyles)
         activity?.title = accountItem.name
-        tvRating.text = accountItem.rating
+        tvRating.text = getString(R.string.rate,accountItem.rating)
         tvAddress.text = getString(R.string.comma,accountItem.addressItem?.address,accountItem.addressItem?.postcode)
         tvOpen.text = getString(R.string.separate,accountItem.open,accountItem.close)
         btnFilter.setOnClickListener { view -> view.findNavController().navigate(R.id.action_saloonFragment_to_filterFragment) }
@@ -82,7 +83,6 @@ class SaloonFragment : Fragment() {
         imageList.add(SlideModel(R.drawable.trim,ScaleTypes.FIT))
         ivStoreFront.setImageList(imageList)
         ivStoreFront.setItemClickListener(object: ItemClickListener {override fun onItemSelected(position: Int) {addImage(position)}})
-
         val categoryTouchHelper = ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT or
                 ItemTouchHelper.LEFT,0){
             override fun onMove(recyclerView: RecyclerView,viewHolder:RecyclerView.ViewHolder,target:RecyclerView.ViewHolder):Boolean {
@@ -125,13 +125,10 @@ class SaloonFragment : Fragment() {
                 val iconBottom = iconTop + inHeight
                 icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                 icon.draw(canvas)
-                super.onChildDraw(canvas,recyclerView,viewHolder,dX, dY,actionState,isCurrentlyActive)
-            } })
-
+                super.onChildDraw(canvas,recyclerView,viewHolder,dX, dY,actionState,isCurrentlyActive) } })
         styleTouchHelper.attachToRecyclerView(rvStyleItems)
         categoryTouchHelper.attachToRecyclerView(rvStyleCategories)
-
-        var url = "http://192.168.1.102:8012/saloon/get_categories.php"
+        var url = getString(R.string.url,"get_categories.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"cat",response)
@@ -150,7 +147,7 @@ class SaloonFragment : Fragment() {
                 return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
         if (back == 0){
-            url = "http://192.168.1.102:8012/saloon/get_style.php"
+            url = getString(R.string.url,"saloon_get_style.php")
             stringRequest = object : StringRequest(
                 Method.POST, url, Response.Listener { response ->
                     Log.println(Log.ASSERT,"SUI", response)
@@ -163,10 +160,11 @@ class SaloonFragment : Fragment() {
                         val time = obj.getString("time")
                         val styleId = obj.getString("style_id")
                         val maxTime = obj.getString("max_time")
+                        val visible = obj.getInt("privacy") == 1
                         val info = obj.getString("info")
                         val rating = obj.getString("rating").toFloatOrNull()
                         val timeItem = TimeItem(time,maxTime)
-                        styleItemList.add(StyleItem(name,price,timeItem,info,styleId,rating=rating,accountItem=accountItem)) }
+                        styleItemList.add(StyleItem(name,price,timeItem,info,styleId,rating=rating,accountItem=accountItem,privacy=visible)) }
                     displayStyleList.addAll(styleItemList)
                     rvStyleItems.adapter?.notifyItemRangeInserted(0,displayStyleList.size)},
                 Response.ErrorListener { volleyError -> println(volleyError.message) }) {
@@ -187,7 +185,7 @@ class SaloonFragment : Fragment() {
             filterObj.put("account_id",accountItem.id)
             val filterArr = JSONArray()
             filterArr.put(filterObj)
-            url = "http://192.168.1.102:8012/saloon/filter_account.php"
+            url = getString(R.string.url,"filter_account.php")
             val jsonRequest = JsonArrayRequest(
                 Request.Method.POST, url,filterArr, { arr ->
                     Log.println(Log.ASSERT,"array",arr.toString())

@@ -38,6 +38,7 @@ class CalendarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_calendar, container, false)
+        (activity as DefaultActivity).supportActionBar?.title = "Calendar"
         accountItem = (activity as DefaultActivity).accountItem
         val months = mutableListOf("January", "February", "March", "April", "May", "June", "July", "August",
             "September", "October", "November", "December")
@@ -126,7 +127,7 @@ class CalendarFragment : Fragment() {
             calendarList.add(CalendarItem(getString(R.string.clock,h,0),
                 getString(R.string.clock,h+1,0),date=getString(R.string.datetime,year,(month+1),chosenDay)))
             timesBarList.add(getString(R.string.clock,h+1,0)) }
-        val url = "http://192.168.1.102:8012/saloon/calendar.php"
+        val url = getString(R.string.url,"calendar.php")
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"sui",response)

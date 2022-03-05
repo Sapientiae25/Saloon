@@ -25,12 +25,12 @@ class SaloonDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_saloon_details, container, false)
+        (activity as DefaultActivity).supportActionBar?.title = "Details"
         val accountItem = (activity as DefaultActivity).accountItem
         etName = rootView.findViewById(R.id.etName)
         etNumber = rootView.findViewById(R.id.etNumber)
         btnSaveName = rootView.findViewById(R.id.btnSaveName)
-
-        var url = "http://192.168.1.102:8012/saloon/get_name.php"
+        var url = getString(R.string.url,"get_name.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 println(response)
@@ -52,7 +52,7 @@ class SaloonDetailsFragment : Fragment() {
             var filled = true
             if (etName.text!!.isEmpty()){filled=false;etName.error="This field must be filled"}
             if (filled){
-                url = "http://192.168.1.102:8012/saloon/name.php"
+                url = getString(R.string.url,"name.php")
                 stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         println(response)

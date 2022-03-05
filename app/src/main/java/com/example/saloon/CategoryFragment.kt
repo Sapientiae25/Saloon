@@ -1,13 +1,14 @@
 package com.example.saloon
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -18,7 +19,6 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
-import java.util.*
 
 class CategoryFragment : Fragment(){
 
@@ -29,12 +29,14 @@ class CategoryFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_category, container, false)
+        val accountItem = (activity as DefaultActivity).accountItem
         categoryItem = arguments?.getParcelable("categoryItem")!!
-        requireActivity().title = categoryItem.category
+        (activity as DefaultActivity).supportActionBar?.title = categoryItem.category
         val styleItemList = mutableListOf<StyleItem>()
         val rvCategoryStyleItems = rootView.findViewById<RecyclerView>(R.id.rvCategoryStyleItems)
         val tvNoStyles = rootView.findViewById<TextView>(R.id.tvNoStyles)
-        rvCategoryStyleItems.adapter = StyleItemAdapter(styleItemList)
+        val btnEditCategory = rootView.findViewById<FloatingActionButton>(R.id.btnEditCategory)
+        rvCategoryStyleItems.adapter = CategoryAdapter(styleItemList)
         rvCategoryStyleItems.layoutManager = LinearLayoutManager(context)
         val ivStoreFront = rootView.findViewById<ImageSlider>(R.id.ivStoreFront)
         val imageList = ArrayList<SlideModel>()
@@ -42,10 +44,10 @@ class CategoryFragment : Fragment(){
         imageList.add(SlideModel(R.drawable.trim, ScaleTypes.FIT))
         imageList.add(SlideModel(R.drawable.trim, ScaleTypes.FIT))
         ivStoreFront.setImageList(imageList)
-        val url = "http://192.168.1.102:8012/saloon/get_category_styles.php"
+        val url = getString(R.string.url,"get_category_styles.php")
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
-                println(response)
+                Log.println(Log.ASSERT,"gory",response)
                 val arr = JSONArray(response)
                 if (arr.length() == 0){tvNoStyles.visibility = View.VISIBLE
                     ivStoreFront.visibility = View.GONE}
@@ -59,7 +61,7 @@ class CategoryFragment : Fragment(){
                     val info = obj.getString("info")
                     val rating = obj.getString("rating").toFloatOrNull()
                     val timeItem = TimeItem(time,maxTime)
-                    styleItemList.add(StyleItem(name,price,timeItem,info,id=styleId,rating=rating)) }
+                    styleItemList.add(StyleItem(name,price,timeItem,info,id=styleId,rating=rating,accountItem=accountItem)) }
                 rvCategoryStyleItems.adapter?.notifyItemRangeInserted(0,styleItemList.size)},
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
@@ -69,5 +71,10 @@ class CategoryFragment : Fragment(){
                 return params
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
+
+        btnEditCategory.setOnClickListener{ view ->
+            val bundle = bundleOf(Pair("categoryItem",categoryItem))
+            view.findNavController().navigate(R.id.action_categoryFragment_to_editCategoryFragment,bundle)
+        }
         return rootView }
 }

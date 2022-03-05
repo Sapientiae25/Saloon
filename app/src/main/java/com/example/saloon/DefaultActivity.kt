@@ -48,15 +48,15 @@ class DefaultActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.activityFragment) as NavHostFragment
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
-
-        val url = "http://192.168.1.102:8012/saloon/check_privacy.php"
+        val url = getString(R.string.url,"check_privacy.php")
         val stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"priv",response)
                 val obj = JSONObject(response)
                 privacy = obj.getInt("privacy") == 1
                 hasPayment = obj.getString("payment").toIntOrNull() != null
-                changePrivacy()
+                if (privacy){switchPrivacy.isChecked = !privacy;switchPrivacy.text = getString(R.string.priv)}
+                else {if (!hasPayment){showCustomDialog()}else{switchPrivacy.isChecked=!privacy;switchPrivacy.text=getString(R.string.pub)}}
             },
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
@@ -66,18 +66,17 @@ class DefaultActivity : AppCompatActivity() {
                 return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
 
-        changePrivacy()
         switchPrivacy.setOnClickListener {changePrivacy() }
         notification.setOnClickListener { findNavController(R.id.activityFragment).navigate(R.id.action_global_bookingFragment) }
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
                 R.id.saloonFragment -> it.onNavDestinationSelected(navController)
-                R.id.calendarFragment -> it.onNavDestinationSelected(navController)
-            }
+                R.id.calendarFragment -> it.onNavDestinationSelected(navController) }
             true } }
     override fun onSupportNavigateUp(): Boolean { return navController.navigateUp() || super.onSupportNavigateUp() }
-    fun changePrivacy(){if (!privacy){privacy=!privacy;switchPrivacy.isChecked = !privacy; switchPrivacy.text = getString(R.string.priv)}
-    else { if (!hasPayment){showCustomDialog()} else {privacy=!privacy;switchPrivacy.isChecked = !privacy; switchPrivacy.text = getString(R.string.pub)}}}
+    private fun changePrivacy(){if (!privacy){privacy=true;switchPrivacy.isChecked = !privacy; switchPrivacy.text = getString(R.string.priv)}
+    else { if (!hasPayment){showCustomDialog();switchPrivacy.isChecked=false}
+    else {privacy=false;switchPrivacy.isChecked=!privacy;switchPrivacy.text = getString(R.string.pub)}}}
     private fun showCustomDialog() {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

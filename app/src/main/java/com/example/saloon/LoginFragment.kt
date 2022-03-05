@@ -46,6 +46,7 @@ class LoginFragment : Fragment() {
                 val url = getString(R.string.url,"login.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
+                        Log.println(Log.ASSERT,"acc",response)
                         val obj = JSONObject(response)
                         val exist = obj.getInt("exist")
                         if (exist == 1){
@@ -58,7 +59,6 @@ class LoginFragment : Fragment() {
                             val rating = obj.getString("rating")
                             val addressItem = AddressItem("",postcode,"",address,"" )
                             val accountItem = AccountItem(accountId,name,open=open,close=close,addressItem=addressItem,rating=rating)
-                            Log.println(Log.ASSERT,"acc",accountItem.toString())
                             val intent = Intent(context, DefaultActivity::class.java)
                             intent.putExtra("account_item", accountItem)
                             startActivity(intent)
