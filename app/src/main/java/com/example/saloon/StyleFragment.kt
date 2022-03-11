@@ -100,7 +100,7 @@ class StyleFragment : Fragment() {
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
         rvMoreLike.adapter = SimilarAdapter(similarStyles)
-        getString(R.string.url,"saloon_get_style.php")
+        url = getString(R.string.url,"saloon_get_style.php")
         stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"POP",response)
@@ -123,8 +123,7 @@ class StyleFragment : Fragment() {
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["account_id"] = accountItem.id
-                return params
-            }}
+                return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
         url = getString(R.string.url,"check_style_privacy.php")
         stringRequest = object : StringRequest(

@@ -43,7 +43,6 @@ class EditCategoryFragment : Fragment(){
         var url = getString(R.string.url,"get_checked_styles.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
-                println(response)
                 val arr = JSONArray(response)
                 if (arr.length() == 0){tvNoStyles.visibility = View.VISIBLE}
                 for (x in 0 until arr.length()){

@@ -1,9 +1,16 @@
 package com.example.saloon
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +18,11 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -29,7 +41,12 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.*
+
 
 class SaloonFragment : Fragment() {
 
@@ -38,8 +55,14 @@ class SaloonFragment : Fragment() {
     lateinit var rvStyleItems: RecyclerView
     lateinit var tvNoStyles: TextView
     lateinit var accountItem: AccountItem
+    private lateinit var ivStoreFront: ImageSlider
+    private lateinit var imageList: ArrayList<SlideModel>
+    private val imageUrls = mutableListOf<String>()
     private var back = 0
     private val background = ColorDrawable()
+    lateinit var directory: File
+    private lateinit var startForResult: ActivityResultLauncher<Intent>
+    private lateinit var startGalleryForResult: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +73,7 @@ class SaloonFragment : Fragment() {
         (activity as DefaultActivity).supportActionBar?.title = accountItem.name
         back = arguments?.getInt("back")!!
         rvStyleItems = rootView.findViewById(R.id.rvStyleItems)
+        directory = ContextWrapper(context).getDir("imageDir", Context.MODE_PRIVATE)
         val backgroundColor = ContextCompat.getColor(requireContext(),R.color.red)
         val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)!!
         icon.setTint(ContextCompat.getColor(requireContext(),R.color.black))
@@ -63,26 +87,22 @@ class SaloonFragment : Fragment() {
         val categoryList = mutableListOf(CategoryItem())
         val svStyle = rootView.findViewById<SearchView>(R.id.svStyle)
         rvStyleCategories.adapter = StyleCategoryAdapter(categoryList)
-        rvStyleCategories.adapter?.notifyItemRangeInserted(1,categoryList.size)
         rvStyleCategories.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
-        rvStyleItems.adapter = SaloonStyleAdapter(displayStyleList)
         rvStyleItems.layoutManager = LinearLayoutManager(context)
-        rvStyleItems.adapter?.notifyItemRangeRemoved(0,displayStyleList.size)
         val btnFilter = rootView.findViewById<FloatingActionButton>(R.id.btnFilter)
         tvNoStyles = rootView.findViewById(R.id.tvNoStyles)
-        activity?.title = accountItem.name
         tvRating.text = getString(R.string.rate,accountItem.rating)
         tvAddress.text = getString(R.string.comma,accountItem.addressItem?.address,accountItem.addressItem?.postcode)
         tvOpen.text = getString(R.string.separate,accountItem.open,accountItem.close)
         btnFilter.setOnClickListener { view -> view.findNavController().navigate(R.id.action_saloonFragment_to_filterFragment) }
         btnNewStyle.setOnClickListener { view -> view.findNavController().navigate(R.id.action_saloonFragment_to_createStyleFragment) }
-        val ivStoreFront = rootView.findViewById<ImageSlider>(R.id.ivStoreFront)
-        val imageList = ArrayList<SlideModel>()
-        imageList.add(SlideModel(R.drawable.ic_baseline_add_circle_24))
-        imageList.add(SlideModel(R.drawable.trim,ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.trim,ScaleTypes.FIT))
+        ivStoreFront = rootView.findViewById(R.id.ivStoreFront)
+        imageList = ArrayList<SlideModel>()
+        imageList.add(SlideModel(R.drawable.add,ScaleTypes.CENTER_INSIDE))
         ivStoreFront.setImageList(imageList)
-        ivStoreFront.setItemClickListener(object: ItemClickListener {override fun onItemSelected(position: Int) {addImage(position)}})
+        ivStoreFront.setItemClickListener(object: ItemClickListener {override fun onItemSelected(position: Int) {
+            if (imageList.size == 1) {photoOption()} else {addImage(position)}
+        }})
         val categoryTouchHelper = ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT or
                 ItemTouchHelper.LEFT,0){
             override fun onMove(recyclerView: RecyclerView,viewHolder:RecyclerView.ViewHolder,target:RecyclerView.ViewHolder):Boolean {
@@ -164,16 +184,17 @@ class SaloonFragment : Fragment() {
                         val info = obj.getString("info")
                         val rating = obj.getString("rating").toFloatOrNull()
                         val timeItem = TimeItem(time,maxTime)
-                        styleItemList.add(StyleItem(name,price,timeItem,info,styleId,rating=rating,accountItem=accountItem,privacy=visible)) }
+                        styleItemList.add(StyleItem(name,price,timeItem,info,styleId,rating=rating,accountItem=accountItem,privacy=visible))}
                     displayStyleList.addAll(styleItemList)
-                    rvStyleItems.adapter?.notifyItemRangeInserted(0,displayStyleList.size)},
+                    rvStyleItems.adapter = SaloonStyleAdapter(displayStyleList)
+//                    rvStyleItems.adapter?.notifyItemRangeInserted(0,displayStyleList.size)
+                                                    },
                 Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
                     val params = HashMap<String, String>()
                     params["account_id"] = accountItem.id
-                    return params
-                }}
+                    return params }}
             VolleySingleton.instance?.addToRequestQueue(stringRequest)}
         else if (back == 1){
             val filterItem = accountItem.filterItem
@@ -201,7 +222,8 @@ class SaloonFragment : Fragment() {
                         val timeItem = TimeItem(time,maxTime)
                         styleItemList.add(StyleItem(name,price,timeItem,info,styleId,accountItem=accountItem)) }
                     displayStyleList.addAll(styleItemList)
-                    rvStyleItems.adapter?.notifyItemRangeInserted(0,displayStyleList.size) },
+//                    rvStyleItems.adapter?.notifyItemRangeInserted(0,displayStyleList.size)
+                    rvStyleItems.adapter = SaloonStyleAdapter(displayStyleList)},
                 { volleyError -> println(volleyError.message) })
             VolleySingleton.instance?.addToRequestQueue(jsonRequest) }
 
@@ -224,6 +246,18 @@ class SaloonFragment : Fragment() {
                     rvStyleItems.adapter?.notifyItemRangeInserted(0,displayStyleList.size)
                 }
                 return true } })
+        startGalleryForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                val takenImage = intent?.extras?.get("data") as Bitmap
+//                saveToInternalStorage(takenImage)
+                ivStoreFront.setImageList(imageList) } }
+        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                val takenImage = intent?.extras?.get("data") as Bitmap
+//                saveToInternalStorage(takenImage)
+                ivStoreFront.setImageList(imageList) } }
         return rootView
     }
     private fun addImage(index: Int) {
@@ -234,8 +268,81 @@ class SaloonFragment : Fragment() {
         val remove = dialog.findViewById<TextView>(R.id.remove)
         val add = dialog.findViewById<TextView>(R.id.add)
         if (index == 0){remove.visibility = View.GONE}
-
-        remove.setOnClickListener { dialog.dismiss() }
-        add.setOnClickListener {dialog.dismiss(); }
+        remove.setOnClickListener { deleteImage(imageUrls[index]); dialog.dismiss() }
+        add.setOnClickListener {photoOption(); dialog.dismiss()}
         dialog.show() }
+    private fun photoOption(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.pick_photo)
+        val gallery = dialog.findViewById<CardView>(R.id.gallery)
+        val camera = dialog.findViewById<CardView>(R.id.camera)
+        gallery.setOnClickListener {openGallery(); dialog.dismiss() }
+        camera.setOnClickListener {dispatchTakePictureIntent(); dialog.dismiss()}
+        dialog.show() }
+    private fun openGallery(){
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startGalleryForResult.launch(gallery)
+    }
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try { startForResult.launch(takePictureIntent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, "Unable to open camera",Toast.LENGTH_SHORT).show() } }
+    private fun saveToInternalStorage(bitmapImage: Bitmap): String? {
+        var fos: FileOutputStream? = null
+        var imageId = ""
+        try {
+            val url = getString(R.string.url,"saloon_image_url.php")
+            val stringRequest = object : StringRequest(
+                Method.POST, url, Response.Listener { response -> Log.println(Log.ASSERT,"IMG", response)
+                    imageId = "${response}.jpg"
+                    val path = File(directory, imageId)
+                    fos = FileOutputStream(path)
+                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
+//                    loadImages()
+                                                    },
+                Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
+                override fun getParams(): Map<String, String> {
+                    val params = HashMap<String, String>()
+                    params["account_id"] = accountItem.id
+                    return params }}
+            VolleySingleton.instance?.addToRequestQueue(stringRequest)
+        }catch (e:Exception){e.printStackTrace();deleteImage(imageId)} finally{try{fos?.close()}catch(e:IOException){e.printStackTrace()}}
+        return directory.absolutePath
+    }
+    private fun deleteImage(imageId: String){
+        val url = getString(R.string.url,"delete_saloon_image.php")
+        val stringRequest = object : StringRequest(Method.POST, url, Response.Listener {
+            val file = File(directory, imageId)
+            if (file.delete()){ Log.println(Log.ASSERT,"DEL", "DELETED") }
+            else {Log.println(Log.ASSERT,"DEL", "FAIL TO DELETE")}
+        },
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
+        override fun getParams(): Map<String, String> {
+            val params = HashMap<String, String>()
+            params["image_id"] = imageId
+            return params }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest) }
+    private fun loadImages(){
+        val url = getString(R.string.url,"get_saloon_images.php")
+        val stringRequest = object : StringRequest(Method.POST, url, Response.Listener { response ->
+            val arr = JSONArray(response)
+            for (i in 0 until arr.length()){
+                val imageId = "${i}.jpg"
+                imageUrls.add(imageId)
+                try {
+                    val file = File(directory, imageId)
+                    imageList.add(SlideModel(file.absolutePath,ScaleTypes.FIT))
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace() } }
+            ivStoreFront.setImageList(imageList) },
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
+        override fun getParams(): Map<String, String> {
+            val params = HashMap<String, String>()
+            params["account_id"] = accountItem.id
+            return params }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+    }
 }

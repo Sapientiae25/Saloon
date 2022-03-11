@@ -71,7 +71,8 @@ class DefaultActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
                 R.id.saloonFragment -> it.onNavDestinationSelected(navController)
-                R.id.calendarFragment -> it.onNavDestinationSelected(navController) }
+                R.id.calendarFragment -> it.onNavDestinationSelected(navController)
+                R.id.settingFragment -> it.onNavDestinationSelected(navController) }
             true } }
     override fun onSupportNavigateUp(): Boolean { return navController.navigateUp() || super.onSupportNavigateUp() }
     private fun changePrivacy(){if (!privacy){privacy=true;switchPrivacy.isChecked = !privacy; switchPrivacy.text = getString(R.string.priv)}

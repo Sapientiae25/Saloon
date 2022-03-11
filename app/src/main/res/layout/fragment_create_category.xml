@@ -22,6 +22,7 @@
             android:maxLength="22"
             android:textSize="20sp"
             android:hint="@string/category_name"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"/>
         <ImageView
             android:id="@+id/ivSave"

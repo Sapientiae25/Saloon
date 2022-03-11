@@ -20,7 +20,7 @@
             app:iss_delay="0"
             app:iss_error_image="@android:color/darker_gray"
             app:iss_period="2000"
-            app:iss_placeholder="@android:color/darker_gray"
+            app:iss_placeholder="@color/white"
             app:iss_selected_dot="@drawable/default_selected_dot"
             app:iss_unselected_dot="@drawable/default_unselected_dot"
             app:layout_constraintStart_toStartOf="parent"
@@ -159,11 +159,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/more_like_this"
-                    android:textSize="25sp" />
+                    android:textSize="28sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvMoreLike"

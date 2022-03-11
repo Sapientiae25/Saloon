@@ -24,6 +24,7 @@
             android:inputType="text"
             android:textSize="20sp"
             android:maxLength="22"
+            android:layout_marginStart="5dp"
             android:hint="@string/category_name"
             android:layout_marginEnd="10dp"/>
         <ImageView

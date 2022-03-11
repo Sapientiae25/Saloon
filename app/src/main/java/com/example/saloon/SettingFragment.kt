@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -27,7 +26,7 @@ class SettingFragment : Fragment(){
     private lateinit var tvClose: TextView
     private lateinit var tvPayment: TextView
     private lateinit var tvChangeImage: TextView
-    private lateinit var tvPassword: EditText
+    private lateinit var tvPassword: TextView
     private lateinit var accountItem: AccountItem
 
     override fun onCreateView(

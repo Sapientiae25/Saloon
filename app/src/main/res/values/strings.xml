@@ -179,4 +179,6 @@
     <string name="expiry">Expiry</string>
     <string name="card_number">Card Number</string>
     <string name="edit_category">Edit Category</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>

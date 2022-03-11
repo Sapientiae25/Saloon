@@ -17,7 +17,7 @@
             app:iss_delay="0"
             app:iss_error_image="@android:color/darker_gray"
             app:iss_period="2000"
-            app:iss_placeholder="@android:color/darker_gray"
+            app:iss_placeholder="@color/white"
             app:iss_selected_dot="@drawable/default_selected_dot"
             app:iss_unselected_dot="@drawable/default_unselected_dot"/>
         <LinearLayout
@@ -79,7 +79,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="18dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPrice"
@@ -94,7 +94,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp">
+                android:layout_marginTop="18dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etInfo"
@@ -109,7 +109,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
+            android:layout_marginTop="18dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llTime">
             <AutoCompleteTextView
@@ -124,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/filter"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="18dp"
         android:textSize="25sp"/>
     <LinearLayout
         android:id="@+id/llFilter"
@@ -227,7 +227,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="18dp"
             android:text="@string/add_image"
             android:textSize="20sp" />
 
@@ -236,8 +236,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/round_button"
-            android:backgroundTint="@color/teal_200"
+            android:backgroundTint="@color/loginColor"
             android:text="@string/save_style"
             android:textColor="@android:color/white" />
     </LinearLayout>

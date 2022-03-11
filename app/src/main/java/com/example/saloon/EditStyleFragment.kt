@@ -2,6 +2,7 @@ package com.example.saloon
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,17 +93,16 @@ class EditStyleFragment : Fragment(){
         tvLength.setOnClickListener { rgLength.visibility = if (rgLength.visibility == View.GONE) View.VISIBLE else View.GONE }
         tvGender.setOnClickListener { rgGender.visibility = if (rgGender.visibility == View.GONE) View.VISIBLE else View.GONE }
         val url = getString(R.string.url,"get_style_filters.php")
-        val stringRequest = object : StringRequest(
-            Method.GET, url, Response.Listener { response ->
-                val obj = JSONObject(response)
-                var length = obj.getInt("length")
-                var gender = obj.getInt("gender")
-                if (length == 0) {length = rgLength.childCount-1} else if (length == rgLength.childCount-1){length = 0}
-                if (gender == 0) {gender = rgGender.childCount-1} else if (gender ==  rgGender.childCount-1){gender = 0}
-                (rgLength.getChildAt(length) as RadioButton).isChecked = true
-                (rgGender.getChildAt(gender) as RadioButton).isChecked = true},
-            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
-            @Throws(AuthFailureError::class)
+        val stringRequest = object : StringRequest(Method.POST, url, Response.Listener { response ->
+            Log.println(Log.ASSERT,"FIL",response)
+            val obj = JSONObject(response)
+            var length = obj.getInt("length")
+            var gender = obj.getInt("gender")
+            if (length == 0) {length = rgLength.childCount-1} else if (length == rgLength.childCount-1){length = 0}
+            if (gender == 0) {gender = rgGender.childCount-1} else if (gender ==  rgGender.childCount-1){gender = 0}
+            (rgLength.getChildAt(length) as RadioButton).isChecked = true
+            (rgGender.getChildAt(gender) as RadioButton).isChecked=true},
+            Response.ErrorListener{volleyError->println(volleyError.message)}){@Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["style_id"] = styleItem.id
