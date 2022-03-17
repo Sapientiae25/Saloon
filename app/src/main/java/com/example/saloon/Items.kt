@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TimeItem(val time: String="", val maxTime: String? = null): Parcelable
 @Parcelize
-data class StyleItem(val name: String,val price: Float, val time: TimeItem=TimeItem(),val info: String="",
-                     val id: String = "",val bookingId:String="",val filterItem: StyleFilterItem=StyleFilterItem(),
+data class StyleItem(var name: String,var price: Float, var time: TimeItem=TimeItem(),var info: String="",
+                     var id: String = "",val bookingId:String="",var filterItem: StyleFilterItem=StyleFilterItem(),
                      val rating: Float?=null,val accountItem: AccountItem=AccountItem(),val privacy:Boolean=false): Parcelable
 @Parcelize
 data class AccountItem(var id: String="",var name: String="", var password: String? = null,var number: String="",

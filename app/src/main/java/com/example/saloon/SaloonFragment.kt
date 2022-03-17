@@ -41,10 +41,7 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.util.*
 
 
@@ -250,12 +247,16 @@ class SaloonFragment : Fragment() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 val takenImage = intent?.extras?.get("data") as Bitmap
+                val stringImage = bitMapToString(takenImage)
+                uploadImage(stringImage)
 //                saveToInternalStorage(takenImage)
                 ivStoreFront.setImageList(imageList) } }
         startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 val takenImage = intent?.extras?.get("data") as Bitmap
+                val stringImage = bitMapToString(takenImage)
+                uploadImage(stringImage)
 //                saveToInternalStorage(takenImage)
                 ivStoreFront.setImageList(imageList) } }
         return rootView
@@ -343,6 +344,24 @@ class SaloonFragment : Fragment() {
             val params = HashMap<String, String>()
             params["account_id"] = accountItem.id
             return params }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+    }
+    private fun bitMapToString(bitmap: Bitmap): String {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
+        val b = bytes.toByteArray()
+        return Base64.getEncoder().encodeToString(b) }
+    private fun uploadImage(image: String){
+        val url = getString(R.string.url,"saloon_image_url.php")
+        val stringRequest: StringRequest = object : StringRequest(
+            Method.POST, url, Response.Listener { response -> Log.println(Log.ASSERT,"IMG",response)},
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["image"] = image
+                params["account_id"] = accountItem.id
+                return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
     }
 }

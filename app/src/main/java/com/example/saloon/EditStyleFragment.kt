@@ -45,13 +45,15 @@ class EditStyleFragment : Fragment(){
 
         etName.setText(styleItem.name)
         etPrice.setText(styleItem.price.toString())
+        etInfo.setText(styleItem.info)
         val timeItem = styleItem.time
         etDuration.setText(timeItem.time)
-        btnCreateStyle.setOnClickListener {
+        btnCreateStyle.setOnClickListener {view ->
             var filled = true
             if (etName.text!!.isEmpty()){filled=false;etName.error="This field must be filled"}
             if (etPrice.text!!.isEmpty()){filled=false;etPrice.error="This field must be filled"}
             if (minute == 0){filled=false;etDuration.error="This field must be filled"}
+            if (etInfo.text!!.isEmpty()){filled=false;etInfo.error="This field must be filled"}
             val genderId: Int = rgGender.checkedRadioButtonId
             val genderButton: View = rgGender.findViewById(genderId)
             var gender = rgGender.indexOfChild(genderButton)
@@ -61,6 +63,11 @@ class EditStyleFragment : Fragment(){
             if (length == 0) {length = rgLength.childCount-1} else if (length == rgLength.childCount-1){length = 0}
             if (gender == 0) {gender = rgGender.childCount-1} else if (gender ==  rgGender.childCount-1){gender = 0}
             if (filled){
+                styleItem.name = etName.text.toString()
+                styleItem.price = etPrice.text.toString().toFloat()
+                styleItem.time = TimeItem(minute.toString())
+                styleItem.info = etInfo.text.toString()
+
                 val url = getString(R.string.url,"update_style.php")
                 val stringRequest: StringRequest = object : StringRequest(
                     Method.GET, url, Response.Listener { response ->
@@ -68,19 +75,17 @@ class EditStyleFragment : Fragment(){
                         val exist = obj.getInt("exist")
                         if (exist == 1){
                             Toast.makeText(context, "Style already exists",Toast.LENGTH_SHORT).show()
-                        }else{
-                            tvUserView.setOnClickListener{view ->
-                                val bundle = bundleOf(Pair("styleItem",styleItem))
-                                view.findNavController().navigate(R.id.action_styleFragment_to_editStyleFragment,bundle) } } },
+                        }else{val bundle = bundleOf(Pair("styleItem",styleItem))
+                            view.findNavController().navigate(R.id.action_editStyleFragment_to_styleFragment,bundle) } },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                     @Throws(AuthFailureError::class)
                     override fun getParams(): Map<String, String> {
                         val params = HashMap<String, String>()
-                        params["name"] = etName.text.toString()
-                        params["price"] = etPrice.text.toString()
-                        params["time"] = minute.toString()
+                        params["name"] = styleItem.name
+                        params["price"] = styleItem.price.toString()
+                        params["time"] = styleItem.time.time
                         params["account_id"] = accountItem.id
-                        params["info"] = etInfo.text.toString()
+                        params["info"] = styleItem.info
                         params["style_id"] = styleItem.id
                         params["gender"] = gender.toString()
                         params["length"] = length.toString()
@@ -109,6 +114,9 @@ class EditStyleFragment : Fragment(){
                 return params
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
+        tvUserView.setOnClickListener{view ->
+            val bundle = bundleOf(Pair("styleItem",styleItem))
+            view.findNavController().navigate(R.id.action_styleFragment_to_editStyleFragment,bundle) }
 
         return rootView
     }
@@ -129,7 +137,7 @@ class EditStyleFragment : Fragment(){
         numPicker.displayedValues = minOptions.toTypedArray()
         numPicker.setOnValueChangedListener { numberPicker, _, _ -> val x = minOptions[numberPicker.value]; minute = x.toInt()}
         close.setOnClickListener { dialog.dismiss() }
-        save.setOnClickListener {dialog.dismiss(); etDuration.setText(getString(R.string.time_mins,minute.toString())) }
+        save.setOnClickListener {dialog.dismiss(); etDuration.setText(minute.toString()) }
         dialog.show()
 
 }}

@@ -5,8 +5,8 @@
     android:orientation="horizontal"
     android:background="@drawable/border"
     android:gravity="center_vertical"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp">
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
     <RadioButton
         android:id="@+id/rbChecked"
         android:layout_marginStart="8dp"

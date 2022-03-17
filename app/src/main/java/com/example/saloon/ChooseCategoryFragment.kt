@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -28,7 +29,7 @@ class ChooseCategoryFragment : Fragment() {
         val filterItem = styleItem.filterItem
         val accountItem = (activity as DefaultActivity).accountItem
         val rvChooseCategory = rootView.findViewById<RecyclerView>(R.id.rvChooseCategory)
-        val ivSave = rootView.findViewById<ImageView>(R.id.ivSave)
+        val ivSave = rootView.findViewById<AppCompatButton>(R.id.ivSave)
         val categoryList = mutableListOf<CheckItem>()
         rvChooseCategory.layoutManager = LinearLayoutManager(context)
         rvChooseCategory.adapter = CategoryChoiceAdapter(categoryList)
@@ -55,7 +56,6 @@ class ChooseCategoryFragment : Fragment() {
             url = getString(R.string.url,"create_style.php")
             stringRequest = object : StringRequest(
                 Method.POST, url, Response.Listener { response ->
-                    println("r $response")
                     val styleId = response
                     val url3 = getString(R.string.url,"delete_tag.php")
                     val stringRequest3 = object : StringRequest(
@@ -94,6 +94,7 @@ class ChooseCategoryFragment : Fragment() {
                                     params["account_fk"] = accountItem.id
                                     return params }}
                             VolleySingleton.instance?.addToRequestQueue(stringRequest4) }}
+                    styleItem.id = styleId
                     val bundle = bundleOf(Pair("styleItem",styleItem))
                     view.findNavController().navigate(R.id.action_chooseCategoryFragment_to_styleFragment,bundle)
                 }, Response.ErrorListener { volleyError -> println(volleyError.message) }) {
