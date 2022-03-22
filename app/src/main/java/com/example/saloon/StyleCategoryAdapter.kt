@@ -9,6 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 
 class StyleCategoryAdapter (private val categories: MutableList<CategoryItem>)
     : RecyclerView.Adapter<StyleCategoryAdapter.StyleCategoryViewHolder>(){
@@ -23,6 +24,9 @@ class StyleCategoryAdapter (private val categories: MutableList<CategoryItem>)
                 tvCategory.text = itemView.context.getString(R.string.create_category)
                 itemView.setOnClickListener { view -> view.findNavController().navigate(R.id.action_saloonFragment_to_createCategory) }
             }else{
+                if (currentItem.imageId.isNotEmpty()){
+                    Picasso.get().load(itemView.context.getString(
+                        R.string.url,"style_images/${currentItem.imageId}.jpeg")).fit().centerCrop().into(ivCategory) }
                 tvCategory.text = currentItem.category
                 itemView.setOnClickListener { view ->
                     val bundle = bundleOf(Pair("categoryItem",currentItem))

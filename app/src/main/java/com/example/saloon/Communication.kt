@@ -1,5 +1,6 @@
 package com.example.saloon
 
+import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 
 interface DeleteEvent { fun deletes() }

@@ -1,5 +1,6 @@
 package com.example.saloon
 
+import android.graphics.Bitmap
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -8,7 +9,8 @@ data class TimeItem(val time: String="", val maxTime: String? = null): Parcelabl
 @Parcelize
 data class StyleItem(var name: String,var price: Float, var time: TimeItem=TimeItem(),var info: String="",
                      var id: String = "",val bookingId:String="",var filterItem: StyleFilterItem=StyleFilterItem(),
-                     val rating: Float?=null,val accountItem: AccountItem=AccountItem(),val privacy:Boolean=false): Parcelable
+                     val rating: Float?=null,val accountItem: AccountItem=AccountItem(),val privacy:Boolean=false,
+                     val imageId: String=""): Parcelable
 @Parcelize
 data class AccountItem(var id: String="",var name: String="", var password: String? = null,var number: String="",
                        var open: String? = null,var close: String? = null,var addressItem: AddressItem? = null,
@@ -21,10 +23,10 @@ data class CalendarItem(val start: String="", val end: String="",val name: Strin
                         var gone: Boolean = false,val date: String = "",val id: Int = -1, val styleId: Int = -1): Parcelable
 data class CheckItem(val id: String,val style: String,var checked: Boolean = false, val old: Boolean = false)
 @Parcelize
-data class CategoryItem(val id: String="",val category: String=""): Parcelable
+data class CategoryItem(val id: String="",val category: String="",val imageId: String=""): Parcelable
 @Parcelize
 data class BookingItem(val bookingId: String,val start: String="", val end: String="",val name: String,val cost: String,
-                       val duration: String, val email: String,val styleId: String): Parcelable
+                       val duration: String, val email: String,val styleId: String,val imageId: String=""): Parcelable
 @Parcelize
 data class StyleFilterItem(var length: Int=2,var gender: Int=2): Parcelable
 @Parcelize

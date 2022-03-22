@@ -7,6 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.AuthFailureError
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.squareup.picasso.Picasso
+import java.util.HashMap
 
 
 class BookingAdapter (private val bookingList: MutableList<BookingItem>)
@@ -18,7 +23,8 @@ class BookingAdapter (private val bookingList: MutableList<BookingItem>)
         private val tvStyleDuration = itemView.findViewById<TextView>(R.id.tvStyleDuration)
         private val tvTimePeriod = itemView.findViewById<TextView>(R.id.tvTimePeriod)
         private val tvEmail = itemView.findViewById<TextView>(R.id.tvEmail)
-        private val ivImage = itemView.findViewById<ImageView>(R.id.ivImage)
+        private val image = itemView.findViewById<ImageView>(R.id.image)
+
         fun bind(index: Int){
             val currentItem = bookingList[index]
             tvName.text = currentItem.name
@@ -32,7 +38,13 @@ class BookingAdapter (private val bookingList: MutableList<BookingItem>)
                 bookingBottomSheetFragment.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog")
                 val bundle = Bundle()
                 bundle.putParcelable("bookingItem",currentItem)
-                bookingBottomSheetFragment.arguments = bundle } }
+                bookingBottomSheetFragment.arguments = bundle }
+            if (currentItem.imageId.isEmpty()){ image.visibility = View.GONE }else{
+                Picasso.get().load(itemView.context.getString(
+                    R.string.url,"style_images/${currentItem.imageId}.jpeg")).fit().centerCrop().into(image)
+            }
+        }
+
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.booking_layout,

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,25 +26,33 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/llCategory" />
-            <com.denzcoskun.imageslider.ImageSlider
-                android:id="@+id/ivStoreFront"
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vpImages"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
-                app:iss_auto_cycle="true"
-                app:iss_corner_radius="5"
-                app:iss_delay="0"
-                app:iss_error_image="@android:color/darker_gray"
-                app:iss_period="2000"
-                app:iss_placeholder="@color/white"
-                app:iss_selected_dot="@drawable/default_selected_dot"
-                app:iss_unselected_dot="@drawable/default_unselected_dot"
+                android:layout_height="@dimen/image_height"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="@+id/vpImages"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp"
+                app:tabMode="scrollable"
+                app:tabPaddingStart="2dp"
+                app:tabPaddingEnd="2dp"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cvInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/ivStoreFront">
+                app:layout_constraintTop_toBottomOf="@id/vpImages">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -123,7 +131,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/llCategory"
                 tools:listitem="@layout/style_layout"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnFilter"

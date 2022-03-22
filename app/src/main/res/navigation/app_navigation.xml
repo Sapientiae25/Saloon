@@ -95,6 +95,12 @@
         <action
             android:id="@+id/action_chooseCategoryFragment_to_styleFragment"
             app:destination="@id/styleFragment" />
+        <argument
+            android:name="styleItem"
+            app:argType="com.example.saloon.StyleItem" />
+        <argument
+            android:name="imageList"
+            app:argType="android.graphics.Bitmap[]" />
     </fragment>
     <fragment
         android:id="@+id/createCategory"

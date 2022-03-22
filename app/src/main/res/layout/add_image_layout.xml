@@ -10,7 +10,7 @@
     app:cardCornerRadius="15dp"
     app:cardBackgroundColor="@color/white"
     app:cardMaxElevation="12dp"
-    android:padding="20dp">
+    android:layout_margin="1dp">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:text="@string/add_image_"
             android:padding="20dp"
             android:drawablePadding="12dp"
-            android:textSize="30sp"
+            android:textSize="25sp"
             app:drawableStartCompat="@drawable/ic_baseline_add_circle_24"
             app:drawableTint="@color/teal_200" />
         <TextView
@@ -33,7 +33,7 @@
             android:text="@string/remove_image"
             android:padding="20dp"
             android:drawablePadding="12dp"
-            android:textSize="30sp"
+            android:textSize="25sp"
             app:drawableStartCompat="@drawable/ic_baseline_cancel_24"
             app:drawableTint="@color/red" />
     </LinearLayout>

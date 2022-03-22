@@ -45,7 +45,8 @@ class BookingFragment : Fragment() {
                     val styleId = obj.getString("style_id")
                     val bookingId = obj.getString("booking_id")
                     val email = obj.getString("email")
-                    bookingList.add(BookingItem(bookingId,start,end,name,price,duration,email,styleId)) }
+                    val imageId = obj.getString("image_id")
+                    bookingList.add(BookingItem(bookingId,start,end,name,price,duration,email,styleId,imageId)) }
                 if (arr.length() == 0){tvNoBookings.visibility = View.VISIBLE}
                 else{rvBookings.adapter?.notifyItemRangeInserted(0,bookingList.size)} },
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {

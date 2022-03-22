@@ -11,49 +11,57 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context=".StyleFragment">
-        <com.denzcoskun.imageslider.ImageSlider
-            android:id="@+id/ivStyleImage"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpImages"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            app:iss_auto_cycle="true"
-            app:iss_corner_radius="5"
-            app:iss_delay="0"
-            app:iss_error_image="@android:color/darker_gray"
-            app:iss_period="2000"
-            app:iss_placeholder="@color/white"
-            app:iss_selected_dot="@drawable/default_selected_dot"
-            app:iss_unselected_dot="@drawable/default_unselected_dot"
+            android:layout_height="@dimen/image_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/vpImages"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabMode="scrollable"
+            app:tabPaddingStart="2dp"
+            app:tabPaddingEnd="2dp"/>
+
         <LinearLayout
             android:id="@+id/llFragmentChange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/ivStyleImage">
+            app:layout_constraintTop_toBottomOf="@+id/vpImages">
 
             <TextView
                 android:id="@+id/tvUserView"
                 android:layout_width="match_parent"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/user_view"
-                android:backgroundTint="@color/light_grey"
                 android:background="@drawable/border"
+                android:backgroundTint="@color/light_grey"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/user_view"
                 android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/tvEditStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/border"
+                android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:gravity="center"
-                android:layout_weight="1"
                 android:text="@string/edit_style"
                 android:textSize="25sp" />
         </LinearLayout>
@@ -147,7 +155,7 @@
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/round_button"
-                android:backgroundTint="@color/teal_200"
+                android:backgroundTint="@color/loginColor"
                 android:text="@string/book_now"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />

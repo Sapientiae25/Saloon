@@ -23,6 +23,9 @@
             android:name=".DefaultActivity"
             android:exported="false" />
         <activity
+            android:name=".Test"
+            android:exported="false" />
+        <activity
             android:name=".CancelAppointmentActivity"
             android:exported="false" />
         <activity

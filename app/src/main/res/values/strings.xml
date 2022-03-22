@@ -181,4 +181,5 @@
     <string name="edit_category">Edit Category</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="image">Image</string>
 </resources>

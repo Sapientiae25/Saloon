@@ -1,10 +1,10 @@
 package com.example.saloon
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -15,10 +15,15 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONArray
+import java.io.ByteArrayOutputStream
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ChooseCategoryFragment : Fragment() {
 
     lateinit var styleItem: StyleItem
+    private lateinit var imageList: ArrayList<Bitmap>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +31,7 @@ class ChooseCategoryFragment : Fragment() {
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_choose_category, container, false)
         styleItem = arguments?.getParcelable("styleItem")!!
+        imageList = arguments?.getParcelableArrayList("imageList")!!
         val filterItem = styleItem.filterItem
         val accountItem = (activity as DefaultActivity).accountItem
         val rvChooseCategory = rootView.findViewById<RecyclerView>(R.id.rvChooseCategory)
@@ -94,6 +100,7 @@ class ChooseCategoryFragment : Fragment() {
                                     params["account_fk"] = accountItem.id
                                     return params }}
                             VolleySingleton.instance?.addToRequestQueue(stringRequest4) }}
+                    uploadImages(styleId)
                     styleItem.id = styleId
                     val bundle = bundleOf(Pair("styleItem",styleItem))
                     view.findNavController().navigate(R.id.action_chooseCategoryFragment_to_styleFragment,bundle)
@@ -111,4 +118,24 @@ class ChooseCategoryFragment : Fragment() {
             VolleySingleton.instance?.addToRequestQueue(stringRequest)
     }
         return rootView
-}}
+}
+    private fun bitMapToString(bitmap: Bitmap): String {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
+        val b = bytes.toByteArray()
+        return Base64.getEncoder().encodeToString(b) }
+    private fun uploadImages(styleId: String){
+        val url = getString(R.string.url,"create_style_image.php")
+        for (image in imageList){
+            val stringImage = bitMapToString(image)
+            val stringRequest: StringRequest = object : StringRequest(
+                Method.POST, url, Response.Listener { },
+                Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+                @Throws(AuthFailureError::class)
+                override fun getParams(): Map<String, String> {
+                    val params = java.util.HashMap<String, String>()
+                    params["image"] = stringImage
+                    params["style_id"] = styleId
+                    return params }}
+            VolleySingleton.instance?.addToRequestQueue(stringRequest) }}
+}
