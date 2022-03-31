@@ -14,7 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
@@ -48,16 +49,30 @@ class DefaultActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.activityFragment) as NavHostFragment
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
-        val url = getString(R.string.url,"check_privacy.php")
-        val stringRequest: StringRequest = object : StringRequest(
+        var url = getString(R.string.url,"check_privacy.php")
+        var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"priv",response)
                 val obj = JSONObject(response)
                 privacy = obj.getInt("privacy") == 1
                 hasPayment = obj.getString("payment").toIntOrNull() != null
                 if (privacy){switchPrivacy.isChecked = !privacy;switchPrivacy.text = getString(R.string.priv)}
-                else {if (!hasPayment){showCustomDialog()}else{switchPrivacy.isChecked=!privacy;switchPrivacy.text=getString(R.string.pub)}}
-            },
+                else {if (!hasPayment){showCustomDialog()}else{switchPrivacy.isChecked=!privacy
+                    switchPrivacy.text=getString(R.string.pub)}} },
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["account_id"] = accountItem.id
+                return params }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+
+        url = getString(R.string.url,"check_notifications.php")
+        stringRequest = object : StringRequest(
+            Method.POST, url, Response.Listener { response ->
+                notificationCount = response.toInt()
+                if (notificationCount != 0){ if (notificationCount > 100) notificationCount = 100
+                    cvCount.visibility = View.VISIBLE; tvCount.text = notificationCount.toString() } },
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
@@ -68,12 +83,11 @@ class DefaultActivity : AppCompatActivity() {
 
         switchPrivacy.setOnClickListener {changePrivacy() }
         notification.setOnClickListener { findNavController(R.id.activityFragment).navigate(R.id.action_global_bookingFragment) }
-        bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId){
-                R.id.saloonFragment -> it.onNavDestinationSelected(navController)
-                R.id.calendarFragment -> it.onNavDestinationSelected(navController)
-                R.id.settingFragment -> it.onNavDestinationSelected(navController) }
-            true } }
+
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.calendarFragment,R.id.saloonFragment,R.id.settingFragment))
+        NavigationUI.setupWithNavController(bottomNavigationView,navController)
+        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration)
+    }
     override fun onSupportNavigateUp(): Boolean { return navController.navigateUp() || super.onSupportNavigateUp() }
     private fun changePrivacy(){if (!privacy){privacy=true;switchPrivacy.isChecked = !privacy; switchPrivacy.text = getString(R.string.priv)}
     else { if (!hasPayment){showCustomDialog();switchPrivacy.isChecked=false}
@@ -89,7 +103,6 @@ class DefaultActivity : AppCompatActivity() {
         close.setOnClickListener { dialog.dismiss() }
         save.setOnClickListener { view -> view.findNavController().navigate(R.id.action_global_paymentMethodFragment) ;dialog.dismiss() }
         dialog.show() }
-    fun addNotification(){ if (notificationCount < 100){
-        notificationCount += 1; cvCount.visibility = View.VISIBLE; tvCount.text = notificationCount.toString() } }
     fun clearNotification(){ cvCount.visibility = View.GONE; notificationCount = 0 }
+
 }

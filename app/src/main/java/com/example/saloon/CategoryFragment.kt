@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -45,6 +46,7 @@ class CategoryFragment : Fragment(){
         val btnEditCategory = rootView.findViewById<FloatingActionButton>(R.id.btnEditCategory)
         rvCategoryStyleItems.adapter = CategoryAdapter(styleItemList)
         rvCategoryStyleItems.layoutManager = LinearLayoutManager(context)
+        rvCategoryStyleItems.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         val sliderHandler = Handler(Looper.getMainLooper())
         vpImages = rootView.findViewById(R.id.vpImages)
         val tabLayout = rootView.findViewById<TabLayout>(R.id.tabLayout)

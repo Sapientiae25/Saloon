@@ -83,8 +83,7 @@ class ChooseCategoryFragment : Fragment() {
                             params["style_fk"] = styleId
                             params["gender"] = filterItem.gender.toString()
                             params["length"] = filterItem.length.toString()
-                            return params
-                        }}
+                            return params }}
                     VolleySingleton.instance?.addToRequestQueue(stringRequest2)
                     val url4 = getString(R.string.url,"category_style.php")
                     for (category in categoryList){

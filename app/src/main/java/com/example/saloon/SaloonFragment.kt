@@ -25,6 +25,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -81,10 +82,10 @@ class SaloonFragment : Fragment() {
         val btnNewStyle = rootView.findViewById<FloatingActionButton>(R.id.btnNewStyle)
         val categoryList = mutableListOf(CategoryItem())
         val svStyle = rootView.findViewById<SearchView>(R.id.svStyle)
-
         rvStyleCategories.adapter = StyleCategoryAdapter(categoryList)
         rvStyleCategories.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
         rvStyleItems.layoutManager = LinearLayoutManager(context)
+        rvStyleItems.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         rvStyleItems.isNestedScrollingEnabled = false
         val btnFilter = rootView.findViewById<FloatingActionButton>(R.id.btnFilter)
         tvNoStyles = rootView.findViewById(R.id.tvNoStyles)
@@ -121,16 +122,6 @@ class SaloonFragment : Fragment() {
                 super.onPageSelected(position)
                 sliderHandler.removeCallbacks(sliderRunnable)
                 sliderHandler.postDelayed(sliderRunnable, 4000) } })
-
-        val categoryTouchHelper = ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT or
-                ItemTouchHelper.LEFT,0){
-            override fun onMove(recyclerView: RecyclerView,viewHolder:RecyclerView.ViewHolder,target:RecyclerView.ViewHolder):Boolean {
-                val sourcePosition = viewHolder.adapterPosition
-                val targetPosition = target.adapterPosition
-                Collections.swap(categoryList,sourcePosition,targetPosition)
-                rvStyleCategories.adapter?.notifyItemMoved(sourcePosition,targetPosition)
-                return true
-            }override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {} })
         val styleTouchHelper = ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or
                 ItemTouchHelper.DOWN,0){
             override fun onMove(recyclerView: RecyclerView,viewHolder:RecyclerView.ViewHolder,target:RecyclerView.ViewHolder):Boolean {
@@ -165,7 +156,6 @@ class SaloonFragment : Fragment() {
                 icon.draw(canvas)
                 super.onChildDraw(canvas,recyclerView,viewHolder,dX, dY,actionState,isCurrentlyActive) } })
         styleTouchHelper.attachToRecyclerView(rvStyleItems)
-        categoryTouchHelper.attachToRecyclerView(rvStyleCategories)
         var url = getString(R.string.url,"get_categories.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->

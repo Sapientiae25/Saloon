@@ -30,8 +30,8 @@ class BookingFragment : Fragment() {
         (activity as DefaultActivity).supportActionBar?.title = "Bookings"
         rvBookings.layoutManager = LinearLayoutManager(context)
         rvBookings.adapter = BookingAdapter(bookingList)
-        val url = getString(R.string.url,"get_bookings.php")
-        val stringRequest = object : StringRequest(
+        var url = getString(R.string.url,"get_bookings.php")
+        var stringRequest : StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
                 Log.println(Log.ASSERT,"response",response.toString())
                 val arr = JSONArray(response)
@@ -57,6 +57,16 @@ class BookingFragment : Fragment() {
                 return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
 
+        url = getString(R.string.url,"view_bookings.php")
+        stringRequest = object : StringRequest(
+            Method.POST, url, Response.Listener {},
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["account_id"] = accountItem.id
+                return params }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
         return rootView
     }
 }

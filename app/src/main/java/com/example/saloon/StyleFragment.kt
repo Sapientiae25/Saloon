@@ -171,6 +171,7 @@ class StyleFragment : Fragment() {
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["account_id"] = accountItem.id
+                params["style_id"] = styleItem.id
                 return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
         url = getString(R.string.url,"check_style_privacy.php")
