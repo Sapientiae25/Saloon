@@ -46,7 +46,7 @@ class LoginFragment : Fragment() {
                 val url = getString(R.string.url,"login.php")
                 val stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
-                        Log.println(Log.ASSERT,"acc",response)
+                        Log.println(Log.ASSERT,"login",response.toString())
                         val obj = JSONObject(response)
                         val exist = obj.getInt("exist")
                         if (exist == 1){
@@ -59,14 +59,11 @@ class LoginFragment : Fragment() {
                             val rating = obj.getString("rating")
                             val addressItem = AddressItem("",postcode,"",address,"" )
                             val accountItem = AccountItem(accountId,name,open=open,close=close,addressItem=addressItem,rating=rating)
-                            val intent = Intent(context, DefaultActivity::class.java)
+                            val intent = Intent(context, Test::class.java)
                             intent.putExtra("account_item", accountItem)
                             startActivity(intent)
-                        }else{
-                            Toast.makeText(context,"Email or Password are incorrect",Toast.LENGTH_SHORT).show()
-                        }},
-                    Response.ErrorListener { volleyError -> println(volleyError.message) }) {
-                    @Throws(AuthFailureError::class)
+                        }else{ Toast.makeText(context,"Email or Password are incorrect",Toast.LENGTH_SHORT).show() }},
+                    Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
                     override fun getParams(): Map<String, String> {
                         val params = HashMap<String, String>()
                         params["email"] = etEmail.text.toString()

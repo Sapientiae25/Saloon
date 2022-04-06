@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -23,7 +24,7 @@ import org.json.JSONArray
 class EditCategoryFragment : Fragment(){
 
     lateinit var categoryItem: CategoryItem
-
+    lateinit var ivSave: ImageView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,12 +34,13 @@ class EditCategoryFragment : Fragment(){
         categoryItem = arguments?.getParcelable("categoryItem")!!
         val checkList = mutableListOf<CheckItem>()
         val etCategory = rootView.findViewById<TextView>(R.id.etCategory)
-        val ivSave = rootView.findViewById<ImageView>(R.id.ivSave)
+        ivSave = rootView.findViewById(R.id.ivSave)
         val tvNoStyles = rootView.findViewById<TextView>(R.id.tvNoStyles)
         val rvAddStyles = rootView.findViewById<RecyclerView>(R.id.rvAddStyles)
         val btnDelete = rootView.findViewById<AppCompatButton>(R.id.btnDelete)
         rvAddStyles.layoutManager = LinearLayoutManager(context)
-        rvAddStyles.adapter = AddStyleAdapter(checkList)
+        rvAddStyles.adapter = EditCategoryAdapter(checkList,this)
+        rvAddStyles.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         etCategory.text = categoryItem.category
         var url = getString(R.string.url,"get_checked_styles.php")
         var stringRequest: StringRequest = object : StringRequest(

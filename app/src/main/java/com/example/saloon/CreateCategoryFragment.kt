@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -19,6 +20,7 @@ import org.json.JSONObject
 
 class CreateCategoryFragment : Fragment(){
 
+    lateinit var ivSave: AppCompatButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,11 +31,12 @@ class CreateCategoryFragment : Fragment(){
         val accountItem = (activity as DefaultActivity).accountItem
         val checkList = mutableListOf<CheckItem>()
         val etCategory = rootView.findViewById<TextView>(R.id.etCategory)
-        val ivSave = rootView.findViewById<ImageView>(R.id.ivSave)
+        ivSave = rootView.findViewById(R.id.ivSave)
         val tvNoStyles = rootView.findViewById<TextView>(R.id.tvNoStyles)
         val rvAddStyles = rootView.findViewById<RecyclerView>(R.id.rvAddStyles)
         rvAddStyles.layoutManager = LinearLayoutManager(context)
-        rvAddStyles.adapter = AddStyleAdapter(checkList)
+        rvAddStyles.adapter = AddStyleAdapter(checkList,this)
+        rvAddStyles.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         var url = getString(R.string.url,"get_style.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->

@@ -13,11 +13,10 @@
         android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/select_time"
+        android:text="@string/select_duration"
         android:textColor="@color/white"
         android:textSize="30sp"
-        android:background="@drawable/border"
-        android:backgroundTint="@color/pink"/>
+        android:background="@color/loginColor"/>
     <LinearLayout
         android:textAlignment="center"
         android:layout_width="match_parent"
@@ -55,7 +54,7 @@
             android:layout_weight="1"
             android:background="@drawable/border"
             android:text="@string/save"
-            android:textColor="@color/pink"
+            android:textColor="@color/loginColor"
             android:textSize="30sp"
             android:paddingBottom="5dp"/>
     </LinearLayout>

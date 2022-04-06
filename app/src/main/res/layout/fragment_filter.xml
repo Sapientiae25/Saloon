@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:text="Sort By"
+                android:text="@string/sort_by"
                 android:textSize="22sp"
                 app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -41,22 +41,22 @@
                     android:id="@+id/rbFeatured"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Featured"/>
+                    android:text="@string/featured"/>
                 <RadioButton
                     android:id="@+id/rbNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Newest"/>
+                    android:text="@string/newest"/>
                 <RadioButton
                     android:id="@+id/rbLowToHigh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price Low-High"/>
+                    android:text="@string/price_low_high"/>
                 <RadioButton
                     android:id="@+id/rbHighToLow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price High-Low"/>
+                    android:text="@string/price_high_low"/>
             </RadioGroup>
             <TextView
                 android:layout_marginTop="5dp"
@@ -66,7 +66,7 @@
                 android:id="@+id/tvFilterGender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Gender"
+                android:text="@string/gender"
                 android:textSize="22sp"
                 app:layout_constraintTop_toBottomOf="@+id/rgSort"
                 app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24" />
@@ -80,17 +80,17 @@
                     android:id="@+id/rbUnisex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unisex"/>
+                    android:text="@string/unisex"/>
                 <RadioButton
                     android:id="@+id/rbMale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Male"/>
+                    android:text="@string/male"/>
                 <RadioButton
                     android:id="@+id/rbFemale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Female"/>
+                    android:text="@string/female"/>
             </RadioGroup>
             <TextView
                 android:paddingTop="6dp"
@@ -99,7 +99,7 @@
                 android:background="@drawable/top_border"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Length"
+                android:text="@string/length"
                 android:textSize="22sp"
                 app:layout_constraintTop_toBottomOf="@+id/llFilterGender"
                 app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24" />
@@ -113,22 +113,22 @@
                     android:id="@+id/cbAllLength"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All"/>
+                    android:text="@string/all"/>
                 <CheckBox
                     android:id="@+id/cbLong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Long"/>
+                    android:text="@string/long_"/>
                 <CheckBox
                     android:id="@+id/cbMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Medium"/>
+                    android:text="@string/medium"/>
                 <CheckBox
                     android:id="@+id/cbShort"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Short"/>
+                    android:text="@string/short_"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -147,8 +147,8 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="10dp"
             android:textColor="@color/black"
-            android:background="@drawable/btn_style"
-            android:backgroundTint="@color/light_grey"
+            android:background="@drawable/round_button"
+            android:backgroundTint="@color/loginColor"
             android:text="Reset" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnApply"
@@ -157,17 +157,18 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/btn_style"
+            android:background="@drawable/round_button"
             android:textColor="@color/black"
-            android:backgroundTint="@color/light_grey"
-            android:text="Apply" />
+            android:backgroundTint="@color/loginColor"
+            android:text="@string/apply" />
     </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cancelFilter"
         android:layout_marginEnd="10dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:backgroundTint="@color/loginColor"
         android:src="@drawable/ic_baseline_cancel_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

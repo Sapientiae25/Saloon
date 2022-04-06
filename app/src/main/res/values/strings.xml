@@ -18,6 +18,7 @@
     <string name="style_name">style name</string>
     <string name="time">Time</string>
     <string name="style_image">style image</string>
+    <string name="skip">Skip</string>
     <string name="distance">%1$s, %2$s, %3$s</string>
     <string name="time_distance">%1$s-%2$s</string>
     <string name="price">Price</string>
@@ -48,7 +49,7 @@
     <string name="open_">Opens: %1$s</string>
     <string name="expiry_format">%1$s/</string>
     <string name="close_">Closes: %1$s</string>
-    <string name="url">http://192.168.1.102:8012/saloon/%1$s</string>
+    <string name="url">http://192.168.1.134:8012/saloon/%1$s</string>
     <string name="closes">Closes:</string>
     <string name="save_address">Save Address</string>
     <string name="postcode">Postcode</string>
@@ -182,4 +183,14 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="image">Image</string>
+    <string name="select_duration">Select Duration</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="unisex">Unisex</string>
+    <string name="price_high_low">Price High-Low</string>
+    <string name="price_low_high">Price Low-High</string>
+    <string name="newest">Newest</string>
+    <string name="featured">Featured</string>
+    <string name="sort_by">Sort By</string>
+    <string name="apply">Apply</string>
 </resources>

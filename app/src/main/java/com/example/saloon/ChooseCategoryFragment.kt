@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -24,6 +25,7 @@ class ChooseCategoryFragment : Fragment() {
 
     lateinit var styleItem: StyleItem
     private lateinit var imageList: ArrayList<Bitmap>
+    lateinit var ivSave: AppCompatButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +37,11 @@ class ChooseCategoryFragment : Fragment() {
         val filterItem = styleItem.filterItem
         val accountItem = (activity as DefaultActivity).accountItem
         val rvChooseCategory = rootView.findViewById<RecyclerView>(R.id.rvChooseCategory)
-        val ivSave = rootView.findViewById<AppCompatButton>(R.id.ivSave)
+        ivSave = rootView.findViewById(R.id.ivSave)
         val categoryList = mutableListOf<CheckItem>()
         rvChooseCategory.layoutManager = LinearLayoutManager(context)
-        rvChooseCategory.adapter = CategoryChoiceAdapter(categoryList)
+        rvChooseCategory.adapter = CategoryChoiceAdapter(categoryList,this)
+        rvChooseCategory.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         var url = getString(R.string.url,"get_categories.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->

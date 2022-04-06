@@ -50,7 +50,7 @@ class CalendarFragment : Fragment() {
         rvCalendar = rootView.findViewById(R.id.rvCalendar)
         rvCalendar.layoutManager = LinearLayoutManager(context)
         rvCalendar.setHasFixedSize(true)
-        rvCalendar.adapter = CalendarAdapter(calendarList,this)
+        rvCalendar.adapter = DayAdapter(calendarList,this)
         val tvYear = rootView.findViewById<AutoCompleteTextView>(R.id.tvYear)
         val tvMonth = rootView.findViewById<AutoCompleteTextView>(R.id.tvMonth)
         val rvTimesBar = rootView.findViewById<RecyclerView>(R.id.rvTimesBar)
@@ -84,21 +84,43 @@ class CalendarFragment : Fragment() {
             makeCalendar(chosenDay)
             dates = daysInAMonth(month,year) }
         next.setOnClickListener {
-            if (chosenDay != dates.size){ chosenDay += 1
-                tvDate.text = chosenDay.toString()
-                userDate = getString(R.string.user_date,chosenDay,month+1,year)
-                tvYear.setText(userDate)
-                makeCalendar(chosenDay)
-                rvCalendar.scrollToPosition(0)
-                rvTimesBar.scrollToPosition(0)} }
+            if (chosenDay == dates.size && month != 11){ month += 1
+                chosenDay = 0
+                tvMonth.setText(months[month])
+                dates = daysInAMonth(month,year)
+            }else if (chosenDay == dates.size && month == 11){ if (year + 1 in years){
+                year += 1
+                month = 0
+                chosenDay = 0
+                tvMonth.setText(months[month])
+                dates = daysInAMonth(month,year)} }
+            else {chosenDay += 1}
+
+            tvDate.text = chosenDay.toString()
+            userDate = getString(R.string.user_date,chosenDay,month+1,year)
+            tvYear.setText(userDate)
+            makeCalendar(chosenDay)
+            rvCalendar.scrollToPosition(0)
+            rvTimesBar.scrollToPosition(0) }
         previous.setOnClickListener {
-            if (chosenDay != 1){ chosenDay -= 1
-                tvDate.text = chosenDay.toString()
-                userDate = getString(R.string.user_date,chosenDay,month+1,year)
-                tvYear.setText(userDate)
-                makeCalendar(chosenDay)
-                rvCalendar.scrollToPosition(0)
-                rvTimesBar.scrollToPosition(0)} }
+            if (chosenDay == 1 && month != 0){ month -= 1
+                dates = daysInAMonth(month,year)
+                chosenDay = dates.size
+                tvMonth.setText(months[month])
+            }else if (chosenDay == 1 && month == 0){ if (year - 1 in years){
+                year -= 1
+                dates = daysInAMonth(month,year)
+                month = 12
+                chosenDay = dates.size
+                tvMonth.setText(months[month]) } }
+            else {chosenDay -= 1}
+
+            tvDate.text = chosenDay.toString()
+            userDate = getString(R.string.user_date,chosenDay,month+1,year)
+            tvYear.setText(userDate)
+            makeCalendar(chosenDay)
+            rvCalendar.scrollToPosition(0)
+            rvTimesBar.scrollToPosition(0)}
         tvDate.text = chosenDay.toString()
 
         timeScrollListener = object : RecyclerView.OnScrollListener() {

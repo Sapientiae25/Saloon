@@ -34,7 +34,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_baseline_check_circle_24"
-            app:tint="@color/teal_200" />
+            app:tint="@color/loginColor" />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAddStyles"

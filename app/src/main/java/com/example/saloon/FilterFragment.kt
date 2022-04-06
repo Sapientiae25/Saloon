@@ -1,8 +1,6 @@
 package com.example.saloon
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class FilterFragment : Fragment(){
 
-    private lateinit var accountItem : AccountItem
     private lateinit var filterItem: FilterItem
-    private var genderCount = 0
     private var lengthCount = 0
     private lateinit var rgFilterGender : RadioGroup
     private lateinit var llFilterLength : LinearLayout

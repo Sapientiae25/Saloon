@@ -7,15 +7,16 @@ import android.widget.RadioButton
 import androidx.recyclerview.widget.RecyclerView
 
 
-class CategoryChoiceAdapter (private val checkedList: MutableList<CheckItem>,val fragment: ChooseCategoryFragment)
-    : RecyclerView.Adapter<CategoryChoiceAdapter.CategoryChoiceViewHolder>(){
+class EditCategoryAdapter (private val checkedList: MutableList<CheckItem>,val fragment: EditCategoryFragment)
+    : RecyclerView.Adapter<EditCategoryAdapter.EditCategoryAdapterViewHolder>(){
 
-    inner class CategoryChoiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class EditCategoryAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val rbChecked: RadioButton = itemView.findViewById(R.id.rbChecked)
         private var click = 0
 
         fun bind(index: Int){
             val currentItem = checkedList[index]
+            rbChecked.isChecked = currentItem.checked
             rbChecked.text = currentItem.style
             itemView.setOnClickListener{
                 if (currentItem.checked){
@@ -25,17 +26,14 @@ class CategoryChoiceAdapter (private val checkedList: MutableList<CheckItem>,val
                 }else{ click += 0
                     rbChecked.isChecked = true
                     currentItem.checked = true }
-                if (click == 0) { fragment.ivSave.text = itemView.context.getString(R.string.skip)
-                    fragment.ivSave.setBackgroundColor(itemView.context.getColor(R.color.light_grey)) }else{
-                    fragment.ivSave.text = itemView.context.getString(R.string.save)
-                    fragment.ivSave.setBackgroundColor(itemView.context.getColor(R.color.loginColor)) }
                 fragment.ivSave.isEnabled = click == 0
-            } } }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryChoiceViewHolder {
+            }
+        } }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditCategoryAdapterViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.check_styles,
             parent, false)
-        return CategoryChoiceViewHolder(itemView) }
-    override fun onBindViewHolder(holder: CategoryChoiceViewHolder, position: Int) {
+        return EditCategoryAdapterViewHolder(itemView) }
+    override fun onBindViewHolder(holder: EditCategoryAdapterViewHolder, position: Int) {
         holder.bind(position) }
     override fun getItemCount() = checkedList.size
 }
