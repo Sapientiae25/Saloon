@@ -36,6 +36,11 @@
         app:tabMode="scrollable"
         app:tabPaddingStart="2dp"
         app:tabPaddingEnd="2dp"/>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategoryStyleItems"
@@ -44,15 +49,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vpImages" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnEditCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="15dp"
         android:contentDescription="@string/edit_category"
-        app:backgroundTint="@color/loginColor"
         android:src="@drawable/ic_baseline_edit_24"
+        app:backgroundTint="@color/loginColor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

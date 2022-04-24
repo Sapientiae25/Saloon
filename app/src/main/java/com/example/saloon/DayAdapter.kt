@@ -9,24 +9,23 @@ import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 
 
-class DayAdapter (private val calendarArray: MutableList<CalendarItem>, val fragment: CalendarFragment)
-    : RecyclerView.Adapter<DayAdapter.CalendarViewHolder>(),CloseSheet{
+class DayAdapter (private val calendarArray: MutableList<CalendarItem>,val fragment: CalendarFragment)
+    : RecyclerView.Adapter<DayAdapter.DayViewHolder>(),CloseSheet{
 
     var bottomSheetFragment: CalendarBottomSheetFragment? = null
 
-    inner class CalendarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class DayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val tvCalendar: TextView = itemView.findViewById(R.id.tvCalendar)
         fun bind(index: Int){
             val currentItem = calendarArray[index]
             itemView.layoutParams.height = itemView.context.resources.getDimensionPixelSize(R.dimen.item_height) * currentItem.span
             if (currentItem.gone) { itemView.layoutParams.height = 0 }
             if (currentItem.calendarType != 2){
-                itemView.setOnClickListener {
-                    val bundle = bundleOf(Pair("booking",currentItem))
+                itemView.setOnClickListener { val bundle = bundleOf(Pair("booking",currentItem))
                     bottomSheetFragment = CalendarBottomSheetFragment(fragment)
                     bottomSheetFragment?.arguments = bundle
                     bottomSheetFragment?.show((itemView.context as DefaultActivity).supportFragmentManager, "BottomSheetDialog") }}
-                else{
+            else{
                 itemView.setOnClickListener {
                     val bundle = Bundle()
                     val bookingBottomSheetFragment = StyleBottomSheet()
@@ -35,13 +34,13 @@ class DayAdapter (private val calendarArray: MutableList<CalendarItem>, val frag
                     bookingBottomSheetFragment.arguments = bundle }}
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.calendar_cell_layout,
             parent, false)
-        return CalendarViewHolder(itemView)
+        return DayViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
         val currentItem = calendarArray[position]
         holder.bind(position)
         val item = holder.itemView

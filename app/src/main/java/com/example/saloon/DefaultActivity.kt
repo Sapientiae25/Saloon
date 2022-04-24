@@ -2,7 +2,6 @@ package com.example.saloon
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.TextView
@@ -52,7 +51,6 @@ class DefaultActivity : AppCompatActivity() {
         var url = getString(R.string.url,"check_privacy.php")
         var stringRequest: StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
-                Log.println(Log.ASSERT,"priv",response)
                 val obj = JSONObject(response)
                 privacy = obj.getInt("privacy") == 1
                 hasPayment = obj.getString("payment").toIntOrNull() != null

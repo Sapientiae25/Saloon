@@ -18,9 +18,12 @@ class SimilarAdapter (private val styleItemList: MutableList<StyleItem>)
         fun bind(index: Int){
             val currentItem = styleItemList[index]
             name.text = currentItem.name
-            if (currentItem.imageId.isEmpty()){ image.visibility = View.GONE }else{
+            if (currentItem.imageId.isNotEmpty())
+//            { image.visibility = View.GONE }else
+            {
                 Picasso.get().load(itemView.context.getString(
-                    R.string.url,"style_images/${currentItem.imageId}.jpeg")).fit().centerCrop().into(image) }
+                    R.string.url,"style_images/${currentItem.imageId}.jpeg")).fit().centerCrop().into(image)
+        }
             itemView.setOnClickListener { view ->
                 val bundle = bundleOf(Pair("styleItem",currentItem))
                 view.findNavController().navigate(R.id.action_styleFragment_self,bundle) } } }

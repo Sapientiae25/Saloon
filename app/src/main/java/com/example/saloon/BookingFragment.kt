@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -17,23 +18,33 @@ import java.util.*
 
 class BookingFragment : Fragment() {
 
+    private lateinit var tvNoBookings: TextView
+    private lateinit var rvBookings: RecyclerView
+    val bookingList = mutableListOf<BookingItem>()
+    private lateinit var accountItem: AccountItem
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_booking, container, false)
         (activity as DefaultActivity).clearNotification()
-        val accountItem = (activity as DefaultActivity).accountItem
-        val tvNoBookings = rootView.findViewById<TextView>(R.id.tvNoBookings)
-        val rvBookings = rootView.findViewById<RecyclerView>(R.id.rvBookings)
-        val bookingList = mutableListOf<BookingItem>()
+        accountItem = (activity as DefaultActivity).accountItem
+        tvNoBookings = rootView.findViewById(R.id.tvNoBookings)
+        rvBookings = rootView.findViewById(R.id.rvBookings)
         (activity as DefaultActivity).supportActionBar?.title = "Bookings"
         rvBookings.layoutManager = LinearLayoutManager(context)
         rvBookings.adapter = BookingAdapter(bookingList)
+        val swipeRefresh = rootView.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
+        loadData()
+
+        swipeRefresh.setOnRefreshListener { loadData();swipeRefresh.isRefreshing = false }
+        return rootView
+    }
+    private fun loadData(){
         var url = getString(R.string.url,"get_bookings.php")
         var stringRequest : StringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
-                Log.println(Log.ASSERT,"response",response.toString())
                 val arr = JSONArray(response)
                 for (i in 0 until arr.length()){
                     val obj = arr.getJSONObject(i)
@@ -67,6 +78,5 @@ class BookingFragment : Fragment() {
                 params["account_id"] = accountItem.id
                 return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
-        return rootView
     }
 }

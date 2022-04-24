@@ -12,7 +12,7 @@ import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
 import java.time.YearMonth
 
-class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accountItem: AccountItem)
+class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accountItem: AccountItem, val fragment: CalendarFragment)
     : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
     inner class CalendarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -36,14 +36,14 @@ class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accou
 
             rvCalendar.layoutManager = LinearLayoutManager(itemView.context)
             rvCalendar.setHasFixedSize(true)
-            rvCalendar.adapter = TestAdapter(calendarList)
-            rvCalendar.scrollToPosition(0)
+            rvCalendar.adapter = DayAdapter(calendarList,fragment)
+            rvCalendar.layoutManager?.scrollToPosition(0)
 
             rvTimesBar.adapter = TimesBarAdapter(timesBarList)
             rvTimesBar.setHasFixedSize(true)
             rvTimesBar.layoutManager = LinearLayoutManager(itemView.context)
             rvTimesBar.adapter?.notifyItemRangeInserted(0,timesBarList.size)
-            rvTimesBar.scrollToPosition(0)
+            rvTimesBar.layoutManager?.scrollToPosition(0)
 
             dates = daysInAMonth(month,year)
             makeCalendar(chosenDay)
@@ -127,26 +127,21 @@ class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accou
                         calendarList[timePosition] = item
                         if (firstSpan > 0){
                             val startHour = startBreak.split(":")[0].toInt()
-                            val previousItem = CalendarItem(itemView.context.getString(R.string.clock,startHour,0),
-                                itemView.context.getString(R.string.clock,startHour+1,0),span=firstSpan,
+                            val previousItem = CalendarItem(itemView.context.getString(R.string.clock,startHour,0), itemView.context.getString(R.string.clock,startHour+1,0),span=firstSpan,
                                 date=itemView.context.getString(R.string.datetime,year,month,chosenDay))
                             calendarList.add(timePosition,previousItem)
                         }}
-                    rvCalendar.adapter?.notifyItemRangeChanged(0,calendarList.size)
-                    rvCalendar.scrollToPosition(chosenDay) },
+                    rvCalendar.adapter?.notifyItemRangeChanged(0,calendarList.size) },
                 Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
                     val params = HashMap<String, String>()
                     params["account_id"] = accountItem.id
                     params["first_day"] = currentItem
-                    return params
-                }}
-            VolleySingleton.instance?.addToRequestQueue(stringRequest) }
-    }
+                    return params }}
+            VolleySingleton.instance?.addToRequestQueue(stringRequest) } }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.test_rv,
-            parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.day_layout, parent, false)
         return CalendarViewHolder(itemView)
     }
 

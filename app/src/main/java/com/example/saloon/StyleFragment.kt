@@ -150,7 +150,6 @@ class StyleFragment : Fragment() {
         url = getString(R.string.url,"saloon_get_style.php")
         stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
-                Log.println(Log.ASSERT,"POP",response)
                 val arr = JSONArray(response)
                 if (arr.length() == 0){llMoreLikeThis.visibility = View.GONE}
                 for (x in 0 until arr.length()){
@@ -176,12 +175,8 @@ class StyleFragment : Fragment() {
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
         url = getString(R.string.url,"check_style_privacy.php")
         stringRequest = object : StringRequest(
-            Method.POST, url, Response.Listener { response ->
-                Log.println(Log.ASSERT,"s_priv",response)
-                privacy = response == "1"
-                changePrivacy()},
-            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
-            @Throws(AuthFailureError::class)
+            Method.POST, url, Response.Listener { response -> privacy = response == "1"; changePrivacy()},
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["style_id"] = styleItem.id

@@ -17,9 +17,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    lintOptions {
-        baseline(file("lint-baseline.xml"))
-    }
 
     buildTypes {
         release {
@@ -35,6 +32,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions { jvmTarget = '1.8'}
+    lint {
+        baseline file('lint-baseline.xml')
+    }
 }
 
 dependencies {

@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -31,18 +32,22 @@ class CategoryFragment : Fragment(){
     lateinit var categoryItem: CategoryItem
     private lateinit var vpImages: ViewPager2
     private val imageUrls = mutableListOf("")
+    private lateinit var rvCategoryStyleItems: RecyclerView
+    private lateinit var tvNoStyles: TextView
+    private lateinit var accountItem: AccountItem
+    val styleItemList = mutableListOf<StyleItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_category, container, false)
-        val accountItem = (activity as DefaultActivity).accountItem
+        accountItem = (activity as DefaultActivity).accountItem
         categoryItem = arguments?.getParcelable("categoryItem")!!
         (activity as DefaultActivity).supportActionBar?.title = categoryItem.category
         val styleItemList = mutableListOf<StyleItem>()
-        val rvCategoryStyleItems = rootView.findViewById<RecyclerView>(R.id.rvCategoryStyleItems)
-        val tvNoStyles = rootView.findViewById<TextView>(R.id.tvNoStyles)
+        rvCategoryStyleItems = rootView.findViewById(R.id.rvCategoryStyleItems)
+        tvNoStyles = rootView.findViewById(R.id.tvNoStyles)
         val btnEditCategory = rootView.findViewById<FloatingActionButton>(R.id.btnEditCategory)
         rvCategoryStyleItems.adapter = CategoryAdapter(styleItemList)
         rvCategoryStyleItems.layoutManager = LinearLayoutManager(context)
@@ -51,7 +56,7 @@ class CategoryFragment : Fragment(){
         vpImages = rootView.findViewById(R.id.vpImages)
         val tabLayout = rootView.findViewById<TabLayout>(R.id.tabLayout)
 
-        val adapter = StyleImageAdapter(imageUrls) { _ ->  }
+        val adapter = StyleImageAdapter(imageUrls) {}
         vpImages.adapter = adapter
         vpImages.clipChildren = false
         vpImages.clipToPadding = false
@@ -63,7 +68,7 @@ class CategoryFragment : Fragment(){
         compositePageTransformer.addTransformer(MarginPageTransformer(40))
         compositePageTransformer.addTransformer { page, position -> val r = 1 - abs(position)
             page.scaleY = 0.85f + r * 0.15f }
-
+        val swipeRefresh = rootView.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
         vpImages.setPageTransformer(compositePageTransformer)
         val sliderRunnable = Runnable {vpImages.currentItem = if(vpImages.currentItem+1 == imageUrls.size) 0
         else vpImages.currentItem+1}
@@ -76,6 +81,31 @@ class CategoryFragment : Fragment(){
                 sliderHandler.removeCallbacks(sliderRunnable)
                 sliderHandler.postDelayed(sliderRunnable, 2000) } })
 
+        btnEditCategory.setOnClickListener{ view ->
+            val bundle = bundleOf(Pair("categoryItem",categoryItem))
+            view.findNavController().navigate(R.id.action_categoryFragment_to_editCategoryFragment,bundle) }
+
+        loadData()
+        loadImages()
+        swipeRefresh.setOnRefreshListener { loadData();loadImages();swipeRefresh.isRefreshing = false}
+        return rootView }
+    private fun loadImages(){
+        val url = getString(R.string.url,"get_category_images.php")
+        val stringRequest = object : StringRequest(Method.POST, url, Response.Listener { response ->
+            Log.println(Log.ASSERT,"CATEG",response)
+            val arr = JSONArray(response)
+            if (arr.length() == 0) {vpImages.visibility = View.GONE}
+            for (i in 0 until arr.length()){
+                val imageId = arr.getString(i)
+                imageUrls.add(imageId)}
+            vpImages.adapter?.notifyItemRangeInserted(1,imageUrls.size)},
+            Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
+        override fun getParams(): Map<String, String> {
+            val params = java.util.HashMap<String, String>()
+            params["category_id"] = categoryItem.id
+            return params }}
+        VolleySingleton.instance?.addToRequestQueue(stringRequest) }
+    private fun loadData(){
         val url = getString(R.string.url,"get_category_styles.php")
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response ->
@@ -103,28 +133,6 @@ class CategoryFragment : Fragment(){
                 params["category_id"] = categoryItem.id
                 return params
             }}
-        VolleySingleton.instance?.addToRequestQueue(stringRequest)
-
-        btnEditCategory.setOnClickListener{ view ->
-            val bundle = bundleOf(Pair("categoryItem",categoryItem))
-            view.findNavController().navigate(R.id.action_categoryFragment_to_editCategoryFragment,bundle) }
-        loadImages()
-        return rootView }
-    private fun loadImages(){
-        val url = getString(R.string.url,"get_category_images.php")
-        val stringRequest = object : StringRequest(Method.POST, url, Response.Listener { response ->
-            Log.println(Log.ASSERT,"CATEG",response)
-            val arr = JSONArray(response)
-            if (arr.length() == 0) {vpImages.visibility = View.GONE}
-            for (i in 0 until arr.length()){
-                val imageId = arr.getString(i)
-                imageUrls.add(imageId)}
-            vpImages.adapter?.notifyItemRangeInserted(1,imageUrls.size)},
-            Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
-        override fun getParams(): Map<String, String> {
-            val params = java.util.HashMap<String, String>()
-            params["category_id"] = categoryItem.id
-            return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)
     }
 }

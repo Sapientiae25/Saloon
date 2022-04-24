@@ -128,33 +128,18 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
 
-        <AutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/tvDate"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:inputType="none"
-            android:layout_gravity="start"
-            android:background="@drawable/rounded"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp" />
+            android:background="@drawable/rounded"/>
 
-        <!--        <TextView-->
-<!--            android:id="@+id/tvDate"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@drawable/rounded"-->
-<!--            android:gravity="center"-->
-<!--            android:paddingStart="15dp"-->
-<!--            android:paddingEnd="15dp"-->
-<!--            android:paddingBottom="10dp"-->
-<!--            android:paddingTop="10dp"-->
-<!--            android:textSize="20sp"
-/>-->
-        <ImageView
+    <ImageView
             android:id="@+id/next"
             android:layout_width="40dp"
             android:layout_height="45dp"

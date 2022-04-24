@@ -5,22 +5,26 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
+
+
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
         style="@style/Widget.MyApp.TextInputLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="15dp"
-        app:endIconMode="dropdown_menu">
+        app:endIconMode="dropdown_menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <AutoCompleteTextView
-            android:backgroundTint="@android:color/transparent"
             android:id="@+id/tvYear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:inputType="none"
             android:layout_gravity="start"
+            android:backgroundTint="@android:color/transparent"
+            android:inputType="none"
+            android:textSize="25sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -82,6 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:padding="4dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="@string/month"
@@ -104,7 +109,7 @@
 
     <LinearLayout
         android:id="@+id/llDay"
-        android:paddingTop="8dp"
+        android:paddingTop="12dp"
         android:paddingBottom="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -116,30 +121,29 @@
 
         <ImageView
             android:id="@+id/previous"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/rounded"
             android:contentDescription="@string/previous_day"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/tvDate"
+            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded"
-            android:gravity="center"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="20sp" />
+            android:textSize="25sp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:inputType="none"
+            android:background="@drawable/rounded"/>
 
         <ImageView
             android:id="@+id/next"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/rounded"
             android:contentDescription="@string/next_day"
@@ -148,28 +152,17 @@
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout6"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/top_border"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llDay">
+        app:layout_constraintTop_toBottomOf="@+id/llDay">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTimesBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="180dp"
-            tools:listitem="@layout/time_bar_layout"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCalendar"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="180dp"
-            tools:listitem="@layout/calendar_cell_layout"/>
-    </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/llDay" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

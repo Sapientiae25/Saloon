@@ -5,33 +5,38 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.AuthFailureError
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import org.json.JSONObject
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager2.widget.ViewPager2
 import java.time.YearMonth
 import java.util.*
 
 
 class CalendarFragment : Fragment() {
 
-    lateinit var rvCalendar: RecyclerView
-    private lateinit var dates: MutableList<String>
-    val calendarList =  mutableListOf<CalendarItem>()
-    lateinit var timeScrollListener: RecyclerView.OnScrollListener
-    lateinit var calendarScrollListener: RecyclerView.OnScrollListener
     private var year: Int= 0
     private var month: Int = 0
     private var chosenDay: Int = 0
-    private val timesBarList = mutableListOf<String>()
     lateinit var accountItem: AccountItem
+    private val calendarList = mutableListOf<Triple<Int,Int,Int>>()
+    private lateinit var tvYear: AutoCompleteTextView
+    private lateinit var tvMonth: AutoCompleteTextView
+    lateinit var next: ImageView
+    private lateinit var previous: ImageView
+    private lateinit var tvDate: AppCompatSpinner
+    private lateinit var vpDay: ViewPager2
+    var userDate = ""
+    var index = 0
+    val appContext = this
+    private val years = mutableListOf<Int>()
+    lateinit var dayList: MutableList<String>
+    val months = arrayOf("January", "February", "March", "April", "May", "June", "July", "August",
+        "September", "October", "November", "December")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,192 +45,132 @@ class CalendarFragment : Fragment() {
         val rootView =  inflater.inflate(R.layout.fragment_calendar, container, false)
         (activity as DefaultActivity).supportActionBar?.title = "Calendar"
         accountItem = (activity as DefaultActivity).accountItem
-        val months = mutableListOf("January", "February", "March", "April", "May", "June", "July", "August",
-            "September", "October", "November", "December")
-        val years = mutableListOf<Int>()
-        val calendar = Calendar.getInstance()
-        year = calendar.get(Calendar.YEAR)
-        month = calendar.get(Calendar.MONTH)
-        chosenDay = calendar.get(Calendar.DAY_OF_MONTH)
-        rvCalendar = rootView.findViewById(R.id.rvCalendar)
-        rvCalendar.layoutManager = LinearLayoutManager(context)
-        rvCalendar.setHasFixedSize(true)
-        rvCalendar.adapter = DayAdapter(calendarList,this)
-        val tvYear = rootView.findViewById<AutoCompleteTextView>(R.id.tvYear)
-        val tvMonth = rootView.findViewById<AutoCompleteTextView>(R.id.tvMonth)
-        val rvTimesBar = rootView.findViewById<RecyclerView>(R.id.rvTimesBar)
-        val next = rootView.findViewById<ImageView>(R.id.next)
-        val previous = rootView.findViewById<ImageView>(R.id.previous)
-        val tvDate = rootView.findViewById<TextView>(R.id.tvDate)
-        for (i in 0 until 10){ years.add(year+i) }
-        dates = daysInAMonth(month,year)
-        makeCalendar(chosenDay)
-        rvTimesBar.adapter = TimesBarAdapter(timesBarList)
-        rvTimesBar.hasFixedSize()
-        rvTimesBar.layoutManager = LinearLayoutManager(context)
-        rvTimesBar.adapter?.notifyItemRangeInserted(0,timesBarList.size)
-        var userDate = getString(R.string.user_date,chosenDay,month+1,year)
-        tvYear.setText(userDate)
-        tvMonth.setText(months[month])
-        val monthArrayAdapter = ArrayAdapter(requireContext(),R.layout.text_layout,months.toTypedArray())
-        val yearArrayAdapter = ArrayAdapter(requireContext(),R.layout.text_layout,years.toTypedArray())
-        tvYear.setAdapter(yearArrayAdapter)
-        tvMonth.setAdapter(monthArrayAdapter)
+        tvYear = rootView.findViewById(R.id.tvYear)
+        tvMonth = rootView.findViewById(R.id.tvMonth)
+        vpDay = rootView.findViewById(R.id.vpDay)
+        next = rootView.findViewById(R.id.next)
+        previous = rootView.findViewById(R.id.previous)
+        tvDate = rootView.findViewById(R.id.tvDate)
+        val swipeRefresh = rootView.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
+        loadData()
+
+        swipeRefresh.setOnRefreshListener { loadData() ;swipeRefresh.isRefreshing = false}
+        tvDate.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, i: Int, p3: Long) {
+                if (i+1 != chosenDay){
+                    chosenDay = i+1
+                    userDate = getString(R.string.user_date,chosenDay,month,year)
+                    tvYear.setText(userDate,false)
+                    index = calendarList.indexOf(Triple(year,month,chosenDay))
+                    vpDay.setCurrentItem(index,false) }}
+            override fun onNothingSelected(p0: AdapterView<*>?) {} }
+        vpDay.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val currentItem = calendarList[position]
+                year = currentItem.first
+                month = currentItem.second
+                chosenDay = currentItem.third
+
+                userDate = getString(R.string.user_date,chosenDay,month,year)
+                tvYear.setText(userDate,false)
+                tvMonth.setText(months[month-1],false)
+                dayList = getDays(month,year)
+                tvDate.adapter = ArrayAdapter(requireContext(),R.layout.text_layout,dayList.toList())
+                tvDate.setSelection(chosenDay-1)
+            } })
         tvMonth.setOnItemClickListener { _, _, i, _ ->
-            month = i
-            userDate = getString(R.string.user_date,chosenDay,month+1,year)
-            tvYear.setText(userDate)
-            dates = daysInAMonth(month,year)
-            makeCalendar(chosenDay)}
+            month = i+1
+            dayList = getDays(month,year)
+            tvDate.adapter = ArrayAdapter(requireContext(),R.layout.text_layout,dayList.toList())
+            val days = dayList.size
+            Log.println(Log.ASSERT,"dayList","$chosenDay $days")
+
+            chosenDay = if (chosenDay < days) chosenDay else days
+            userDate = getString(R.string.user_date,chosenDay,month,year)
+            tvYear.setText(userDate,false)
+            index = calendarList.indexOf(Triple(year,month,chosenDay))
+            tvDate.setSelection(chosenDay-1)
+            vpDay.setCurrentItem(index,false)}
         tvYear.setOnItemClickListener { _, _, i, _ ->
             year = years[i]
-            userDate = getString(R.string.user_date,chosenDay,month+1,year)
-            tvYear.setText(userDate)
-            makeCalendar(chosenDay)
-            dates = daysInAMonth(month,year) }
+            dayList = getDays(month,year)
+            tvDate.adapter = ArrayAdapter(requireContext(),R.layout.text_layout,dayList.toList())
+            val days = dayList.size
+            chosenDay = if (chosenDay < days) chosenDay else days
+            userDate = getString(R.string.user_date,chosenDay,month,year)
+            tvYear.setText(userDate,false)
+            index = calendarList.indexOf(Triple(year,month,chosenDay))
+            tvDate.setSelection(chosenDay-1)
+            vpDay.setCurrentItem(index,false)}
         next.setOnClickListener {
-            if (chosenDay == dates.size && month != 11){ month += 1
-                chosenDay = 0
-                tvMonth.setText(months[month])
-                dates = daysInAMonth(month,year)
-            }else if (chosenDay == dates.size && month == 11){ if (year + 1 in years){
-                year += 1
-                month = 0
-                chosenDay = 0
-                tvMonth.setText(months[month])
-                dates = daysInAMonth(month,year)} }
-            else {chosenDay += 1}
-
-            tvDate.text = chosenDay.toString()
-            userDate = getString(R.string.user_date,chosenDay,month+1,year)
-            tvYear.setText(userDate)
-            makeCalendar(chosenDay)
-            rvCalendar.scrollToPosition(0)
-            rvTimesBar.scrollToPosition(0) }
+            if (vpDay.currentItem != calendarList.size-1) {
+                index = vpDay.currentItem+1
+                val currentItem = calendarList[index]
+                year = currentItem.first
+                month = currentItem.second
+                chosenDay = currentItem.third
+                userDate = getString(R.string.user_date,chosenDay,month,year)
+                tvYear.setText(userDate,false)
+                tvMonth.setText(months[month-1],false)
+                vpDay.setCurrentItem(index,true)
+                dayList = getDays(month,year)
+                tvDate.adapter = ArrayAdapter(requireContext(),R.layout.text_layout,dayList.toList())
+                tvDate.setSelection(chosenDay-1) } }
         previous.setOnClickListener {
-            if (chosenDay == 1 && month != 0){ month -= 1
-                dates = daysInAMonth(month,year)
-                chosenDay = dates.size
-                tvMonth.setText(months[month])
-            }else if (chosenDay == 1 && month == 0){ if (year - 1 in years){
-                year -= 1
-                dates = daysInAMonth(month,year)
-                month = 12
-                chosenDay = dates.size
-                tvMonth.setText(months[month]) } }
-            else {chosenDay -= 1}
-
-            tvDate.text = chosenDay.toString()
-            userDate = getString(R.string.user_date,chosenDay,month+1,year)
-            tvYear.setText(userDate)
-            makeCalendar(chosenDay)
-            rvCalendar.scrollToPosition(0)
-            rvTimesBar.scrollToPosition(0)}
-        tvDate.text = chosenDay.toString()
-
-        timeScrollListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                rvCalendar.removeOnScrollListener(calendarScrollListener)
-                rvCalendar.scrollBy(dx, dy)
-                rvCalendar.addOnScrollListener(calendarScrollListener) } }
-        calendarScrollListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                rvTimesBar.removeOnScrollListener(timeScrollListener)
-                rvTimesBar.scrollBy(dx, dy)
-                rvTimesBar.addOnScrollListener(timeScrollListener) }}
-        rvTimesBar.addOnScrollListener(timeScrollListener)
-        rvCalendar.addOnScrollListener(calendarScrollListener)
-
+            if (vpDay.currentItem != 0) {
+                index = vpDay.currentItem-1
+                val currentItem = calendarList[index]
+                year = currentItem.first
+                month = currentItem.second
+                chosenDay = currentItem.third
+                userDate = getString(R.string.user_date,chosenDay,month,year)
+                tvYear.setText(userDate,false)
+                tvMonth.setText(months[month-1],false)
+                vpDay.setCurrentItem(index,true)
+                dayList = getDays(month,year)
+                tvDate.adapter = ArrayAdapter(requireContext(),R.layout.text_layout,dayList.toList())
+                tvDate.setSelection(chosenDay-1) }}
         return rootView
     }
+    private fun loadData(){
+        val calendar = Calendar.getInstance()
+        year = calendar.get(Calendar.YEAR)
+        month = calendar.get(Calendar.MONTH)+1
+        chosenDay = calendar.get(Calendar.DAY_OF_MONTH)
+        vpDay.adapter = CalendarAdapter(calendarList,accountItem,this)
+        for (i in 0 until 5){ years.add(year+i) }
+        for (y in years){ for (m in 1 until 13){ calendarList.addAll(makeCalendar(m,y)) } }
+        vpDay.adapter?.notifyItemRangeInserted(0,calendarList.size)
 
+        index = calendarList.indexOf(Triple(year,month,chosenDay))
 
-    private fun makeCalendar(index: Int){
-        val currentItem = dates[index-1]
-        calendarList.clear()
-        for (h in 0 until 24){
-            calendarList.add(CalendarItem(getString(R.string.clock,h,0),
-                getString(R.string.clock,h+1,0),date=getString(R.string.datetime,year,(month+1),chosenDay)))
-            timesBarList.add(getString(R.string.clock,h+1,0)) }
-        val url = getString(R.string.url,"calendar.php")
-        val stringRequest = object : StringRequest(
-            Method.POST, url, Response.Listener { response ->
-                Log.println(Log.ASSERT,"sui",response)
-                val obj = JSONObject(response)
-                val datesArray = obj.getJSONArray("dates")
-                val breaksArray = obj.getJSONArray("break")
-                for (x in 0 until datesArray.length()) {
-                    val date = datesArray.getJSONObject(x)
-                    val timePosition = date.getInt("position")
-                    val rowCount = date.getInt("row_count")
-                    val startBook = date.getString("start")
-                    val endBook = date.getString("end")
-                    val removeHours = date.getInt("remove_hours")
-                    val firstSpan = date.getInt("first_span")
-                    val finalSpan = date.getInt("final_span")
-                    val bookingId = date.getInt("booking_id")
-                    val styleId = date.getInt("style_id")
-                    val calendarDate = date.getString("date")
-                    if (firstSpan > 0){
-                        val startHour = startBook.split(":")[0].toInt()
-                        val previousItem = CalendarItem(getString(R.string.clock,startHour,0),
-                            getString(R.string.clock,startHour+1,0),span=firstSpan,
-                            date=getString(R.string.datetime,year,(month+1),chosenDay))
-                        calendarList[timePosition-1] = previousItem }
-                    for (y in 1 until removeHours+1){calendarList[timePosition+y].gone = true}
-                    calendarList[timePosition+removeHours+1].span = finalSpan
-                    val item = CalendarItem(startBook,endBook,span=rowCount,calendarType=2,date=calendarDate,id=bookingId,styleId=styleId)
-                    calendarList[timePosition] = item
-                }
-                for (x in 0 until breaksArray.length()) {
-                    val breaks = breaksArray.getJSONObject(x)
-                    val timePosition = breaks.getInt("position")
-                    val rowCount = breaks.getInt("row_count")
-                    val startBreak = breaks.getString("start")
-                    val endBreak = breaks.getString("end")
-                    val calendarDate = breaks.getString("date")
-                    val removeHours = breaks.getInt("remove_hours")
-                    val firstSpan = breaks.getInt("first_span")
-                    val finalSpan = breaks.getInt("final_span")
-                    val breakId = breaks.getInt("id")
-                    for (y in 1 until removeHours+1){ calendarList[timePosition+y].gone = true}
-                    calendarList[timePosition+removeHours+1].span = finalSpan
-                    val item = CalendarItem(startBreak,endBreak,"",rowCount,1,id=breakId,date=calendarDate)
-                    calendarList[timePosition] = item
-                    if (firstSpan > 0){
-                        val startHour = startBreak.split(":")[0].toInt()
-                        val previousItem = CalendarItem(getString(R.string.clock,startHour,0),
-                            getString(R.string.clock,startHour+1,0),span=firstSpan,
-                            date=getString(R.string.datetime,year,(month+1),chosenDay))
-                        calendarList.add(timePosition,previousItem)
-                    }}
-                rvCalendar.adapter?.notifyItemRangeChanged(0,calendarList.size)
-                rvCalendar.scrollToPosition(chosenDay) },
-            Response.ErrorListener { volleyError -> println(volleyError.message) }) {
-            @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String> {
-                val params = HashMap<String, String>()
-                params["account_id"] = accountItem.id
-                params["first_day"] = currentItem
-                return params
-            }}
-        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+        vpDay.setCurrentItem(index,false)
+
+        userDate = getString(R.string.user_date,chosenDay,month,year)
+        tvYear.setText(userDate,false)
+        tvMonth.setText(months[month-1],false)
+
+        val monthArrayAdapter = ArrayAdapter(requireContext(),R.layout.text_layout,months)
+        val yearArrayAdapter = ArrayAdapter(requireContext(),R.layout.text_layout,years.toList())
+
+        tvYear.setAdapter(yearArrayAdapter)
+        tvMonth.setAdapter(monthArrayAdapter)
+        dayList = getDays(month,year)
+        tvDate.adapter = ArrayAdapter(requireContext(),R.layout.text_layout,dayList.toList())
+        tvDate.setSelection(chosenDay-1)
     }
-    fun restart(){
-        Log.println(Log.ASSERT,"da",chosenDay.toString())
-        makeCalendar(chosenDay)}
 
-    private fun daysInAMonth( m: Int, year: Int): MutableList<String> {
-       val  month = m + 1
-        val daysObj = YearMonth.of(year,month)
+    fun restart(){ Log.println(Log.ASSERT,"da",chosenDay.toString())
+//        makeCalendar(chosenDay) TODO FIX
+    }
+    fun getDays(m: Int,y: Int): MutableList<String> {
+        val days = mutableListOf<String>()
+        for (i in 1 until YearMonth.of(y,m).lengthOfMonth()+1) {days.add("$i")}
+        return days }
+    private fun makeCalendar( month: Int, year: Int): MutableList<Triple<Int,Int,Int>> {
+        val daysObj = YearMonth.of(year, month)
         val days = daysObj.lengthOfMonth()
-        val dateList = mutableListOf<String>()
-        for (day in 1 until days+1){ dateList.add(getString(R.string.datetime,year,month,day)) }
-        return dateList
-    }
-
-
-
+        val dateList = mutableListOf<Triple<Int,Int,Int>>()
+        for (day in 1 until days+1){ dateList.add(Triple(year, month, day)) }
+        return dateList }
 }
