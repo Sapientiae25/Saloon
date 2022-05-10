@@ -9,23 +9,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import org.json.JSONObject
+import org.json.JSONArray
 import java.time.YearMonth
 
-class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accountItem: AccountItem, val fragment: CalendarFragment)
+class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accountItem: AccountItem,
+                       val calendarList: MutableList<CalendarItem>, val fragment: CalendarFragment)
     : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
     inner class CalendarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val rvTimesBar = itemView.findViewById<RecyclerView>(R.id.rvTimesBar)
         private val rvCalendar = itemView.findViewById<RecyclerView>(R.id.rvCalendar)
         private lateinit var dates: MutableList<String>
-        val calendarList =  mutableListOf<CalendarItem>()
         lateinit var timeScrollListener: RecyclerView.OnScrollListener
         lateinit var calendarScrollListener: RecyclerView.OnScrollListener
-        var year: Int= 0
-        var month: Int = 0
-        var chosenDay: Int = 0
-        private val timesBarList = mutableListOf<String>()
+        private var year: Int= 0
+        private var month: Int = 0
+        private var chosenDay: Int = 0
+        private val timesBarList = mutableListOf("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"
+            ,"17","18","19","20","21","22","23")
+        val calendar = mutableListOf<CalendarItem>()
 
         fun bind(index: Int){
             val currentItem = dateList[index]
@@ -36,7 +38,7 @@ class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accou
 
             rvCalendar.layoutManager = LinearLayoutManager(itemView.context)
             rvCalendar.setHasFixedSize(true)
-            rvCalendar.adapter = DayAdapter(calendarList,fragment)
+            rvCalendar.adapter = DayAdapter(calendar,fragment)
             rvCalendar.layoutManager?.scrollToPosition(0)
 
             rvTimesBar.adapter = TimesBarAdapter(timesBarList)
@@ -68,84 +70,97 @@ class CalendarAdapter (val dateList: MutableList<Triple<Int,Int,Int>>, val accou
             val daysObj = YearMonth.of(year,month)
             val days = daysObj.lengthOfMonth()
             val dateList = mutableListOf<String>()
-            for (day in 1 until days+1){ dateList.add(itemView.context.getString(R.string.datetime,year,month,day)) }
+            for (day in 1 until days+1){ dateList.add(itemView.context.getString(R.string.datetime,year,month-1,day)) }
             return dateList }
 
         private fun makeCalendar(index: Int){
             val currentItem = dates[index-1]
+            rvCalendar.adapter?.notifyItemRangeRemoved(0,calendar.size)
+            calendar.clear()
 
-            calendarList.clear()
-            for (h in 0 until 24){
-                calendarList.add(CalendarItem(itemView.context.getString(R.string.clock,h,0),
-                    itemView.context.getString(R.string.clock,h+1,0),date=itemView.context.
-                    getString(R.string.datetime,year,month,chosenDay)))
-                timesBarList.add(itemView.context.getString(R.string.clock,h+1,0)) }
-            val url = itemView.context.getString(R.string.url,"calendar.php")
+            val url = itemView.context.getString(R.string.url,"make_calendar.php")
             val stringRequest = object : StringRequest(
-                Method.POST, url, Response.Listener { response ->
-                    val obj = JSONObject(response)
-                    val datesArray = obj.getJSONArray("dates")
-                    val breaksArray = obj.getJSONArray("break")
-                    for (x in 0 until datesArray.length()) {
-                        val date = datesArray.getJSONObject(x)
-                        val timePosition = date.getInt("position")
-                        val rowCount = date.getInt("row_count")
-                        val startBook = date.getString("start")
-                        val endBook = date.getString("end")
-                        val removeHours = date.getInt("remove_hours")
-                        val firstSpan = date.getInt("first_span")
-                        val finalSpan = date.getInt("final_span")
-                        val bookingId = date.getInt("booking_id")
-                        val styleId = date.getInt("style_id")
-                        val calendarDate = date.getString("date")
-                        if (firstSpan > 0){
-                            val startHour = startBook.split(":")[0].toInt()
-                            val previousItem = CalendarItem(itemView.context.getString(R.string.clock,startHour,0),
-                                itemView.context.getString(R.string.clock,startHour+1,0),span=firstSpan,
-                                date=itemView.context.getString(R.string.datetime,year,month,chosenDay))
-                            calendarList[timePosition-1] = previousItem }
-                        for (y in 1 until removeHours+1){calendarList[timePosition+y].gone = true}
-                        calendarList[timePosition+removeHours+1].span = finalSpan
-                        val item = CalendarItem(startBook,endBook,span=rowCount,calendarType=2,date=calendarDate,
-                            id=bookingId,styleId=styleId)
-                        calendarList[timePosition] = item
-                    }
-                    for (x in 0 until breaksArray.length()) {
-                        val breaks = breaksArray.getJSONObject(x)
-                        val timePosition = breaks.getInt("position")
-                        val rowCount = breaks.getInt("row_count")
-                        val startBreak = breaks.getString("start")
-                        val endBreak = breaks.getString("end")
-                        val calendarDate = breaks.getString("date")
-                        val removeHours = breaks.getInt("remove_hours")
-                        val firstSpan = breaks.getInt("first_span")
-                        val finalSpan = breaks.getInt("final_span")
-                        val breakId = breaks.getInt("id")
-                        for (y in 1 until removeHours+1){ calendarList[timePosition+y].gone = true}
-                        calendarList[timePosition+removeHours+1].span = finalSpan
-                        val item = CalendarItem(startBreak,endBreak,"",rowCount,1,id=breakId,date=calendarDate)
-                        calendarList[timePosition] = item
-                        if (firstSpan > 0){
-                            val startHour = startBreak.split(":")[0].toInt()
-                            val previousItem = CalendarItem(itemView.context.getString(R.string.clock,startHour,0), itemView.context.getString(R.string.clock,startHour+1,0),span=firstSpan,
-                                date=itemView.context.getString(R.string.datetime,year,month,chosenDay))
-                            calendarList.add(timePosition,previousItem)
-                        }}
-                    rvCalendar.adapter?.notifyItemRangeChanged(0,calendarList.size) },
-                Response.ErrorListener { volleyError -> println(volleyError.message) }) {
-                @Throws(AuthFailureError::class)
-                override fun getParams(): Map<String, String> {
-                    val params = HashMap<String, String>()
-                    params["account_id"] = accountItem.id
-                    params["first_day"] = currentItem
-                    return params }}
-            VolleySingleton.instance?.addToRequestQueue(stringRequest) } }
+                Method.POST, url, Response.Listener { response -> Log.println(Log.ASSERT,"response",response)
+                    val arr = JSONArray(response)
+                    val calendarItem = CalendarItem(date=currentItem)
+                    var span = 1
+                    var available = true
+                    var bookSpan = 0
+                    var new = false
+
+                    for (z in 0 until calendarList.size){val item = calendarList[z]
+                        if (bookSpan > 1){ bookSpan-=1
+                            if (bookSpan == 1){
+                                calendarItem.end = item.end
+                                calendarItem.endMinute = item.endMinute
+                                calendar.add(calendarItem.copy())
+                                span = 1
+                                bookSpan=0
+                                new = true
+                                available = true}
+                        }
+                        else{
+
+                        for (x in 0 until arr.length()) {
+                            val obj = arr.getJSONObject(x)
+                            val startBookNull = obj.getString("start").toIntOrNull()
+                            val endBookNull = obj.getString("end").toIntOrNull()
+                            val calType = obj.getInt("calendar")
+                            val id = obj.getInt("id")
+                            val bookingId = obj.getString("booking_id")
+                            if ((startBookNull != null && endBookNull != null && startBookNull >= item.startMinute
+                                && startBookNull < item.endMinute)
+                                || (startBookNull == null && endBookNull == null) ||
+                                (endBookNull != null && startBookNull == null && endBookNull >= item.startMinute && endBookNull <
+                                item.endMinute) || (startBookNull != null && endBookNull == null && startBookNull >= item.startMinute
+                                && startBookNull < item.endMinute)){
+                                if (available){
+                                    val startBook = startBookNull ?: 0
+                                    val endBook = endBookNull ?: 1440
+                                    calendarItem.startMinute = item.startMinute
+                                    calendarItem.start = item.start
+                                    calendarItem.calendarType = calType
+                                    calendarItem.id = id
+                                    calendarItem.bookingId = bookingId
+                                    val diff = (endBook - startBook) / 15
+                                    bookSpan = if ((endBook - startBook) % 15 == 0) diff else diff + 1
+                                    calendarItem.span = bookSpan
+                                    available = false}
+                                break } }
+
+                        if ((item.startMinute % 60 == 0 || new) && available){
+                            new = false
+                            calendarItem.startMinute = item.startMinute
+                            calendarItem.start = item.start
+                        }
+                        else if (item.endMinute % 60 == 0){
+                            calendarItem.end = item.end
+                            calendarItem.endMinute = item.endMinute
+                            calendarItem.span = span
+                            calendarItem.calendarType = 0
+                            calendar.add(calendarItem.copy())
+                            span = 0 }
+                        span += 1
+                    }}
+                    rvCalendar.adapter = DayAdapter(calendar,fragment)
+                    rvCalendar.adapter?.notifyItemRangeInserted(0,calendar.size) },
+                Response.ErrorListener { volleyError -> println(volleyError.message) }) { @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["account_id"] = accountItem.id
+                params["start"] = itemView.context.getString(R.string.make_datetime,currentItem,"00:00")
+                params["end"] = itemView.context.getString(R.string.make_datetime,currentItem,"23:59")
+                return params }}
+            VolleySingleton.instance?.addToRequestQueue(stringRequest)
+
+        } }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.day_layout, parent, false)
         return CalendarViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) { holder.bind(position) }
+    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
+        holder.bind(position) }
 
     override fun getItemCount() = dateList.size
 

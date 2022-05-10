@@ -4,18 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import java.util.*
 
 class BreakCheckPopUp(val fragment: CalendarFragment) : DialogFragment(), DeleteEvent {
-    private lateinit var editBtn: TextView
+    private lateinit var editBtn: AppCompatButton
     private lateinit var endDatetime: String
     private lateinit var startDatetime: String
     private lateinit var accountItem: AccountItem
@@ -33,7 +31,7 @@ class BreakCheckPopUp(val fragment: CalendarFragment) : DialogFragment(), Delete
 
         val rvEvents = rootView.findViewById<RecyclerView>(R.id.rvEvents)
         editBtn = rootView.findViewById(R.id.editBtn)
-        val cancelBtn = rootView.findViewById<Button>(R.id.cancelBtn)
+        val cancelBtn = rootView.findViewById<AppCompatButton>(R.id.cancelBtn)
         rvEvents.layoutManager = LinearLayoutManager(context)
         rvEvents.adapter = EventCheckAdapter(bookingArray!!.toMutableList(),this)
         rvEvents.adapter?.notifyItemRangeInserted(0,bookingArray.size)

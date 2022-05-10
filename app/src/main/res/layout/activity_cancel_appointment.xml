@@ -5,20 +5,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".CancelAppointmentActivity"
-    android:layout_marginEnd="10dp"
-    android:layout_marginStart="10dp">
+    android:layout_marginEnd="12dp"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="25dp">
     <TextView
         android:id="@+id/tvStyleName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/style_name"
-        android:textSize="25sp"/>
+        android:textSize="27sp"
+        android:textColor="@color/black"/>
     <TextView
         android:id="@+id/tvStyleTime"
         android:layout_marginStart="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="27sp"
+        android:textColor="@color/black"
         android:text="@string/time"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -26,7 +29,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:layout_marginBottom="10dp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etReason"
@@ -53,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:textColor="@color/teal_200"
             android:text="@string/email"/>
     </LinearLayout>
 

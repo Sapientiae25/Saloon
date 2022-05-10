@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/border"
+    android:background="@drawable/top_border"
     android:orientation="horizontal"
     >
     <TextView
         android:id="@+id/tvCalendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"/>
 </LinearLayout>

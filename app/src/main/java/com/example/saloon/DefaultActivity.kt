@@ -6,6 +6,7 @@ import android.view.View
 import android.view.Window
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
@@ -95,8 +96,8 @@ class DefaultActivity : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.payment_pop_up)
-        val save = dialog.findViewById<TextView>(R.id.save)
-        val close = dialog.findViewById<TextView>(R.id.close)
+        val save = dialog.findViewById<AppCompatButton>(R.id.save)
+        val close = dialog.findViewById<AppCompatButton>(R.id.close)
 
         close.setOnClickListener { dialog.dismiss() }
         save.setOnClickListener { view -> view.findNavController().navigate(R.id.action_global_paymentMethodFragment) ;dialog.dismiss() }

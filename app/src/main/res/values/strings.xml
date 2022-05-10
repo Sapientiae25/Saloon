@@ -102,6 +102,7 @@
     <string name="month">Month</string>
     <string name="make_datetime">%1$s %2$s</string>
     <string name="book_show">%1$s: %2$s</string>
+    <string name="time_format">%1$02d:%2$02d</string>
     <string name="next_day">Next day</string>
     <string name="previous_day">Previous day</string>
     <string name="break_word">Break</string>
@@ -193,4 +194,5 @@
     <string name="featured">Featured</string>
     <string name="sort_by">Sort By</string>
     <string name="apply">Apply</string>
+    <string name="to_make_your_saloon_public_you_must_add_a_payment_method">To make your saloon public you must add a payment method</string>
 </resources>

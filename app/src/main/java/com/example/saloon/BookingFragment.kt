@@ -44,7 +44,7 @@ class BookingFragment : Fragment() {
     private fun loadData(){
         var url = getString(R.string.url,"get_bookings.php")
         var stringRequest : StringRequest = object : StringRequest(
-            Method.POST, url, Response.Listener { response ->
+            Method.POST, url, Response.Listener { response -> Log.println(Log.ASSERT,"response",response)
                 val arr = JSONArray(response)
                 for (i in 0 until arr.length()){
                     val obj = arr.getJSONObject(i)

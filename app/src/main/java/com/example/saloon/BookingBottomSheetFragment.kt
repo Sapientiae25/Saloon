@@ -53,7 +53,8 @@ class BookingBottomSheetFragment : BottomSheetDialogFragment() {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
                     val params = HashMap<String, String>()
-                    params["style_id"] = bookingItem.styleId
+                    params["booking_id"] = bookingItem.bookingId
+
                     return params
                 }}
             VolleySingleton.instance?.addToRequestQueue(stringRequest)

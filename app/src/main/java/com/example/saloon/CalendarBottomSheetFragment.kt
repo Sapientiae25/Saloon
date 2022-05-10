@@ -2,6 +2,7 @@ package com.example.saloon
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,20 +32,23 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val booking = arguments?.getParcelable<CalendarItem>("booking")!!
+        val accountItem = (activity as DefaultActivity).accountItem
         val startTime = booking.start
         val endTime = booking.end
         val breakType = booking.calendarType == 1
-        val accountItem = (activity as DefaultActivity).accountItem
         val tvBreak = view.findViewById<TextView>(R.id.tvBreak)
-        if (breakType) tvBreak.text = getString(R.string.edit_break)
+        val btnAddBreak = view.findViewById<AppCompatButton>(R.id.btnAddBreak)
+        if (breakType) { tvBreak.text = getString(R.string.edit_break)
+            btnAddBreak.text = getString(R.string.edit_break)
+        }
         val tvEnd = view.findViewById<TextView>(R.id.tvEnd)
         val tvStart = view.findViewById<TextView>(R.id.tvStart)
         tvStart.text = startTime
         tvEnd.text = endTime
         val llEndTime = view.findViewById<LinearLayout>(R.id.llEndTime)
         val llStartTime = view.findViewById<LinearLayout>(R.id.llStartTime)
-        val btnAddBreak = view.findViewById<AppCompatButton>(R.id.btnAddBreak)
         val btnDelete = view.findViewById<AppCompatButton>(R.id.btnDelete)
+        btnDelete.visibility = if(!breakType) View.GONE else View.VISIBLE
         llEndTime.setOnClickListener { showCustomDialog(tvEnd)}
         llStartTime.setOnClickListener { showCustomDialog(tvStart) }
         btnAddBreak.setOnClickListener {
@@ -54,9 +58,9 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
                 val startDatetime = getString(R.string.make_datetime,booking.date,tvStart.text)
                 val endDatetime = getString(R.string.make_datetime,booking.date,tvEnd.text)
                 val bookingArray = mutableListOf<CalendarItem>()
-                val url = getString(R.string.url,"break_check.php")
+                val url = getString(R.string.url,"check_break.php")
                 val stringRequest = object : StringRequest(
-                    Method.POST, url, Response.Listener { response ->
+                    Method.POST, url, Response.Listener { response -> Log.println(Log.ASSERT,"response",response)
                         val jObj = JSONObject(response)
                         val past = jObj.getInt("past") == 1
                         if (!past){
@@ -65,11 +69,11 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
                                 val obj = arr.getJSONObject(y)
                                 val start = obj.getString("start")
                                 val end = obj.getString("end")
-                                val id = obj.getInt("id")
-                                val bookType = obj.getInt("type")
-                                val style = obj.getString("style")
-                                bookingArray.add(CalendarItem(start,end, name=style,id=id, calendarType=bookType)) }
-                            if (arr.length() != 0){
+                                val id = obj.getInt("style_id")
+                                val name = obj.getString("name")
+                                val email = obj.getString("email")
+                                bookingArray.add(CalendarItem(start,end,id=id,name=name,email=email,accountId=accountItem.id)) }
+                            if (bookingArray.size != 0){
                                 val dialog = BreakCheckPopUp(fragment)
                                 val bundle = Bundle()
                                 bundle.putString("startDatetime", startDatetime)
@@ -79,10 +83,13 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
                                 dialog.arguments = bundle
                                 dialog.show(parentFragmentManager,"customDialog")
                             }else{
+                                Log.println(Log.ASSERT,"calendarType","${booking.calendarType}")
                                 if (booking.calendarType == 1){
                                     val url2 = getString(R.string.url,"edit_break.php")
                                     val stringRequest = object : StringRequest(
-                                        Method.POST, url2, Response.Listener {fragment.restart(); dismiss() },
+                                        Method.POST, url2, Response.Listener { res ->
+                                            Log.println(Log.ASSERT,"res",res)
+                                            fragment.restart(); dismiss() },
                                         Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                                         @Throws(AuthFailureError::class)
                                         override fun getParams(): Map<String, String> {
@@ -97,7 +104,7 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
                                 }else{
                                     val url2 = getString(R.string.url,"break.php")
                                     val stringRequest = object : StringRequest(
-                                        Method.POST, url2, Response.Listener { fragment.restart(); dismiss() },
+                                        Method.POST, url2, Response.Listener { dismiss(); fragment.restart()  },
                                         Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                                         @Throws(AuthFailureError::class)
                                         override fun getParams(): Map<String, String> {
@@ -107,18 +114,19 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
                                             params["break_end"] = endDatetime
                                             return params }}
                                     VolleySingleton.instance?.addToRequestQueue(stringRequest) }
-                        }} else{Toast.makeText(context,"Date Has Passed",Toast.LENGTH_SHORT).show()} },
+                        }} else{Toast.makeText(context,"Date has passed",Toast.LENGTH_SHORT).show()} },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                     @Throws(AuthFailureError::class)
                     override fun getParams(): Map<String, String> {
                         val params = HashMap<String, String>()
                         params["account_id"] = accountItem.id
-                        params["start_time"] = startDatetime
-                        params["end_time"] = endDatetime
-                        params["exist_id"] = booking.id.toString()
+                        params["start"] = startDatetime
+                        params["end"] = endDatetime
                         return params
                     }}
-                VolleySingleton.instance?.addToRequestQueue(stringRequest) }}
+                VolleySingleton.instance?.addToRequestQueue(stringRequest) }
+            else{Toast.makeText(context,"Invalid Time",Toast.LENGTH_SHORT).show()}
+        }
         btnDelete.setOnClickListener{
             val url = getString(R.string.url,"delete_break.php")
             val stringRequest = object : StringRequest(
@@ -127,7 +135,7 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
                 override fun getParams(): Map<String, String> {
                     val params = HashMap<String, String>()
                     params["break_id"] = booking.id.toString()
-                    return params }}
+                return params }}
             VolleySingleton.instance?.addToRequestQueue(stringRequest) }
 }
 

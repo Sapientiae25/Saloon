@@ -1,13 +1,13 @@
 package com.example.saloon
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
-
 
 class DayAdapter (private val calendarArray: MutableList<CalendarItem>,val fragment: CalendarFragment)
     : RecyclerView.Adapter<DayAdapter.DayViewHolder>(),CloseSheet{
@@ -18,8 +18,6 @@ class DayAdapter (private val calendarArray: MutableList<CalendarItem>,val fragm
         val tvCalendar: TextView = itemView.findViewById(R.id.tvCalendar)
         fun bind(index: Int){
             val currentItem = calendarArray[index]
-            itemView.layoutParams.height = itemView.context.resources.getDimensionPixelSize(R.dimen.item_height) * currentItem.span
-            if (currentItem.gone) { itemView.layoutParams.height = 0 }
             if (currentItem.calendarType != 2){
                 itemView.setOnClickListener { val bundle = bundleOf(Pair("booking",currentItem))
                     bottomSheetFragment = CalendarBottomSheetFragment(fragment)
@@ -45,14 +43,14 @@ class DayAdapter (private val calendarArray: MutableList<CalendarItem>,val fragm
         holder.bind(position)
         val item = holder.itemView
         val tvCalendar = holder.tvCalendar
+        item.layoutParams.height = item.resources.getDimensionPixelSize(R.dimen.item_height) * currentItem.span
         when (currentItem.calendarType) {
-            1 -> {tvCalendar.setBackgroundResource(R.drawable.red_round) ;tvCalendar.textSize = 18f
+            1 -> { item.setBackgroundResource(R.drawable.red_round)
                 tvCalendar.text = item.context.getString(R.string.address_ph,currentItem.start,currentItem.end) }
-            2 -> {tvCalendar.setBackgroundResource(R.drawable.blue_round) ;tvCalendar.textSize = 18f
-                tvCalendar.text = item.context.getString(R.string.obj_colon,currentItem.name,
-                    item.context.getString(R.string.address_ph,currentItem.start,currentItem.end))
-            }
-            else -> {item.setBackgroundResource(R.drawable.border);tvCalendar.text = ""} }
+            2 -> { item.setBackgroundResource(R.drawable.blue_round)
+                tvCalendar.text = item.context.getString(R.string.address_ph,currentItem.start,currentItem.end) }
+            else -> { item.setBackgroundResource(R.drawable.border);tvCalendar.text =
+                item.context.getString(R.string.address_ph,currentItem.start,currentItem.end)} }
     }
     override fun getItemCount() = calendarArray.size
     override fun close() {

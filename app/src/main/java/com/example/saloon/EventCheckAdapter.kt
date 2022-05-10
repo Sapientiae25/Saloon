@@ -1,5 +1,6 @@
 package com.example.saloon
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,9 @@ class EventCheckAdapter (private val bookingArray: MutableList<CalendarItem>,val
 
         fun bind(index: Int){
             val currentItem = bookingArray[index]
-            val time = itemView.context.getString(R.string.address_ph,currentItem.start,currentItem.end)
-            val text = itemView.context.getString(R.string.book_show,currentItem.name,time)
+            val time = itemView.context.getString(R.string.separate,currentItem.start,currentItem.end)
+            val name = if (currentItem.name.length > 15) currentItem.name.take(15) + ".." else currentItem.name
+            val text = itemView.context.getString(R.string.book_show,name,time)
             tvDelete.text = text
 
             itemView.setOnClickListener {
@@ -38,12 +40,20 @@ class EventCheckAdapter (private val bookingArray: MutableList<CalendarItem>,val
                     bookingArray.removeAt(removeId)
                     notifyItemRemoved(removeId)
                     notifyItemRangeChanged(0,bookingArray.size)
-                    if (bookingArray.size == 0){ fragment.deletes() } } } } }
+                    if (bookingArray.size == 0){ fragment.deletes() } }
+                else{
+                    val intent = Intent(itemView.context, CancelAppointmentActivity::class.java)
+                    intent.putExtra("styleItem", StyleItem(currentItem.name,id=currentItem.id.toString()))
+                    intent.putExtra("email", currentItem.email)
+                    intent.putExtra("timePeriod", text)
+                    intent.putExtra("account_id", currentItem.accountId)
+                    itemView.context.startActivity(intent)
+                }
+            } } }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventCheckViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.event_exist_layout,
             parent, false)
         return EventCheckViewHolder(itemView) }
-    override fun onBindViewHolder(holder: EventCheckViewHolder, position: Int) {
-        holder.bind(position) }
+    override fun onBindViewHolder(holder: EventCheckViewHolder, position: Int) { holder.bind(position) }
     override fun getItemCount() = bookingArray.size
 }

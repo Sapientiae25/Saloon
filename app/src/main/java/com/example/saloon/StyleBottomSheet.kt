@@ -2,6 +2,7 @@ package com.example.saloon
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,7 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
-import kotlin.math.max
 
 class StyleBottomSheet : BottomSheetDialogFragment(){
 
@@ -41,13 +39,11 @@ class StyleBottomSheet : BottomSheetDialogFragment(){
         tvTimePeriod.text = getString(R.string.obj_colon,"Time",getString(R.string.time_distance,booking.start,booking.end))
         val url = getString(R.string.url,"style_info.php")
         val stringRequest = object : StringRequest(
-            Method.POST, url, Response.Listener { response ->
-                println(response)
+            Method.POST, url, Response.Listener { response -> Log.println(Log.ASSERT,"response",response)
                 val obj = JSONObject(response)
                 val name = obj.getString("name")
                 val price = obj.getString("price").toFloat()
                 val time = obj.getString("time")
-                val bookingId = obj.getString("booking_id")
                 val maxTime = obj.getString("max_time")
                 val email = obj.getString("email")
                 val timeItem = TimeItem(time,maxTime)
@@ -56,18 +52,21 @@ class StyleBottomSheet : BottomSheetDialogFragment(){
                 tvCost.text = getString(R.string.obj_colon,"Cost",getString(R.string.money,price))
                 val timeValue = if (maxTime.isNotEmpty()) getString(R.string.time_distance,time,maxTime) else time
                 tvStyleDuration.text = getString(R.string.obj_colon,"Duration",getString(R.string.time_mins,timeValue))
-                val styleItem = StyleItem(name,price,timeItem,id=booking.styleId.toString(), bookingId=bookingId)
+                val styleItem = StyleItem(name,price,timeItem,id=booking.id.toString(), bookingId=booking.bookingId)
+
                 removeBtn.setOnClickListener{
+                    (activity as DefaultActivity).supportActionBar?.title = getString(R.string.cancel_booking)
                     val intent = Intent(context, CancelAppointmentActivity::class.java)
                     intent.putExtra("styleItem", styleItem)
                     intent.putExtra("email", email)
                     intent.putExtra("timePeriod", tvTimePeriod.text)
+                    intent.putExtra("account_id", accountItem.id)
                     startActivity(intent) }},
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
-                params["style_id"] = booking.styleId.toString()
+                params["booking_id"] = booking.bookingId
                 return params
             }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest)

@@ -1,69 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginStart="25dp"
+    android:layout_marginEnd="25dp"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardMaxElevation="12dp"
+    app:cardPreventCornerOverlap="true"
+    android:layout_gravity="center">
+
+<LinearLayout
+    android:id="@+id/llTester"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="200dp"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingStart="18dp"
+    android:paddingEnd="18dp"
+    android:paddingBottom="5dp">
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="15dp"
+        android:contentDescription="@string/cancel"
+        android:src="@drawable/ic_baseline_error_outline_24"
+        app:tint="@color/red" />
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:padding="7dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/loginColor"
-        android:gravity="center_horizontal"
-        android:text="@string/events_already_exists"
-        android:textSize="25sp"
-        android:textColor="@color/white"
         android:layout_marginBottom="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:text="@string/events_already_exists" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvents"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
+        tools:listitem="@layout/event_exist_layout"
+        android:layout_height="130dp"
+        android:layout_marginBottom="20dp" />
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/cancelBtn"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/border"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
+            android:backgroundTint="@color/light_grey"
+            android:background="@drawable/round_button"
+            android:textColor="@color/white"
             android:text="@string/close"
-            android:textAlignment="center"
-            android:textColor="@color/red"
-            android:textSize="30sp" />
-
-        <TextView
+            android:textSize="14sp"
+            android:layout_marginEnd="28dp"/>
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/editBtn"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/border"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
+            android:backgroundTint="@color/loginColor"
+            android:background="@drawable/round_button"
+            android:textColor="@color/white"
             android:text="@string/edit_time"
-            android:textAlignment="center"
-            android:textColor="@color/loginColor"
-            android:textSize="30sp" />
+            android:textSize="14sp"
+            android:layout_marginStart="28dp"/>
     </LinearLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+</androidx.cardview.widget.CardView>

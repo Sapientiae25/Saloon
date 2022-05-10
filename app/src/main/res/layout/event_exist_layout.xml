@@ -11,9 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/time"
-        android:drawablePadding="50dp"
+        android:drawablePadding="8dp"
         android:padding="5dp"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:drawableEndCompat="@drawable/ic_baseline_cancel_24"
         app:drawableTint="@color/red" />
+
 </LinearLayout>

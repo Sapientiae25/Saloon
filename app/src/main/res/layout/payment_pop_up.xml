@@ -1,62 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/llTester"
+<androidx.cardview.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@drawable/border"
-    android:orientation="vertical">
-    <TextView
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:id="@+id/tvHelp"
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_payment_method"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:background="@drawable/border"
-        android:backgroundTint="@color/loginColor"/>
-    <TextView
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="30dp"
-        android:text="To Make Your Saloon Public You Must Add A Payment Method" />
+    android:layout_marginStart="40dp"
+    android:layout_marginEnd="40dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginBottom="10dp"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardMaxElevation="12dp"
+    app:cardPreventCornerOverlap="true"
+    android:layout_gravity="center">
+
     <LinearLayout
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/llTester"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="5dp">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/cancel"
+            android:src="@drawable/ic_baseline_error_outline_24"
+            app:tint="@color/red" />
+
         <TextView
-            android:id="@+id/close"
             android:gravity="center"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:layout_marginTop="25dp"
+            android:textSize="18sp"
+            android:text="@string/to_make_your_saloon_public_you_must_add_a_payment_method" />
+     <LinearLayout
+            android:textAlignment="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/close"
-            android:background="@drawable/border"
-            android:layout_weight="1"
-            android:textColor="@color/red"
-            android:textSize="20sp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"/>
-        <TextView
-            android:id="@+id/save"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingTop="5dp"
-            android:background="@drawable/border"
-            android:text="@string/add_payment_method"
-            android:textColor="@color/loginColor"
-            android:textSize="20sp"
-            android:paddingBottom="5dp"/>
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/close"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_grey"
+                android:background="@drawable/round_button"
+                android:textColor="@color/white"
+                android:text="@string/close"
+                android:textSize="15sp"
+                android:layout_margin="8dp"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/loginColor"
+                android:background="@drawable/round_button"
+                android:textColor="@color/white"
+                android:text="@string/save"
+                android:textSize="15sp"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    </androidx.cardview.widget.CardView>
