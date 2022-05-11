@@ -1,10 +1,12 @@
 package com.example.saloon
 
-import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
@@ -38,18 +40,20 @@ class EventCheckAdapter (private val bookingArray: MutableList<CalendarItem>,val
                     VolleySingleton.instance?.addToRequestQueue(stringRequest)
                     val removeId = bookingArray.indexOf(currentItem)
                     bookingArray.removeAt(removeId)
-                    notifyItemRemoved(removeId)
-                    notifyItemRangeChanged(0,bookingArray.size)
-                    if (bookingArray.size == 0){ fragment.deletes() } }
+                    if (bookingArray.size == 0){ fragment.deletes() }
+                    notifyItemRemoved(removeId) }
                 else{
-                    val intent = Intent(itemView.context, CancelAppointmentActivity::class.java)
-                    intent.putExtra("styleItem", StyleItem(currentItem.name,id=currentItem.id.toString()))
-                    intent.putExtra("email", currentItem.email)
-                    intent.putExtra("timePeriod", text)
-                    intent.putExtra("account_id", currentItem.accountId)
-                    itemView.context.startActivity(intent)
-                }
-            } } }
+                    val bundle = bundleOf(Pair("styleItem", StyleItem(currentItem.name,id=currentItem.id.toString(),bookingId=currentItem.
+                    bookingId)),Pair("email", currentItem.email),Pair("timePeriod", text),Pair("account_id", currentItem.accountId))
+                    val bottomSheetFragment = CancelAppointmentBottomFragment(){
+                        val removeId = bookingArray.indexOf(currentItem)
+                        bookingArray.removeAt(removeId)
+                        Log.println(Log.ASSERT,"bookingArray","${bookingArray.size}")
+                        if (bookingArray.size == 0){ fragment.deletes() }
+                        notifyItemRemoved(removeId) }
+                    bottomSheetFragment.arguments = bundle
+
+                    bottomSheetFragment.show(fragment.childFragmentManager, "BottomSheetDialog") } } } }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventCheckViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.event_exist_layout,
             parent, false)

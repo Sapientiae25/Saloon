@@ -174,4 +174,10 @@
             android:id="@+id/action_editCategoryFragment_to_categoryFragment"
             app:destination="@id/categoryFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/cancelAppointmentFragment"
+        android:name="com.example.saloon.CancelAppointmentFragment"
+        android:label="fragment_cancel_appointment"
+        tools:layout="@layout/fragment_cancel_appointment" />
+    <action android:id="@+id/action_global_cancelAppointmentFragment" app:destination="@id/cancelAppointmentFragment" />
 </navigation>

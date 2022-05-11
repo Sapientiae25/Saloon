@@ -1,6 +1,5 @@
 package com.example.saloon
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.os.bundleOf
+import androidx.core.text.isDigitsOnly
+import androidx.navigation.findNavController
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.squareup.picasso.Picasso
 import org.json.JSONObject
 
 class StyleBottomSheet : BottomSheetDialogFragment(){
@@ -34,9 +38,10 @@ class StyleBottomSheet : BottomSheetDialogFragment(){
         val tvStyleDuration = view.findViewById<TextView>(R.id.tvStyleDuration)
         val tvTimePeriod = view.findViewById<TextView>(R.id.tvTimePeriod)
         val tvEmail = view.findViewById<TextView>(R.id.tvEmail)
-        val ivImage = view.findViewById<ImageView>(R.id.ivImage)
+        val image = view.findViewById<ImageView>(R.id.image)
         val removeBtn = view.findViewById<AppCompatButton>(R.id.removeBtn)
-        tvTimePeriod.text = getString(R.string.obj_colon,"Time",getString(R.string.time_distance,booking.start,booking.end))
+
+        tvTimePeriod.text = getString(R.string.separate,"Time",getString(R.string.time_distance,booking.start,booking.end))
         val url = getString(R.string.url,"style_info.php")
         val stringRequest = object : StringRequest(
             Method.POST, url, Response.Listener { response -> Log.println(Log.ASSERT,"response",response)
@@ -46,6 +51,7 @@ class StyleBottomSheet : BottomSheetDialogFragment(){
                 val time = obj.getString("time")
                 val maxTime = obj.getString("max_time")
                 val email = obj.getString("email")
+                val imageId = obj.getString("image_id")
                 val timeItem = TimeItem(time,maxTime)
                 tvEmail.text = email
                 tvName.text = name
@@ -54,14 +60,17 @@ class StyleBottomSheet : BottomSheetDialogFragment(){
                 tvStyleDuration.text = getString(R.string.obj_colon,"Duration",getString(R.string.time_mins,timeValue))
                 val styleItem = StyleItem(name,price,timeItem,id=booking.id.toString(), bookingId=booking.bookingId)
 
+                if (!imageId.isDigitsOnly()){
+                    image.visibility = View.GONE
+                }else{
+                    Picasso.get().load(getString(
+                        R.string.url,"style_images/$imageId.jpeg")).fit().centerCrop().into(image)}
                 removeBtn.setOnClickListener{
-                    (activity as DefaultActivity).supportActionBar?.title = getString(R.string.cancel_booking)
-                    val intent = Intent(context, CancelAppointmentActivity::class.java)
-                    intent.putExtra("styleItem", styleItem)
-                    intent.putExtra("email", email)
-                    intent.putExtra("timePeriod", tvTimePeriod.text)
-                    intent.putExtra("account_id", accountItem.id)
-                    startActivity(intent) }},
+                    val bundle = bundleOf(Pair("styleItem", styleItem),Pair("email", email),Pair("timePeriod", tvTimePeriod.text),
+                        Pair("account_id", accountItem.id))
+                    (activity as DefaultActivity).findNavController(R.id.activityFragment).navigate(R.id.
+                    action_global_cancelAppointmentFragment,bundle)
+                    dismiss()}},
             Response.ErrorListener { volleyError -> println(volleyError.message) }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {

@@ -36,23 +36,17 @@ class BreakCheckPopUp(val fragment: CalendarFragment) : DialogFragment(), Delete
         rvEvents.adapter = EventCheckAdapter(bookingArray!!.toMutableList(),this)
         rvEvents.adapter?.notifyItemRangeInserted(0,bookingArray.size)
 
-
-        editBtn.setOnClickListener {
-            dismiss()
-        }
-        cancelBtn.setOnClickListener {
-            dismiss()
-        }
+        editBtn.setOnClickListener { dismiss() }
+        cancelBtn.setOnClickListener { dismiss() }
         return rootView
     }
 
     override fun deletes() {
-        editBtn.text = getString(R.string.save)
-        editBtn.setOnClickListener {
+//        editBtn.text = getString(R.string.save)
+//        editBtn.setOnClickListener {
             val url = getString(R.string.url,"break.php")
             val stringRequest = object : StringRequest(
-                Method.POST, url, Response.Listener { response -> println(response)
-                },
+                Method.POST, url, Response.Listener { response -> println(response) },
                 Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
@@ -64,7 +58,7 @@ class BreakCheckPopUp(val fragment: CalendarFragment) : DialogFragment(), Delete
             VolleySingleton.instance?.addToRequestQueue(stringRequest)
             fragment.restart()
             dismiss()
-        }
+//        }
 
     }
 }

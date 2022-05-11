@@ -28,10 +28,11 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
     ): View? {
         return inflater.inflate(R.layout.calendar_bottom_sheet_layout, container, false)
     }
+    private lateinit var booking: CalendarItem
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val booking = arguments?.getParcelable<CalendarItem>("booking")!!
+        booking = arguments?.getParcelable("booking")!!
         val accountItem = (activity as DefaultActivity).accountItem
         val startTime = booking.start
         val endTime = booking.end
@@ -72,7 +73,10 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
                                 val id = obj.getInt("style_id")
                                 val name = obj.getString("name")
                                 val email = obj.getString("email")
-                                bookingArray.add(CalendarItem(start,end,id=id,name=name,email=email,accountId=accountItem.id)) }
+                                val bookingId = obj.getString("booking_id")
+
+                                bookingArray.add(CalendarItem(start,end,id=id,name=name,email=email,accountId=accountItem.id,
+                                    bookingId=bookingId)) }
                             if (bookingArray.size != 0){
                                 val dialog = BreakCheckPopUp(fragment)
                                 val bundle = Bundle()
@@ -144,6 +148,7 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
         var hour = 0
         var minute = 0
         val minOptions = arrayOf("00","15","30","45")
+        val currentHour = booking.start.take(2).toInt()
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.time_picker_layout)
@@ -155,6 +160,7 @@ class CalendarBottomSheetFragment(val fragment: CalendarFragment) : BottomSheetD
 
         numPickerHour.minValue = 0
         numPickerHour.maxValue  = 23
+        numPickerHour.value = currentHour
         numPickerMins.minValue = 0
         numPickerMins.maxValue = 3
         numPickerMins.displayedValues = minOptions
