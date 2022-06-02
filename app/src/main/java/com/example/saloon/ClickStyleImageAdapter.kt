@@ -21,7 +21,7 @@ class ClickStyleImageAdapter(private var images: MutableList<Pair<String,String>
         private val image = itemView.findViewById<ImageView>(R.id.image)
         fun bind(index: Int){
             if (index == 0){
-                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.add))
+                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.ic_baseline_add_circle_24))
             }else{
                 val currentItem = images[index]
                 Picasso.get().load(itemView.context.getString(

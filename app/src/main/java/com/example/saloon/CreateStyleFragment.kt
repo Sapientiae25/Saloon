@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,7 @@ import kotlin.math.abs
 class CreateStyleFragment : Fragment() {
 
     private lateinit var etDuration: AutoCompleteTextView
-    private var minute = 0
+    private var minute = 15
     private lateinit var startForResult: ActivityResultLauncher<Intent>
     private lateinit var startGalleryForResult: ActivityResultLauncher<Intent>
     private lateinit var vpImages: ViewPager2
@@ -47,6 +48,7 @@ class CreateStyleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_create_style, container, false)
+        val accountItem = (activity as DefaultActivity).accountItem
         val etName = rootView.findViewById<TextInputEditText>(R.id.etName)
         val etPrice = rootView.findViewById<TextInputEditText>(R.id.etPrice)
         val tvAddImage = rootView.findViewById<TextView>(R.id.tvAddImage)
@@ -60,7 +62,7 @@ class CreateStyleFragment : Fragment() {
         vpImages = rootView.findViewById(R.id.vpImages)
         val tabLayout = rootView.findViewById<TabLayout>(R.id.tabLayout)
         val sliderHandler = Handler(Looper.getMainLooper())
-        imageList = arrayListOf()
+        imageList = arrayListOf(Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888))
 
         etDuration.setOnClickListener { showCustomDialog() }
 
@@ -113,7 +115,9 @@ class CreateStyleFragment : Fragment() {
                             val timeItem = TimeItem(minute.toString())
                             val styleItem = StyleItem(etName.text.toString(),etPrice.text.toString().toFloat(),timeItem,
                                 etInfo.text.toString(),filterItem=filterItem)
-                            val bundle = bundleOf(Pair("styleItem",styleItem),Pair("imageList",imageList))
+                            imageList.removeAt(0)
+                            Log.println(Log.ASSERT,"imageList","$imageList")
+                            val bundle = bundleOf(Pair("styleItem",styleItem),Pair("imageList",imageList.toArray()))
                             view.findNavController().navigate(R.id.action_createStyleFragment_to_chooseCategoryFragment,bundle)
                         } },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
@@ -121,6 +125,7 @@ class CreateStyleFragment : Fragment() {
                     override fun getParams(): Map<String, String> {
                         val params = HashMap<String, String>()
                         params["name"] = etName.text.toString()
+                        params["account_id"] = accountItem.id
                         return params
                     }}
                 VolleySingleton.instance?.addToRequestQueue(stringRequest) }
@@ -193,6 +198,6 @@ class CreateStyleFragment : Fragment() {
         numPicker.setOnValueChangedListener { numberPicker, _, _ ->
             val x = minOptions[numberPicker.value]; minute = x.toInt()}
         close.setOnClickListener { dialog.dismiss() }
-        save.setOnClickListener {dialog.dismiss(); etDuration.setText(getString(R.string.time_mins,minute.toString())) }
+        save.setOnClickListener {dialog.dismiss(); etDuration.setText(minute.toString()) }
         dialog.show() }
 }

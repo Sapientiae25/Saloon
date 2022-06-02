@@ -16,7 +16,7 @@ class CreateStyleImageAdapter(private var images: MutableList<Bitmap>, val click
         private val image = itemView.findViewById<ImageView>(R.id.image)
         fun bind(index: Int){
             if (index == 0){
-                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.add))
+                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.ic_baseline_add_circle_24))
             }else{
                 image.setImageBitmap(images[0])
             }

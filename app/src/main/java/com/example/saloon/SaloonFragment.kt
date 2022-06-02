@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -235,7 +234,7 @@ class SaloonFragment : Fragment() {
             return params }}
         VolleySingleton.instance?.addToRequestQueue(stringRequest) }
     private fun loadImages(){
-        imageUrls.clear()
+        imageUrls.clear(); imageUrls.add("")
         vpImages.adapter = SaloonImageAdapter(imageUrls) {index -> addImage(index) }
         val url = getString(R.string.url,"get_saloon_images.php")
         val stringRequest = object : StringRequest(Method.POST, url, Response.Listener { response ->

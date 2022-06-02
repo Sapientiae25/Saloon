@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
@@ -45,7 +44,7 @@ class EventCheckAdapter (private val bookingArray: MutableList<CalendarItem>,val
                 else{
                     val bundle = bundleOf(Pair("styleItem", StyleItem(currentItem.name,id=currentItem.id.toString(),bookingId=currentItem.
                     bookingId)),Pair("email", currentItem.email),Pair("timePeriod", text),Pair("account_id", currentItem.accountId))
-                    val bottomSheetFragment = CancelAppointmentBottomFragment(){
+                    val bottomSheetFragment = CancelAppointmentBottomFragment {
                         val removeId = bookingArray.indexOf(currentItem)
                         bookingArray.removeAt(removeId)
                         Log.println(Log.ASSERT,"bookingArray","${bookingArray.size}")

@@ -19,7 +19,7 @@
     <string name="time">Time</string>
     <string name="style_image">style image</string>
     <string name="skip">Skip</string>
-    <string name="distance">%1$s, %2$s, %3$s</string>
+    <string name="distance">%1$s, %2$s, %3$s, %4$s</string>
     <string name="time_distance">%1$s-%2$s</string>
     <string name="price">Price</string>
     <string name="duration_mins">Duration (mins)</string>

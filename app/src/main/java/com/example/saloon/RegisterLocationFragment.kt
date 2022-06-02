@@ -4,6 +4,7 @@ import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +50,7 @@ class RegisterLocationFragment : Fragment() {
             if (etCity.text!!.isEmpty()){filled=false;etCity.error="This field must be filled"}
             if (etPostcode.text!!.isEmpty()){filled=false;etPostcode.error="This field must be filled"}
             if (etTown.text!!.isEmpty()){filled=false;etTown.error="This field must be filled"}
-            val addressText = getString(R.string.distance,etAddress1.text,etCity.text,acCountry.text)
+            val addressText = getString(R.string.distance,etAddress1.text,etPostcode.text,etCity.text,acCountry.text)
             val latLong = getLocationFromAddress(addressText)
             if (filled && latLong != null){
                 val addressItem = AddressItem(etCity.text.toString(), etPostcode.text.toString(),
@@ -91,9 +92,7 @@ class RegisterLocationFragment : Fragment() {
             address = coder.getFromLocationName(strAddress, 1)
             if (address == null) { return null }
             val location: Address = address[0]
-            location.latitude
-            location.longitude
-            p1 = GeoPoint((location.latitude * 1E6), (location.longitude * 1E6))
+            p1 = GeoPoint(location.latitude, location.longitude)
             return p1
         } catch (e: IOException) { e.printStackTrace() }
         return null

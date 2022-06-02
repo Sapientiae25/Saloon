@@ -15,7 +15,7 @@ class StyleImageAdapter(private var images: MutableList<String>,val clickListene
         private val image = itemView.findViewById<ImageView>(R.id.image)
         fun bind(index: Int){
             if (index == 0){
-                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.add))
+                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.ic_baseline_add_circle_24))
             }else{
                 Picasso.get().load(itemView.context.getString(
                     R.string.url,"style_images/${images[index]}.jpeg")).fit().centerCrop().into(image) }

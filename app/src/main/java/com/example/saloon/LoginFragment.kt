@@ -33,8 +33,8 @@ class LoginFragment : Fragment() {
         etPassword = rootView.findViewById(R.id.etPassword)
         btnLogin = rootView.findViewById(R.id.btnLogin)
         tvRegisterAccount = rootView.findViewById(R.id.tvRegisterAccount)
-        etEmail.setText("test@gmail.com")
-        etPassword.setText("pass")
+        etEmail.setText("cutz@gmail.com")
+        etPassword.setText("word")
 
         tvRegisterAccount.setOnClickListener { view -> view.findNavController().navigate(R.id.action_loginFragment_to_registerFragment) }
 
