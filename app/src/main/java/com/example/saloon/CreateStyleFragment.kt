@@ -32,6 +32,8 @@ import com.android.volley.toolbox.StringRequest
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
+import java.io.ByteArrayOutputStream
+import java.util.*
 import kotlin.math.abs
 
 class CreateStyleFragment : Fragment() {
@@ -42,13 +44,16 @@ class CreateStyleFragment : Fragment() {
     private lateinit var startGalleryForResult: ActivityResultLauncher<Intent>
     private lateinit var vpImages: ViewPager2
     private lateinit var imageList: ArrayList<Bitmap>
+    private lateinit var accountItem: AccountItem
+    val stringImages = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_create_style, container, false)
-        val accountItem = (activity as DefaultActivity).accountItem
+        (activity as DefaultActivity).supportActionBar?.title = "Create Style"
+        accountItem = (activity as DefaultActivity).accountItem
         val etName = rootView.findViewById<TextInputEditText>(R.id.etName)
         val etPrice = rootView.findViewById<TextInputEditText>(R.id.etPrice)
         val tvAddImage = rootView.findViewById<TextView>(R.id.tvAddImage)
@@ -116,9 +121,22 @@ class CreateStyleFragment : Fragment() {
                             val styleItem = StyleItem(etName.text.toString(),etPrice.text.toString().toFloat(),timeItem,
                                 etInfo.text.toString(),filterItem=filterItem)
                             imageList.removeAt(0)
-                            Log.println(Log.ASSERT,"imageList","$imageList")
-                            val bundle = bundleOf(Pair("styleItem",styleItem),Pair("imageList",imageList.toArray()))
-                            view.findNavController().navigate(R.id.action_createStyleFragment_to_chooseCategoryFragment,bundle)
+                            val bundle = if (imageList.size == 0){ bundleOf(Pair("styleItem",styleItem),Pair("imageList",null))
+                            } else{ for (i in imageList) {stringImages.add(bitMapToString(i))}
+                                bundleOf(Pair("styleItem",styleItem),Pair("imageList",stringImages.toTypedArray())) }
+
+                            val url2 = getString(R.string.url, "has_category.php")
+                            val stringRequest2: StringRequest = object : StringRequest(
+                                Method.POST, url2, Response.Listener { response -> Log.println(Log.ASSERT,"response",response)
+                                if (response == "0"){ book(styleItem,view) }else{
+                                view.findNavController().navigate(R.id.action_createStyleFragment_to_chooseCategoryFragment,bundle) }},
+                                Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+                                @Throws(AuthFailureError::class)
+                                override fun getParams(): Map<String, String> {
+                                    val params = HashMap<String, String>()
+                                    params["account_fk"] = accountItem.id
+                                    return params } }
+                            VolleySingleton.instance?.addToRequestQueue(stringRequest2)
                         } },
                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                     @Throws(AuthFailureError::class)
@@ -126,8 +144,7 @@ class CreateStyleFragment : Fragment() {
                         val params = HashMap<String, String>()
                         params["name"] = etName.text.toString()
                         params["account_id"] = accountItem.id
-                        return params
-                    }}
+                        return params }}
                 VolleySingleton.instance?.addToRequestQueue(stringRequest) }
         }
 
@@ -181,6 +198,11 @@ class CreateStyleFragment : Fragment() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try { startForResult.launch(takePictureIntent) } catch (e: ActivityNotFoundException) {
             Toast.makeText(context, "Unable to open camera",Toast.LENGTH_SHORT).show() } }
+    private fun bitMapToString(bitmap: Bitmap): String {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
+        val b = bytes.toByteArray()
+        return Base64.getEncoder().encodeToString(b) }
     private fun showCustomDialog() {
         val dialog = Dialog(requireContext())
         val minOptions = mutableListOf<String>()
@@ -200,4 +222,52 @@ class CreateStyleFragment : Fragment() {
         close.setOnClickListener { dialog.dismiss() }
         save.setOnClickListener {dialog.dismiss(); etDuration.setText(minute.toString()) }
         dialog.show() }
+    private fun book(styleItem: StyleItem,v:View){
+        val url = getString(R.string.url, "create_style.php")
+        val stringRequest = object : StringRequest(
+            Method.POST, url, Response.Listener { response ->
+                val styleId = response
+                val url2 = getString(R.string.url, "set_filters.php")
+                val stringRequest2 = object : StringRequest(
+                    Method.POST, url2, Response.Listener { response -> println(response) },
+                    Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+                    @Throws(AuthFailureError::class)
+                    override fun getParams(): Map<String, String> {
+                        val params = HashMap<String, String>()
+                        params["style_fk"] = styleId
+                        params["gender"] = styleItem.filterItem.gender.toString()
+                        params["length"] = styleItem.filterItem.length.toString()
+                        return params } }
+                VolleySingleton.instance?.addToRequestQueue(stringRequest2)
+                uploadImages(styleId)
+                styleItem.id = styleId
+                val bundle = bundleOf(Pair("styleItem", styleItem))
+                v.findNavController().navigate(R.id.action_createStyleFragment_to_styleFragment, bundle)
+            }, Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["name"] = styleItem.name
+                params["price"] = styleItem.price.toString()
+                params["time"] = styleItem.time.time
+                params["account_id"] = accountItem.id
+                params["info"] = styleItem.info
+                return params
+            }
+        }
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
+    }
+    private fun uploadImages(styleId: String){
+        val url = getString(R.string.url,"create_style_image.php")
+        for (stringImage in stringImages){
+            val stringRequest: StringRequest = object : StringRequest(
+                Method.POST, url, Response.Listener { },
+                Response.ErrorListener { volleyError -> println(volleyError.message) }) {
+                @Throws(AuthFailureError::class)
+                override fun getParams(): Map<String, String> {
+                    val params = HashMap<String, String>()
+                    params["image"] = stringImage
+                    params["style_id"] = styleId
+                    return params }}
+            VolleySingleton.instance?.addToRequestQueue(stringRequest) }}
 }

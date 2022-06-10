@@ -85,6 +85,9 @@
         <action
             android:id="@+id/action_createStyleFragment_to_chooseCategoryFragment"
             app:destination="@id/chooseCategoryFragment" />
+        <action
+            android:id="@+id/action_createStyleFragment_to_styleFragment"
+            app:destination="@id/styleFragment" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategoryFragment"
@@ -99,7 +102,7 @@
             app:argType="com.example.saloon.StyleItem" />
         <argument
             android:name="imageList"
-            app:argType="android.graphics.Bitmap[]"
+            app:argType="string[]"
             app:nullable="true" />
     </fragment>
     <fragment
