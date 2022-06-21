@@ -329,9 +329,8 @@ class SaloonFragment : Fragment() {
             val filterItem = accountItem.filterItem
             val filterObj = JSONObject()
             val length = JSONArray(filterItem.length)
-            val gender = JSONArray(filterItem.gender)
             filterObj.put("length",length)
-            filterObj.put("gender",gender)
+            filterObj.put("gender",filterItem.gender)
             filterObj.put("account_id",accountItem.id)
             val filterArr = JSONArray()
             filterArr.put(filterObj)

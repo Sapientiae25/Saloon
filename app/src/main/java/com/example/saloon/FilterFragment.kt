@@ -25,6 +25,7 @@ class FilterFragment : Fragment(){
     private lateinit var btnApply : AppCompatButton
     private lateinit var cancelFilter : FloatingActionButton
     private lateinit var rgSort : RadioGroup
+    private var lengths = mutableSetOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,13 +48,14 @@ class FilterFragment : Fragment(){
 
         for (i in 1 until lengthCount){
             val child = llFilterLength.getChildAt(i) as CheckBox
-            child.setOnClickListener { if (child.isChecked){filterItem.length.add(i)} else {filterItem.length.remove(i)};lengthCheck()} }
+            child.setOnClickListener { var index = i; if (index == 0) { index = lengthCount}; index -= 1
+                if (child.isChecked){lengths.add(index)} else {lengths.remove(index)};lengthCheck()} }
         tvSort.setOnClickListener { tvSort.visibility = if (tvSort.visibility == View.GONE) View.VISIBLE else View.GONE}
         tvFilterLength.setOnClickListener { llFilterLength.visibility = if (llFilterLength.visibility == View.GONE) View.VISIBLE
         else View.GONE}
         tvFilterGender.setOnClickListener { rgFilterGender.visibility = if (rgFilterGender.visibility == View.GONE) View.VISIBLE
         else View.GONE}
-        cbAllLength.setOnClickListener { filterItem.length.clear();lengthCheck()}
+        cbAllLength.setOnClickListener { lengths.clear();lengthCheck()}
         btnClear.setOnClickListener{cbAllLength.performClick();(rgFilterGender.getChildAt(0) as RadioButton).isChecked = true}
         cancelFilter.setOnClickListener { view ->
             view.findNavController().popBackStack() }
@@ -61,24 +63,22 @@ class FilterFragment : Fragment(){
             allCheck()
             val checked = rgFilterGender.findViewById<RadioButton>(rgFilterGender.checkedRadioButtonId)
             (activity as DefaultActivity).accountItem.filterItem.gender = rgFilterGender.indexOfChild(checked)
+            (activity as DefaultActivity).accountItem.filterItem.length = lengths
             val bundle = bundleOf(Pair("back",1))
             view.findNavController().navigate(R.id.action_filterFragment_to_saloonFragment,bundle)
         }
         resetChecked()
         return rootView }
     private fun resetChecked(){
-        val length = filterItem.length
         val sort = filterItem.sort
-        if (length.size == lengthCount-1 || length.size == 0){(llFilterLength.getChildAt(0) as CheckBox).isChecked=true}
-        else { for (x in length){ (llFilterLength.getChildAt(x) as CheckBox).isChecked=true }}
+        if (lengths.size == lengthCount-1 || lengths.size == 0){(llFilterLength.getChildAt(0) as CheckBox).isChecked=true}
+        else { for (x in lengths){ (llFilterLength.getChildAt(x) as CheckBox).isChecked=true }}
         rgFilterGender.check((rgFilterGender.getChildAt(sort) as RadioButton).id)
         rgSort.check((rgSort.getChildAt(sort) as RadioButton).id) }
-    private fun allCheck(){
-        if (filterItem.length.size == 0) filterItem.length = (1 until lengthCount).toMutableSet()}
+    private fun allCheck(){ if (lengths.size == 0) lengths = (1 until lengthCount).toMutableSet()}
     private fun lengthCheck(){
-        val length = filterItem.length
-        if (length.size == lengthCount-1 || length.size == 0){
+        if (lengths.size == lengthCount-1 || lengths.size == 0){
             (llFilterLength.getChildAt(0) as CheckBox).isChecked=true
-            for (i in 1 until lengthCount){(llFilterLength.getChildAt(i) as CheckBox).isChecked=false} ;filterItem.length.clear()}
+            for (i in 1 until lengthCount){(llFilterLength.getChildAt(i) as CheckBox).isChecked=false} ;allCheck()}
         else{(llFilterLength.getChildAt(0) as CheckBox).isChecked=false} }
 }

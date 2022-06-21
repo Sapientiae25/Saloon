@@ -114,9 +114,13 @@ class CreateStyleFragment : Fragment() {
                             val lengthId: Int = rgLength.checkedRadioButtonId
                             val lengthButton: View = rgLength.findViewById(lengthId)
                             var length = rgLength.indexOfChild(lengthButton)
-                            if (length == 0) {length = rgLength.childCount-1} else if (length == rgLength.childCount-1){length = 0}
-                            if (gender == 0) {gender = rgGender.childCount-1} else if (gender ==  rgGender.childCount-1){gender = 0}
-                            val filterItem = StyleFilterItem(gender,length)
+                            if (length == 0) {length = rgLength.childCount} // else if (length == rgLength.childCount-1){length = 0}
+                            if (gender == 0) {gender = rgGender.childCount} // else if (gender ==  rgGender.childCount-1){gender = 0}
+                            length -=1
+                            gender -=1
+                            Log.println(Log.ASSERT,"gender","$gender")
+                            Log.println(Log.ASSERT,"length","$length")
+                            val filterItem = StyleFilterItem(length,gender)
                             val timeItem = TimeItem(minute.toString())
                             val styleItem = StyleItem(etName.text.toString(),etPrice.text.toString().toFloat(),timeItem,
                                 etInfo.text.toString(),filterItem=filterItem)

@@ -1,6 +1,7 @@
 package com.example.saloon
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +69,7 @@ class ChooseCategoryFragment : Fragment() {
                     val styleId = response
                     val url2 = getString(R.string.url, "set_filters.php")
                     val stringRequest2 = object : StringRequest(
-                        Method.POST, url2, Response.Listener { response -> println(response) },
+                        Method.POST, url2, Response.Listener { response -> Log.println(Log.ASSERT,"filter","$response") },
                         Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                         @Throws(AuthFailureError::class)
                         override fun getParams(): Map<String, String> {
@@ -101,8 +102,7 @@ class ChooseCategoryFragment : Fragment() {
                     uploadImages(styleId)
                     styleItem.id = styleId
                     val bundle = bundleOf(Pair("styleItem", styleItem))
-                    view.findNavController()
-                        .navigate(R.id.action_chooseCategoryFragment_to_styleFragment, bundle)
+                    view.findNavController().navigate(R.id.action_chooseCategoryFragment_to_styleFragment, bundle)
                 }, Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {

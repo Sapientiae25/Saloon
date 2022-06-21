@@ -96,7 +96,8 @@
         tools:layout="@layout/fragment_choose_category" >
         <action
             android:id="@+id/action_chooseCategoryFragment_to_styleFragment"
-            app:destination="@id/styleFragment" />
+            app:destination="@id/styleFragment"
+            app:popUpTo="@id/saloonFragment"/>
         <argument
             android:name="styleItem"
             app:argType="com.example.saloon.StyleItem" />

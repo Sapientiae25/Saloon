@@ -35,15 +35,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAddStyles"
+    <LinearLayout
+        android:id="@+id/llAddStyles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etCategory"
-        tools:listitem="@layout/check_styles" />
+        android:orientation="vertical"/>
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rvAddStyles"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etCategory"-->
+<!--        tools:listitem="@layout/check_styles" />-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/ivSave"
@@ -56,7 +64,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/loginColor"
         android:background="@drawable/round_button"
-        android:text="@string/save"
+        android:text="@string/skip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

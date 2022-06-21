@@ -27,7 +27,7 @@ class AddStyleAdapter (private val checkedList: MutableList<CheckItem>,val fragm
                         rbChecked.isChecked = true
                         currentItem.checked = true }
                     if (click == 0) { fragment.ivSave.text = itemView.context.getString(R.string.skip)
-                        fragment.ivSave.setBackgroundColor(itemView.context.getColor(R.color.light_grey)) }else{
+                        fragment.ivSave.setBackgroundColor(itemView.context.getColor(R.color.dark_grey)) }else{
                         fragment.ivSave.text = itemView.context.getString(R.string.save)
                         fragment.ivSave.setBackgroundColor(itemView.context.getColor(R.color.loginColor)) }
                     fragment.ivSave.isEnabled = click == 0
