@@ -1,6 +1,7 @@
 package com.example.saloon
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +63,6 @@ class CreateCategoryFragment : Fragment(){
             if (etCategory.text.isEmpty()){etCategory.error = "Please Enter A Category Name"}
             else{
                 url = getString(R.string.url,"create_category.php")
-                val url2 = getString(R.string.url,"category_style.php")
                 stringRequest = object : StringRequest(
                     Method.POST, url, Response.Listener { response ->
                         println(response)
@@ -73,6 +73,8 @@ class CreateCategoryFragment : Fragment(){
                         else{
                         for (check in checkList){
                             if (check.checked){
+                                Log.println(Log.ASSERT,"A","$categoryId ${check.id}")
+                                val url2 = getString(R.string.url,"category_style.php")
                                 val stringRequest2 = object : StringRequest(
                                     Method.POST, url2, Response.Listener { response -> println(response) },
                                     Response.ErrorListener { volleyError -> println(volleyError.message) }) {

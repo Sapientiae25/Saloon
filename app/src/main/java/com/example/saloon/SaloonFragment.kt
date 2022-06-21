@@ -274,6 +274,7 @@ class SaloonFragment : Fragment() {
         val styleSize = displayStyleList.size
         categoryList = mutableListOf(CategoryItem())
         displayStyleList.clear()
+        rvStyleItems.adapter?.notifyItemRangeRemoved(1,styleSize)
         rvStyleCategories.adapter?.notifyItemRangeRemoved(1,categorySize)
         rvStyleCategories.adapter = StyleCategoryAdapter(categoryList)
 

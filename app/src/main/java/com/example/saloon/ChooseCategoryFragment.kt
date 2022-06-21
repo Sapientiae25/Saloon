@@ -84,9 +84,7 @@ class ChooseCategoryFragment : Fragment() {
                     for (category in categoryList) {
                         if (category.checked) {
                             val stringRequest4 = object : StringRequest(
-                                Method.POST,
-                                url4,
-                                Response.Listener { response -> println(response) },
+                                Method.POST, url4, Response.Listener { response -> println(response) },
                                 Response.ErrorListener { volleyError -> println(volleyError.message) }) {
                                 @Throws(AuthFailureError::class)
                                 override fun getParams(): Map<String, String> {
