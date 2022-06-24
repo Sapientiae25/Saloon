@@ -30,6 +30,7 @@ class EditCategoryFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val rootView =  inflater.inflate(R.layout.fragment_edit_category, container, false)
+        (activity as DefaultActivity).supportActionBar?.title = "Edit Category"
         val accountItem = (activity as DefaultActivity).accountItem
         categoryItem = arguments?.getParcelable("categoryItem")!!
         val checkList = mutableListOf<CheckItem>()

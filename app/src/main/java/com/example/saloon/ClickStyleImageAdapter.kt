@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -14,15 +13,15 @@ import com.android.volley.toolbox.StringRequest
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
 
-class ClickStyleImageAdapter(private var images: MutableList<Pair<String,String>>,val clickListener: (Int) -> Unit)
+class ClickStyleImageAdapter(private var images: MutableList<Pair<String, String>>)
     : RecyclerView.Adapter<ClickStyleImageAdapter.ClickStyleImageViewHolder>(){
 
     inner class ClickStyleImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val image = itemView.findViewById<ImageView>(R.id.image)
         fun bind(index: Int){
-            if (index == 0){
-                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.ic_baseline_add_circle_24))
-            }else{
+//            if (index == 0){
+//                image.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.ic_baseline_add_circle_24))
+//            }else{
                 val currentItem = images[index]
                 Picasso.get().load(itemView.context.getString(
                     R.string.url,"style_images/${currentItem.first}.jpeg")).fit().centerCrop().into(image)
@@ -49,7 +48,7 @@ class ClickStyleImageAdapter(private var images: MutableList<Pair<String,String>
                         params["style_id"] = styleId
                         return params }}
                     VolleySingleton.instance?.addToRequestQueue(stringRequest)}
-            }
+//            }
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClickStyleImageViewHolder {
